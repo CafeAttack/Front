@@ -1,3 +1,4 @@
+import 'package:cafe_attack/view/resposive/ResponsiveCenter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -13,7 +14,9 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container()
+      body: ResponsiveCenter(
+        child: Text("dkdkdk"),
+      )
     );
   }
 }
