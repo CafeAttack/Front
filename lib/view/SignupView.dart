@@ -1,9 +1,17 @@
+import 'package:cafe_attack/view/dialog.dart';
 import 'package:cafe_attack/view/resposive/BreakPoint.dart';
 import 'package:cafe_attack/view/resposive/ResponsiveCenter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+final TextEditingController _idController = TextEditingController();
+final TextEditingController _nameController = TextEditingController();
+final TextEditingController _nicknameController = TextEditingController();
+final TextEditingController _emailController = TextEditingController();
+final TextEditingController _pwController = TextEditingController();
+final TextEditingController _pwcController = TextEditingController();
+final TextEditingController _birthController = TextEditingController();
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -15,7 +23,23 @@ class SignupPage extends StatefulWidget {
 class _SignupPageState extends State<SignupPage> {
   bool _IDButtonClick = false;
   bool _IDduplication = false;
+  bool _emailCertification = false;
   bool _IsCheck = false;
+
+  String? _idField;
+  String? _nameField;
+  String? _nicknameField;
+  String? _emailField;
+  String? _pwField;
+  String? _pwcField;
+  String? _birthField;
+
+  bool _isValidEmail(String email) {
+    // 이메일 정규식 패턴
+    final RegExp regex =
+        RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+    return regex.hasMatch(email);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +70,7 @@ class _SignupPageState extends State<SignupPage> {
                     height: 25,
                     width: 60,
                     child: Text(
-                      ' 아이디',
+                      '아이디',
                       style: TextStyle(
                         fontFamily: 'Freesentation',
                         fontWeight: FontWeight.w500,
@@ -63,13 +87,10 @@ class _SignupPageState extends State<SignupPage> {
                       alignment: Alignment.centerRight,
                       children: [
                         TextFormField(
+                          controller: _idController,
                           decoration: InputDecoration(
                             border: UnderlineInputBorder(),
-                            helperText: (_IDButtonClick
-                                ? (_IDduplication
-                                    ? "이미 존재하는 아이디 입니다"
-                                    : "사용할 수 있는 아이디 입니다")
-                                : null),
+                            helperText: _idField,
                             helperStyle: TextStyle(
                               color: Colors.red,
                               fontSize: 14,
@@ -86,16 +107,29 @@ class _SignupPageState extends State<SignupPage> {
                               setState(() {
                                 _IDButtonClick = true;
                                 _IDduplication = !_IDduplication;
+
+                                if (_idController.text.isEmpty) {
+                                  _idField = "아이디를 입력하세요";
+                                } else if (!_IDduplication) {
+                                  _idField = "사용 가능한 아이디입니다";
+                                } else if (_IDduplication) {
+                                  _idField = "이미 존재하는 아이디입니다";
+                                } else {
+                                  _idField = null;
+                                }
                               });
                             },
                             style: ElevatedButton.styleFrom(
                               side: BorderSide(
                                   color: Color(0x50564646), width: 2),
-                              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2), // padding 조정
-                              backgroundColor: Color(0x20564646),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 5, vertical: 2),
+                              // padding 조정
+                              backgroundColor: Color(0x00564646),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(7)),
-                              minimumSize: Size(55, 20), // 최소 크기 설정
+                              minimumSize: Size(55, 20),
+                              // 최소 크기 설정
                               maximumSize: Size(55, 40), // 최대 크기 설정
                             ),
                             child: Text(
@@ -137,15 +171,16 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   Expanded(
                     child: TextFormField(
+                      controller: _nameController,
                       decoration: InputDecoration(
                         border: UnderlineInputBorder(),
-                        // helperText: ,
-                        // helperStyle: TextStyle(
-                        //   color: Colors.red,
-                        //   fontSize: 14,
-                        //   fontFamily: 'Freesentation',
-                        //   fontWeight: FontWeight.w400,
-                        // ),
+                        helperText: _nameField,
+                        helperStyle: TextStyle(
+                          color: Colors.red,
+                          fontSize: 14,
+                          fontFamily: 'Freesentation',
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ),
                   ),
@@ -174,15 +209,16 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   Expanded(
                     child: TextFormField(
+                      controller: _nicknameController,
                       decoration: InputDecoration(
                         border: UnderlineInputBorder(),
-                        // helperText: ,
-                        // helperStyle: TextStyle(
-                        //   color: Colors.red,
-                        //   fontSize: 14,
-                        //   fontFamily: 'Freesentation',
-                        //   fontWeight: FontWeight.w400,
-                        // ),
+                        helperText: _nicknameField,
+                        helperStyle: TextStyle(
+                          color: Colors.red,
+                          fontSize: 14,
+                          fontFamily: 'Freesentation',
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ),
                   ),
@@ -211,15 +247,16 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   Expanded(
                     child: TextFormField(
+                      controller: _emailController,
                       decoration: InputDecoration(
                         border: UnderlineInputBorder(),
-                        // helperText: ,
-                        // helperStyle: TextStyle(
-                        //   color: Colors.red,
-                        //   fontSize: 14,
-                        //   fontFamily: 'Freesentation',
-                        //   fontWeight: FontWeight.w400,
-                        // ),
+                        helperText: _emailField,
+                        helperStyle: TextStyle(
+                          color: Colors.red,
+                          fontSize: 14,
+                          fontFamily: 'Freesentation',
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ),
                   ),
@@ -232,14 +269,27 @@ class _SignupPageState extends State<SignupPage> {
                 children: [
                   Expanded(child: SizedBox()),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        if (_emailController.text.isEmpty) {
+                          _emailField = "이메일을 입력하세요";
+                        } else if (!_isValidEmail(_emailController.text)) {
+                          _emailField = "유효한 이메일을 입력하세요";
+                        } else {
+                          _emailCertification = true;
+                          print(_emailController.text);
+                          _emailField = null;
+                        }
+                      });
+                    },
                     style: ElevatedButton.styleFrom(
                       side: BorderSide(color: Color(0x50564646), width: 2),
                       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                      backgroundColor: Color(0x20564646),
+                      backgroundColor: Color(0x00564646),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(7)),
-                      minimumSize: Size(68, 20), // 최소 크기 설정
+                      minimumSize: Size(68, 20),
+                      // 최소 크기 설정
                       maximumSize: Size(68, 40), // 최대 크기 설정
                     ),
                     child: Text(
@@ -280,15 +330,16 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   Expanded(
                     child: TextFormField(
+                      controller: _pwController,
                       decoration: InputDecoration(
                         border: UnderlineInputBorder(),
-                        // helperText: ,
-                        // helperStyle: TextStyle(
-                        //   color: Colors.red,
-                        //   fontSize: 14,
-                        //   fontFamily: 'Freesentation',
-                        //   fontWeight: FontWeight.w400,
-                        // ),
+                        helperText: _pwField,
+                        helperStyle: TextStyle(
+                          color: Colors.red,
+                          fontSize: 14,
+                          fontFamily: 'Freesentation',
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ),
                   ),
@@ -317,15 +368,16 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   Expanded(
                     child: TextFormField(
+                      controller: _pwcController,
                       decoration: InputDecoration(
                         border: UnderlineInputBorder(),
-                        // helperText: ,
-                        // helperStyle: TextStyle(
-                        //   color: Colors.red,
-                        //   fontSize: 14,
-                        //   fontFamily: 'Freesentation',
-                        //   fontWeight: FontWeight.w400,
-                        // ),
+                        helperText: _pwcField,
+                        helperStyle: TextStyle(
+                          color: Colors.red,
+                          fontSize: 14,
+                          fontFamily: 'Freesentation',
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ),
                   ),
@@ -354,15 +406,23 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   Expanded(
                     child: TextFormField(
+                      controller: _birthController,
                       decoration: InputDecoration(
                         border: UnderlineInputBorder(),
-                        // helperText: ,
-                        // helperStyle: TextStyle(
-                        //   color: Colors.red,
-                        //   fontSize: 14,
-                        //   fontFamily: 'Freesentation',
-                        //   fontWeight: FontWeight.w400,
-                        // ),
+                        hintText: "yyddmm의 형식으로 입력해주세요",
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
+                          fontFamily: 'Freesentation',
+                          fontWeight: FontWeight.w400,
+                        ),
+                        helperText: _birthField,
+                        helperStyle: TextStyle(
+                          color: Colors.red,
+                          fontSize: 14,
+                          fontFamily: 'Freesentation',
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ),
                   ),
@@ -412,9 +472,96 @@ class _SignupPageState extends State<SignupPage> {
                   )
                 ],
               ),
-              SizedBox(height: 40,),
+              SizedBox(
+                height: 40,
+              ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  bool success = true;
+                  setState(() {
+                    if (_idController.text.isEmpty) {
+                      _idField = "아이디를 입력해주세요";
+                      success = false;
+                    } else if (!_IDButtonClick) {
+                      _idField = "아이디 중복확인을 진행해주세요";
+                      success = false;
+                    } else if (_IDduplication) {
+                      _idField = "이미 존재하는 아이디입니다";
+                      success = false;
+                    } else {
+                      _idField = null;
+                      success = true;
+                    }
+
+                    if (_nameController.text.isEmpty) {
+                      _nameField = "이름을 입력해주세요";
+                      success = false;
+                    } else {
+                      _nameField = null;
+                      success = true;
+                    }
+
+                    if (_nicknameController.text.isEmpty) {
+                      _nicknameField = "닉네임을 입력해주세요";
+                      success = false;
+                    } else {
+                      _nicknameField = null;
+                      success = true;
+                    }
+
+                    if (_emailController.text.isEmpty) {
+                      _emailField = "이메일을 입력해주세요";
+                      success = false;
+                    } else if (!_emailCertification) {
+                      _emailField = "이메일 인증을 진행해주세요";
+                      success = false;
+                    } else {
+                      _emailField = null;
+                      success = true;
+                    }
+
+                    if (_pwController.text.isEmpty) {
+                      _pwField = "비밀번호를 입력해주세요";
+                      success = false;
+                    } else {
+                      _pwField = null;
+                      success = true;
+                    }
+
+                    if (_pwcController.text.isEmpty) {
+                      _pwcField = "비밀번호를 확인해주세요";
+                      success = false;
+                    } else if (_pwcController.text != _pwController.text) {
+                      _pwcField = "비밀번호가 일치하지 않습니다";
+                      success = false;
+                    } else {
+                      _pwcField = null;
+                      success = true;
+                    }
+
+                    if (_birthController.text.isEmpty) {
+                      _birthField = "비밀번호를 확인해주세요";
+                      success = false;
+                    } else if (_birthController.text.length > 6) {
+                      _birthField = "yymmdd 6자리로 입력바랍니다";
+                      success = false;
+                    } else if (_birthController.text.length < 6) {
+                      _birthField = "yymmdd 6자리로 입력바랍니다";
+                      success = false;
+                    } else {
+                      _birthField = null;
+                      success = true;
+                    }
+
+                    if (success&&!_IsCheck) {
+                      showErrorDialog(context, "개인정보 수집 동의", "개인 정보 수집에 동의하지 않으면 가입이 불가합니다", "확인");
+                    }
+                  });
+                  if (success)
+                    print("success!!!!");
+                  else
+                    print("not success ;;");
+                },
                 child: Text(
                   "회원가입 완료",
                   style: TextStyle(
@@ -424,15 +571,12 @@ class _SignupPageState extends State<SignupPage> {
                       color: Colors.black),
                 ),
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0x20564646),
-                    side: BorderSide(
-                        color: Color(0x50564646),
-                        width: 2
-                    ),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(7)
-                    ),
-                  minimumSize: Size(145, 35), // 최소 크기 설정
+                  backgroundColor: Color(0x20564646),
+                  side: BorderSide(color: Color(0x50564646), width: 2),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(7)),
+                  minimumSize: Size(145, 35),
+                  // 최소 크기 설정
                   maximumSize: Size(145, 35), // 최대 크기 설정
                 ),
               ),
