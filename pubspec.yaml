@@ -95,6 +95,10 @@ flutter:
           weight: 800
         - asset: assets/fonts/Freesentation-9Black.ttf
           weight: 900
+    - family: Cafe24Ssurround
+      fonts:
+        - asset: assets/fonts/Cafe24Ssurround-v2.0.otf
+          weight: 700
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
