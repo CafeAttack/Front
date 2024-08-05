@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cafe_attack/view/LoginView.dart';
 import 'package:cafe_attack/view/SignupView.dart';
+import 'package:cafe_attack/view/MenuView.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFF564646)),
       ),
-      home: SignupPage(),
+      home: MenuPage(),
     );
   }
 }
