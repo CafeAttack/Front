@@ -447,7 +447,62 @@ class _SignupPageState extends State<SignupPage> {
                     width: 5,
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (BuildContext context) {
+                          double bottomPadding = MediaQuery.of(context).viewInsets.bottom;
+                          return Padding(
+                            padding: EdgeInsets.only(bottom: bottomPadding),
+                            child: Container(
+                              height: MediaQuery.of(context).size.height * 0.8,
+                              margin:
+                              const EdgeInsets.only(left: 25, right: 25, bottom: 10),
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(20),
+                                ),
+                              ),
+                              child: Scrollbar(
+                                thumbVisibility: true,
+                                thickness: 6.0,
+                                radius: const Radius.circular(10),
+                                child: SingleChildScrollView(
+                                  physics: const ClampingScrollPhysics(),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Column(
+                                      children: [
+                                        const SizedBox(height: 10),
+                                        const Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              '이용약관',
+                                              style: TextStyle(
+                                                fontSize: 25,
+                                                fontWeight: FontWeight.bold,
+                                                fontStyle: FontStyle.italic,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+
+
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                          // 모달 내부 디자인 영역
+                        },
+                        backgroundColor: Colors.transparent, // 앱 <=> 모달의 여백 부분을 투명하게 처리
+                      );
+                    },
                     child: Text(
                       "개인정보 수집",
                       style: TextStyle(
@@ -557,10 +612,7 @@ class _SignupPageState extends State<SignupPage> {
                       showErrorDialog(context, "개인정보 수집 동의", "개인 정보 수집에 동의하지 않으면 가입이 불가합니다", "확인");
                     }
                   });
-                  if (success)
-                    print("success!!!!");
-                  else
-                    print("not success ;;");
+
                 },
                 child: Text(
                   "회원가입 완료",
