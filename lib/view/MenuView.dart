@@ -89,12 +89,15 @@ class _MenuPageState extends State<MenuPage> {
                                   SizedBox(
                                     width: 20,
                                   ),
-                                  Text(
-                                    '내 정보 수정',
-                                    style: TextStyle(
-                                        fontFamily: 'Freesentation',
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: 15
+                                  TextButton(
+                                    onPressed: () {},
+                                    child: Text(
+                                      '내 정보 수정',
+                                      style: TextStyle(
+                                          fontFamily: 'Freesentation',
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 15
+                                      ),
                                     ),
                                   )
                                 ],
