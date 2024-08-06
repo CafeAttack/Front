@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cafe_attack/view/LoginView.dart';
 import 'package:cafe_attack/view/SignupView.dart';
 import 'package:cafe_attack/view/MenuView.dart';
-import 'package:cafe_attack/view/EditInfoView.dart';
+import 'package:cafe_attack/view/ResetInfoView.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 
 void main() {
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFF564646)),
       ),
-      home: EditInfoPage(),
+      home: ResetInfoPage(),
     );
   }
 }
