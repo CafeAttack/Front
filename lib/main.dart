@@ -1,10 +1,13 @@
+import 'package:cafe_attack/view/MapView.dart';
 import 'package:flutter/material.dart';
 import 'package:cafe_attack/view/LoginView.dart';
 import 'package:cafe_attack/view/SignupView.dart';
 import 'package:cafe_attack/view/MenuView.dart';
+import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 
 void main() {
   runApp(const MyApp());
+  AuthRepository.initialize(appKey: '60c2aaaa6b9b22b03b1cbdd54bbea37d');
 }
 
 class MyApp extends StatelessWidget {
@@ -17,7 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFF564646)),
       ),
-      home: MenuPage(),
+      home: MapPage(),
     );
   }
 }
