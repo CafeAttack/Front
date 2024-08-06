@@ -2,6 +2,7 @@ import 'package:cafe_attack/view/MapView.dart';
 import 'package:flutter/material.dart';
 import 'package:cafe_attack/view/LoginView.dart';
 import 'package:cafe_attack/view/SignupView.dart';
+import 'package:cafe_attack/view/MenuView.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 
 void main() {
