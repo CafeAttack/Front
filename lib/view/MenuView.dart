@@ -12,6 +12,32 @@ class MenuPage extends StatefulWidget {
 }
 
 class _MenuPageState extends State<MenuPage> {
+  void showConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Text('로그아웃 하겠습니까?'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('취소'),
+              onPressed: () {
+                Navigator.of(context).pop(); // 다이얼로그 닫기
+              },
+            ),
+            TextButton(
+              child: Text('확인'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                print('진행 확인됨');
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -143,7 +169,9 @@ class _MenuPageState extends State<MenuPage> {
                       width: 31,
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        showConfirmationDialog(context);
+                      },
                       child: Text(
                         '로그아웃',
                         style: TextStyle(
