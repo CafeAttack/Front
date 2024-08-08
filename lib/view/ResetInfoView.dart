@@ -351,6 +351,17 @@ class _ResetInfoPageState extends State<ResetInfoPage> {
                         success = true;
                       }
                     });
+
+                    if(success) {
+                      bool nickDiff = false;
+                      if(originNickname != nicknameController.text) {
+                        nickDiff = true;
+                      }
+                      bool pwdDiff = false;
+                      if(originPassword != passwordController.text) {
+                        pwdDiff = true;
+                      }
+                    }
                   },
                   child: Text(
                     '수정 완료',
