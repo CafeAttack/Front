@@ -34,9 +34,9 @@ class _LabelChangeState extends State<LabelChange> {
       backgroundColor: Colors.white,
       direction: SpeedDialDirection.up,
       switchLabelPosition: true,
-      buttonSize: Size(60, 60),
+      buttonSize: Size(50, 50),
       // Adjust button size
-      childrenButtonSize: Size(70, 50),
+      childrenButtonSize: Size(50, 50),
       // Adjust children button size
       spaceBetweenChildren: 5,
       // Adjust spacing between items
@@ -45,7 +45,7 @@ class _LabelChangeState extends State<LabelChange> {
       children: [
         SpeedDialChild(
           labelWidget: SizedBox(
-            width: 100,
+            width: 80,
             height: 40,
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 8.0),
@@ -56,7 +56,7 @@ class _LabelChangeState extends State<LabelChange> {
                     fontFamily: 'Freesentation',
                     fontWeight: FontWeight.w600,
                     color: Colors.black,
-                    fontSize: 16.0),
+                    fontSize: 14.0),
               ),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.0),
@@ -70,7 +70,7 @@ class _LabelChangeState extends State<LabelChange> {
         ),
         SpeedDialChild(
           labelWidget: SizedBox(
-            width: 100,
+            width: 80,
             height: 40,
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 8.0),
@@ -81,7 +81,7 @@ class _LabelChangeState extends State<LabelChange> {
                   fontFamily: 'Freesentation',
                   fontWeight: FontWeight.w600,
                   color: Colors.red,
-                  fontSize: 16.0,
+                  fontSize: 14.0,
                 ),
               ),
               decoration: BoxDecoration(
@@ -96,7 +96,7 @@ class _LabelChangeState extends State<LabelChange> {
         ),
         SpeedDialChild(
           labelWidget: SizedBox(
-            width: 100,
+            width: 80,
             height: 40,
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 8.0),
@@ -110,7 +110,7 @@ class _LabelChangeState extends State<LabelChange> {
                     fontFamily: 'Freesentation',
                     fontWeight: FontWeight.w600,
                     color: Colors.orange,
-                    fontSize: 16.0),
+                    fontSize: 14.0),
               ),
             ),
           ),
@@ -121,7 +121,7 @@ class _LabelChangeState extends State<LabelChange> {
         ),
         SpeedDialChild(
           labelWidget: SizedBox(
-            width: 100,
+            width: 80,
             height: 40,
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 8.0),
@@ -135,7 +135,7 @@ class _LabelChangeState extends State<LabelChange> {
                     fontFamily: 'Freesentation',
                     fontWeight: FontWeight.w600,
                     color: Colors.green,
-                    fontSize: 16.0),
+                    fontSize: 14.0),
               ),
             ),
           ),
@@ -146,7 +146,7 @@ class _LabelChangeState extends State<LabelChange> {
         ),
         SpeedDialChild(
           labelWidget: SizedBox(
-            width: 100,
+            width: 80,
             height: 40,
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 8.0),
@@ -160,7 +160,7 @@ class _LabelChangeState extends State<LabelChange> {
                     fontFamily: 'Freesentation',
                     fontWeight: FontWeight.w600,
                     color: Colors.blue,
-                    fontSize: 16.0),
+                    fontSize: 14.0),
               ),
             ),
           ),

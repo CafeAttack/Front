@@ -12,13 +12,17 @@ class MapPage extends StatelessWidget {
         Align(
           alignment:
               Alignment(Alignment.bottomRight.x - 0.2, Alignment.bottomRight.y),
-          child: FloatingActionButton(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(50),
-            ), //모서리
-            onPressed: () {},
-            backgroundColor: Colors.white,
-            child: Icon(Icons.my_location_rounded),
+          child: SizedBox(
+            width: 50,
+            height: 50,
+            child: FloatingActionButton(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50),
+              ), //모서리
+              onPressed: () {},
+              backgroundColor: Colors.white,
+              child: Icon(Icons.my_location_rounded),
+            ),
           ),
         ),
         Align(
@@ -35,7 +39,7 @@ class MapPage extends StatelessWidget {
 
               ),
           Positioned(
-            top: 50,
+            top: 30,
             left: 20,
             right: 20,
             child: Row(
@@ -43,25 +47,26 @@ class MapPage extends StatelessWidget {
                 IconButton(
                   onPressed: () {},
                   icon: Icon(Icons.menu),
-                  iconSize: 40,
+                  iconSize: 30,
                 ),
                 SizedBox(width: 10),
                 Expanded(
                   child: TextFormField(
                     decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        hintText: '카페를 검색하세요...',
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        )),
+                      filled: true,
+                      fillColor: Colors.white,
+                      hintText: '카페를 검색하세요...',
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
                   ),
                 ),
                 IconButton(
                   onPressed: () {},
                   icon: Icon(Icons.search),
-                  iconSize: 40,
+                  iconSize: 30,
                 )
               ],
             ),
