@@ -1,5 +1,5 @@
 import 'package:cafe_attack/view/MapView.dart';
-import 'package:cafe_attack/view/SearchPage.dart';
+import 'package:cafe_attack/view/SearchView.dart';
 import 'package:flutter/material.dart';
 import 'package:cafe_attack/view/LoginView.dart';
 import 'package:cafe_attack/view/SignupView.dart';
