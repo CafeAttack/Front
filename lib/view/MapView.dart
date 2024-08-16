@@ -1,5 +1,7 @@
 import 'package:cafe_attack/MetaData.dart';
 import 'package:cafe_attack/view/floatingButton.dart';
+import 'package:cafe_attack/view/mapCafeBottomsheet.dart';
+import 'package:cafe_attack/view/resposive/BreakPoint.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
@@ -20,6 +22,11 @@ class _MapPageState extends State<MapPage> {
     LatLng(37.6198, 127.0598),
     LatLng(37.6184, 127.0581),
     LatLng(37.6200, 127.0562)
+  ];
+  List<String> positions_name = [
+    '<div>광운대학교</div>',
+    '<div>서울 선곡초등학교</div>',
+    '<div>광운 인공지능 고등학교</div>'
   ];
   Set<Marker> markers = {};
 
@@ -116,17 +123,30 @@ class _MapPageState extends State<MapPage> {
 
                     for (int i = 0; i < positions.length; i++) {
                       markers.add(Marker(
-                        markerId: i.toString(), // 각 마커에 고유한 ID 부여
-                        latLng: positions[i],   // positions 리스트의 각 위치 사용
+                        markerId: markers.length.toString(),
+                        // 각 마커에 고유한 ID 부여
+                        latLng: positions[i],
+                        // positions 리스트의 각 위치 사용
                         markerImageSrc: mapMaker_unclicked,
+                        //infoWindowContent: positions_name[i],
                         width: 38,
                         height: 38,
+                        offsetX: 15,
+                        offsetY: 44,
                       ));
                     }
                     setState(() {});
                   }),
                   center: LatLng(centerLat, centerLng),
                   markers: markers.toList(),
+                    onMarkerTap: (markerId, latLng, zoomLevel) {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return CafeDetailBottomSheet(latlag: latLng);
+                        },
+                      );
+                    }
                 ),
                 Positioned(
                   top: 30,
