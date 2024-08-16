@@ -1,3 +1,4 @@
+import 'package:cafe_attack/MetaData.dart';
 import 'package:cafe_attack/view/floatingButton.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,12 @@ class _MapPageState extends State<MapPage> {
   var centerLat;
   late KakaoMapController mapController;
   bool loading = true;
+  List<LatLng> positions = [
+    LatLng(37.6198, 127.0598),
+    LatLng(37.6184, 127.0581),
+    LatLng(37.6200, 127.0562)
+  ];
+  Set<Marker> markers = {};
 
   @override
   void initState() {
@@ -77,7 +84,7 @@ class _MapPageState extends State<MapPage> {
       floatingActionButton: Stack(children: [
         Align(
           alignment:
-          Alignment(Alignment.bottomRight.x - 0.2, Alignment.bottomRight.y),
+              Alignment(Alignment.bottomRight.x - 0.2, Alignment.bottomRight.y),
           child: SizedBox(
             width: 50,
             height: 50,
@@ -86,7 +93,6 @@ class _MapPageState extends State<MapPage> {
                 borderRadius: BorderRadius.circular(50),
               ),
               onPressed: () async {
-                getPosition();
                 LatLng currentPosition = new LatLng(centerLat, centerLng);
                 mapController.setCenter(currentPosition);
               },
@@ -100,51 +106,63 @@ class _MapPageState extends State<MapPage> {
           child: LabelChange(),
         )
       ]),
-      body: centerLat==null?Center(child: CircularProgressIndicator())
-      :Stack(
-        children: [
-          KakaoMap(
-            onMapCreated: ((controller) async {
-              mapController = controller;
-            }),
-            center: LatLng(centerLat, centerLng),
-          ),
-
-          Positioned(
-            top: 30,
-            left: 20,
-            right: 20,
-            child: Row(
+      body: centerLat == null
+          ? Center(child: CircularProgressIndicator())
+          : Stack(
               children: [
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.menu),
-                  iconSize: 30,
+                KakaoMap(
+                  onMapCreated: ((controller) async {
+                    mapController = controller;
+
+                    for (int i = 0; i < positions.length; i++) {
+                      markers.add(Marker(
+                        markerId: i.toString(), // 각 마커에 고유한 ID 부여
+                        latLng: positions[i],   // positions 리스트의 각 위치 사용
+                        markerImageSrc: mapMaker_unclicked,
+                        width: 38,
+                        height: 38,
+                      ));
+                    }
+                    setState(() {});
+                  }),
+                  center: LatLng(centerLat, centerLng),
+                  markers: markers.toList(),
                 ),
-                SizedBox(width: 10),
-                Expanded(
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.white,
-                      hintText: '카페를 검색하세요...',
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none,
+                Positioned(
+                  top: 30,
+                  left: 20,
+                  right: 20,
+                  child: Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.menu),
+                        iconSize: 30,
                       ),
-                    ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            hintText: '카페를 검색하세요...',
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.search),
+                        iconSize: 30,
+                      )
+                    ],
                   ),
                 ),
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.search),
-                  iconSize: 30,
-                )
               ],
             ),
-          ),
-        ],
-      ),
     );
   }
 }
