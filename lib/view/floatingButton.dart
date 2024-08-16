@@ -66,6 +66,7 @@ class _LabelChangeState extends State<LabelChange> {
           backgroundColor: Colors.white,
           onTap: () {
             onLabelChange("All");
+            print("all");
           },
         ),
         SpeedDialChild(
