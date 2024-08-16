@@ -11,7 +11,62 @@ class MenuPage extends StatefulWidget {
   State<MenuPage> createState() => _MenuPageState();
 }
 
+int favor_count = 0;
+String? nickname;
+
 class _MenuPageState extends State<MenuPage> {
+  void LogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Text('로그아웃 하겠습니까?'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('확인'),
+              onPressed: () {
+                Navigator.of(context).pop(); // 다이얼로그 닫기
+                print('진행 확인됨');
+              },
+            ),
+            TextButton(
+              child: Text('취소'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void WithdrawalDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Text('탈퇴가 진행됩니다.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                print('진행');
+              },
+              child: Text('확인')
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('취소')
+            )
+          ],
+        );
+      }
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +103,7 @@ class _MenuPageState extends State<MenuPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'nickname',
+                                '$nickname',
                                 style: TextStyle(
                                   fontFamily: 'Freesentation',
                                   fontWeight: FontWeight.w600,
@@ -56,7 +111,7 @@ class _MenuPageState extends State<MenuPage> {
                                 ),
                               ),
                               SizedBox(
-                                height: 1,
+                                height: 10,
                               ),
                               Row(
                                 children: [
@@ -64,7 +119,7 @@ class _MenuPageState extends State<MenuPage> {
                                     width: 20,
                                   ),
                                   Text(
-                                    '즐겨찾기 목록 count',
+                                    '즐겨찾기 목록 $favor_count',
                                     style: TextStyle(
                                         fontFamily: 'Freesentation',
                                         fontWeight: FontWeight.w300,
@@ -81,22 +136,20 @@ class _MenuPageState extends State<MenuPage> {
                                   )
                                 ],
                               ),
-                              SizedBox(
-                                height: 1,
-                              ),
                               Row(
                                 children: [
                                   SizedBox(
-                                    width: 20,
+                                    width: 10,
                                   ),
                                   TextButton(
                                     onPressed: () {},
                                     child: Text(
                                       '내 정보 수정',
                                       style: TextStyle(
-                                          fontFamily: 'Freesentation',
-                                          fontWeight: FontWeight.w300,
-                                          fontSize: 15
+                                        fontFamily: 'Freesentation',
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: 15,
+                                        color: Colors.black
                                       ),
                                     ),
                                   )
@@ -143,7 +196,9 @@ class _MenuPageState extends State<MenuPage> {
                       width: 31,
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        LogoutDialog(context);
+                      },
                       child: Text(
                         '로그아웃',
                         style: TextStyle(
@@ -168,18 +223,20 @@ class _MenuPageState extends State<MenuPage> {
                       width: 31,
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        WithdrawalDialog(context);
+                      },
                       child: Text(
                         '계정 탈퇴',
                         style: TextStyle(
-                            color: Colors.black,
-                            fontFamily: 'Freesentation',
-                            fontWeight: FontWeight.w500,
-                            fontSize: 24
+                          color: Colors.black,
+                          fontFamily: 'Freesentation',
+                          fontWeight: FontWeight.w500,
+                          fontSize: 24
                         ),
                       ),
                       style: TextButton.styleFrom(
-                          padding: EdgeInsets.zero
+                        padding: EdgeInsets.zero
                       ),
                     )
                   ],
@@ -197,10 +254,10 @@ class _MenuPageState extends State<MenuPage> {
                       child: Text(
                         '개인정보 이용약관',
                         style: TextStyle(
-                            color: Color(0xff4C4C4C),
-                            fontFamily: 'Freesentation',
-                            fontWeight: FontWeight.w500,
-                            fontSize: 24
+                          color: Color(0xff4C4C4C),
+                          fontFamily: 'Freesentation',
+                          fontWeight: FontWeight.w500,
+                          fontSize: 24
                         ),
                       ),
                       style: TextButton.styleFrom(
@@ -222,10 +279,10 @@ class _MenuPageState extends State<MenuPage> {
                       child: Text(
                         '위치정보서비스 이용약관',
                         style: TextStyle(
-                            color: Color(0xff4C4C4C),
-                            fontFamily: 'Freesentation',
-                            fontWeight: FontWeight.w500,
-                            fontSize: 24
+                          color: Color(0xff4C4C4C),
+                          fontFamily: 'Freesentation',
+                          fontWeight: FontWeight.w500,
+                          fontSize: 24
                         ),
                       ),
                       style: TextButton.styleFrom(
@@ -247,10 +304,10 @@ class _MenuPageState extends State<MenuPage> {
                       child: Text(
                         '개인정보 처리방침',
                         style: TextStyle(
-                            color: Color(0xff4C4C4C),
-                            fontFamily: 'Freesentation',
-                            fontWeight: FontWeight.w500,
-                            fontSize: 24
+                          color: Color(0xff4C4C4C),
+                          fontFamily: 'Freesentation',
+                          fontWeight: FontWeight.w500,
+                          fontSize: 24
                         ),
                       ),
                       style: TextButton.styleFrom(
