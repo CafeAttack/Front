@@ -48,7 +48,7 @@ class _SearchPageState extends State<SearchPage> {
                   fontWeight: FontWeight.w500,
                   fontFamily: 'Freesentation',
                 ),),
-                hintText: "검색어를 입력하세요",
+                hintText: "카페를 검색하세요...",
                 hintStyle: MaterialStateProperty.all(TextStyle(
                   color: Colors.grey.shade400, fontWeight: FontWeight.w500,
                   fontFamily: 'Freesentation',),),
