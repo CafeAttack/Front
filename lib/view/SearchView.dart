@@ -1,5 +1,7 @@
+import 'package:cafe_attack/MetaData.dart';
 import 'package:cafe_attack/view/resposive/BreakPoint.dart';
 import 'package:cafe_attack/view/resposive/ResponsiveCenter.dart';
+import 'package:cafe_attack/view/searchItem.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -79,8 +81,9 @@ class _SearchPageState extends State<SearchPage> {
                             "All",
                             style: TextStyle(
                               color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: 'Freesentation',
+                              fontWeight: FontWeight.w400,
+                              fontSize: 17,
+                              fontFamily: freesentation,
                             ),
                           ),
                         ),
@@ -90,8 +93,9 @@ class _SearchPageState extends State<SearchPage> {
                             "카공",
                             style: TextStyle(
                               color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: 'Freesentation',
+                              fontWeight: FontWeight.w400,
+                              fontSize: 17,
+                              fontFamily: freesentation,
                             ),
                           ),
                         ),
@@ -101,8 +105,9 @@ class _SearchPageState extends State<SearchPage> {
                             "프랜차이즈",
                             style: TextStyle(
                               color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: 'Freesentation',
+                              fontWeight: FontWeight.w400,
+                              fontSize: 17,
+                              fontFamily: freesentation,
                             ),
                           ),
                         ),
@@ -112,8 +117,9 @@ class _SearchPageState extends State<SearchPage> {
                             "감성",
                             style: TextStyle(
                               color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: 'Freesentation',
+                              fontWeight: FontWeight.w400,
+                              fontSize: 17,
+                              fontFamily: freesentation,
                             ),
                           ),
                         ),
@@ -123,8 +129,9 @@ class _SearchPageState extends State<SearchPage> {
                             "테이크아웃",
                             style: TextStyle(
                               color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: 'Freesentation',
+                              fontWeight: FontWeight.w400,
+                              fontSize: 17,
+                              fontFamily: freesentation,
                             ),
                           ),
                         ),
@@ -136,86 +143,8 @@ class _SearchPageState extends State<SearchPage> {
                     child: Scrollbar(
                       child: ListView(
                         children: [
-                          Text(
-                            'data',
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          Text(
-                            'data',
-                            style: TextStyle(fontSize: 40),
-                          ),
-                          Text(
-                            'data',
-                            style: TextStyle(fontSize: 40),
-                          ),
-                          Text(
-                            'data',
-                            style: TextStyle(fontSize: 40),
-                          ),
-                          Text(
-                            'data',
-                            style: TextStyle(fontSize: 40),
-                          ),
-                          Text(
-                            'data',
-                            style: TextStyle(fontSize: 40),
-                          ),
-                          Text(
-                            'data',
-                            style: TextStyle(fontSize: 40),
-                          ),
-                          Text(
-                            'data',
-                            style: TextStyle(fontSize: 40),
-                          ),
-                          Text(
-                            'data',
-                            style: TextStyle(fontSize: 40),
-                          ),
-                          Text(
-                            'data',
-                            style: TextStyle(fontSize: 40),
-                          ),
-                          Text(
-                            'data',
-                            style: TextStyle(fontSize: 40),
-                          ),
-                          Text(
-                            'data',
-                            style: TextStyle(fontSize: 40),
-                          ),
-                          Text(
-                            'data',
-                            style: TextStyle(fontSize: 40),
-                          ),
-                          Text(
-                            'data',
-                            style: TextStyle(fontSize: 40),
-                          ),
-                          Text(
-                            'data',
-                            style: TextStyle(fontSize: 40),
-                          ),
-                          Text(
-                            'data',
-                            style: TextStyle(fontSize: 40),
-                          ),
-                          Text(
-                            'data',
-                            style: TextStyle(fontSize: 40),
-                          ),
-                          Text(
-                            'data',
-                            style: TextStyle(fontSize: 40),
-                          ),
-                          Text(
-                            'data',
-                            style: TextStyle(fontSize: 40),
-                          ),
-                          Text(
-                            'data',
-                            style: TextStyle(fontSize: 40),
-                          ),
+                          SearchItem(),
+                          SearchItem(),
                         ],
                       ),
                     ),
