@@ -13,149 +13,192 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  GlobalKey _searchBarKey = GlobalKey();
+  // GlobalKey _columnKey = GlobalKey();
+  double? _remainingHeight;
+  GlobalKey _appBarKey = GlobalKey();
   TextEditingController _serchText = new TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => _calculateRemainingHeight());
+  }
+
+  void _calculateRemainingHeight() {
+    final RenderBox appBarBox = _appBarKey.currentContext!.findRenderObject() as RenderBox;
+    // final RenderBox columnBox = _columnKey.currentContext!.findRenderObject() as RenderBox;
+    final RenderBox searchBarBox =
+        _searchBarKey.currentContext!.findRenderObject() as RenderBox;
+    final searchBarHeight = searchBarBox.size.height;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final appBarHeight = appBarBox.size.height;
+    // final columnHeight = columnBox.size.height;
+
+    // Assume that 30 is the top padding and 5 is the vertical margin between elements
+    setState(() {
+      _remainingHeight = screenHeight - searchBarHeight - kToolbarHeight - appBarHeight-30;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: ResponsiveCenter(
-          child: Column(
-            children: [
-              SearchBar(
-                controller: _serchText,
-                trailing: [
-                  IconButton(
-                    icon: Icon(Icons.close),
-                    onPressed: () {
-                      _serchText.clear();
-                      FocusManager.instance.primaryFocus?.unfocus();
-                    },
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.search),
-                  ),
-                ],
-                backgroundColor: MaterialStatePropertyAll(Colors.white),
-                side: MaterialStateProperty.all(
-                  BorderSide(
-                    color: Colors.black,
-                    width: 1,
-                  ),
+      appBar: PreferredSize(
+          preferredSize: Size.fromHeight(0),
+          child: AppBar(
+            key: _appBarKey,
+          )),
+      body: ResponsiveCenter(
+        child: Column(
+          children: [
+            SearchBar(
+              key: _searchBarKey,
+              controller: _serchText,
+              trailing: [
+                IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: () {
+                    _serchText.clear();
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  },
                 ),
-                shadowColor: MaterialStatePropertyAll(Colors.transparent),
-                shape: MaterialStateProperty.all(
-                  ContinuousRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.search),
                 ),
-                textStyle: MaterialStateProperty.all(
-                  TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: 'Freesentation',
-                  ),
-                ),
-                hintText: "카페를 검색하세요...",
-                hintStyle: MaterialStateProperty.all(
-                  TextStyle(
-                    color: Colors.grey.shade400,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: 'Freesentation',
-                  ),
+              ],
+              backgroundColor: MaterialStatePropertyAll(Colors.white),
+              side: MaterialStateProperty.all(
+                BorderSide(
+                  color: Colors.black,
+                  width: 1,
                 ),
               ),
-              Column(
-                children: [
-                  SizedBox(
-                    height: 5,
+              shadowColor: MaterialStatePropertyAll(Colors.transparent),
+              shape: MaterialStateProperty.all(
+                ContinuousRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              textStyle: MaterialStateProperty.all(
+                TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: 'Freesentation',
+                ),
+              ),
+              hintText: "카페를 검색하세요...",
+              hintStyle: MaterialStateProperty.all(
+                TextStyle(
+                  color: Colors.grey.shade400,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: 'Freesentation',
+                ),
+              ),
+            ),
+            Column(
+              // key: _columnKey,
+              children: [
+                SizedBox(height: 5),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          "All",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 17,
+                            fontFamily: freesentation,
+                          ),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          "카공",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 17,
+                            fontFamily: freesentation,
+                          ),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          "프랜차이즈",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 17,
+                            fontFamily: freesentation,
+                          ),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          "감성",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 17,
+                            fontFamily: freesentation,
+                          ),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          "테이크아웃",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 17,
+                            fontFamily: freesentation,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
+                ),
+                SizedBox(
+                  height: _remainingHeight, // Use the calculated height
+                  child: Scrollbar(
+                    thickness: 0,
+                    child: ListView(
                       children: [
-                        TextButton(
-                          onPressed: () {},
-                          child: Text(
-                            "All",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 17,
-                              fontFamily: freesentation,
-                            ),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: Text(
-                            "카공",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 17,
-                              fontFamily: freesentation,
-                            ),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: Text(
-                            "프랜차이즈",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 17,
-                              fontFamily: freesentation,
-                            ),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: Text(
-                            "감성",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 17,
-                              fontFamily: freesentation,
-                            ),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: Text(
-                            "테이크아웃",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 17,
-                              fontFamily: freesentation,
-                            ),
-                          ),
-                        ),
+                        SearchItem(),
+                        SearchItem(),
+                        SearchItem(),
+                        SearchItem(),
+                        SearchItem(),
+                        SearchItem(),
+                        SearchItem(),
+                        SearchItem(),
+                        SearchItem(),
+                        SearchItem(),
+                        SearchItem(),
+                        SearchItem(),
+                        SearchItem(),
+                        SearchItem(),
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: BreakPoint.tablet, // 고정된 높이를 설정
-                    child: Scrollbar(
-                      child: ListView(
-                        children: [
-                          SearchItem(),
-                          SearchItem(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          padding: EdgeInsets.only(top: 30, left: 15, right: 15),
-          maxContentWidth: BreakPoint.tablet,
+                ),
+              ],
+            ),
+          ],
         ),
+        padding: EdgeInsets.only(top: 10, left: 15, right: 15),
+        maxContentWidth: BreakPoint.tablet,
       ),
     );
   }
