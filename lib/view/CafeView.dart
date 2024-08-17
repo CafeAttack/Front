@@ -4,6 +4,7 @@ import 'package:cafe_attack/view/resposive/BreakPoint.dart';
 import 'package:cafe_attack/view/resposive/ResponsiveCenter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class CafePage extends StatefulWidget {
   const CafePage({super.key});
@@ -13,11 +14,34 @@ class CafePage extends StatefulWidget {
 }
 
 class _CafePageState extends State<CafePage> {
-  GlobalKey _boxKey = GlobalKey();
+  GlobalKey _appBarKey = GlobalKey();
+  GlobalKey _containerKey = GlobalKey();
+  double? _remainingHeight;
+
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _calculateRemainingHeight());
+  }
+
+  void _calculateRemainingHeight() {
+    final RenderBox appBarBox = _appBarKey.currentContext!.findRenderObject() as RenderBox;
+    final RenderBox containerBox = _containerKey.currentContext!.findRenderObject() as RenderBox;
+    final appBarHeight = appBarBox.size.height;
+    final containerHeight = containerBox.size.height;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    setState(() {
+      _remainingHeight = screenHeight - appBarHeight - containerHeight - kToolbarHeight;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        key: _appBarKey,
         leading: IconButton(
           onPressed: () {},
           icon: Icon(Icons.expand_more),
@@ -40,6 +64,7 @@ class _CafePageState extends State<CafePage> {
       body: ResponsiveCenter(
         child: Column(children: [
           Container(
+            key: _containerKey,
             decoration: BoxDecoration(
               border: Border(
                 top: BorderSide(
@@ -84,6 +109,9 @@ class _CafePageState extends State<CafePage> {
                       ),
                       height: 23,
                     ),
+                  SizedBox(
+                    width: 5,
+                  ),
                   ],
                 ),
                 SizedBox(
@@ -189,7 +217,7 @@ class _CafePageState extends State<CafePage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(right: 20, left: 20, top: 8, bottom: 8),
+            padding: const EdgeInsets.only(right: 20, left: 20, top: 8,),
             child: Column(
               children: [
                 Row(
@@ -250,20 +278,17 @@ class _CafePageState extends State<CafePage> {
                   ],
                 ),
                 SizedBox(width: 10,),
-                Scrollbar(
-                  child: SizedBox(
-                    key: _boxKey,
-                    height:400,
-                    child: ListView(
-                      children: [
-                        ReviewContainer(),
-                        ReviewContainer(),
-                        ReviewContainer(),
-                        ReviewContainer(),
-                        ReviewContainer(),
-                        ReviewContainer(),
-                      ],
-                    ),
+                SizedBox(
+                  height: _remainingHeight, // Set the calculated height here
+                  child: ListView(
+                    children: [
+                      ReviewContainer(),
+                      ReviewContainer(),
+                      ReviewContainer(),
+                      ReviewContainer(),
+                      ReviewContainer(),
+                      ReviewContainer(),
+                    ],
                   ),
                 )
               ],
