@@ -21,12 +21,12 @@ class _MapPageState extends State<MapPage> {
   List<LatLng> positions = [
     LatLng(37.6198, 127.0598),
     LatLng(37.6184, 127.0581),
-    LatLng(37.6200, 127.0562)
+    LatLng(37.6203, 127.0583)
   ];
   List<String> positions_name = [
     '<div>광운대학교</div>',
     '<div>서울 선곡초등학교</div>',
-    '<div>광운 인공지능 고등학교</div>'
+    '<div>설빙 광운대점</div>'
   ];
   Set<Marker> markers = {};
 
