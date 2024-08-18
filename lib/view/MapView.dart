@@ -113,6 +113,10 @@ class _MapPageState extends State<MapPage> {
           child: LabelChange(),
         )
       ]),
+      appBar: PreferredSize(
+          preferredSize: Size.fromHeight(0),
+          child: AppBar(
+          )),
       body: centerLat == null
           ? Center(child: CircularProgressIndicator())
           : Stack(
@@ -149,7 +153,7 @@ class _MapPageState extends State<MapPage> {
                     }
                 ),
                 Positioned(
-                  top: 30,
+                  top: 8,
                   left: 20,
                   right: 20,
                   child: Row(
