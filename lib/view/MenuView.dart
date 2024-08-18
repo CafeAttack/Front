@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'ResetInfoView.dart';
+
 class MenuPage extends StatefulWidget {
   const MenuPage({super.key});
 
@@ -142,9 +144,15 @@ class _MenuPageState extends State<MenuPage> {
                                     width: 10,
                                   ),
                                   TextButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      print("pressed");
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => ResetInfoPage())
+                                      );
+                                    },
                                     child: Text(
-                                      '내 정보 수정',
+                                      '내 정보 수정!',
                                       style: TextStyle(
                                         fontFamily: 'Freesentation',
                                         fontWeight: FontWeight.w300,
