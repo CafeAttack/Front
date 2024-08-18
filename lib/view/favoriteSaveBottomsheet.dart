@@ -1,3 +1,4 @@
+import 'package:cafe_attack/view/dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cafe_attack/MetaData.dart';
@@ -50,7 +51,9 @@ class _FavoriteSaveState extends State<FavoriteSave> {
               ),
               IconButton(
                 icon: Icon(Icons.create_new_folder_outlined),
-                onPressed: () {
+                onPressed: () async {
+                  String? result = await showInputTextDialog(context, "새로운 그룹 생성", "생성");
+                  print("$result");
                   _addGroup;
                 },
               ),
