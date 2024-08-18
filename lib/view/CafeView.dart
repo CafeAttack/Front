@@ -68,6 +68,7 @@ class _CafePageState extends State<CafePage> {
                 ),
                 backgroundColor: Colors.white,
               );
+              // 좋아요 색칠은 백엔드에서 받기
             },
             icon: Icon(Icons.favorite_border),
           ),

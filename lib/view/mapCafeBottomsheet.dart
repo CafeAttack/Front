@@ -1,4 +1,5 @@
 import 'package:cafe_attack/MetaData.dart';
+import 'package:cafe_attack/view/favoriteSaveBottomsheet.dart';
 import 'package:cafe_attack/view/resposive/BreakPoint.dart';
 import 'package:flutter/material.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
@@ -68,7 +69,18 @@ class _CafeDetailBottomSheetState extends State<CafeDetailBottomSheet> {
                   )
                 ],
               ),
-              IconButton(onPressed: () {}, icon: Icon(Icons.favorite_border))
+              IconButton(onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) => FavoriteSave(),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(0), // No rounding for a rectangular shape
+                    ),
+                  ),
+                  backgroundColor: Colors.white,
+                );
+              }, icon: Icon(Icons.favorite_border))
             ],
           ),
           Text(
