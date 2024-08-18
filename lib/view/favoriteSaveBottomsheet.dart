@@ -32,8 +32,8 @@ class _FavoriteSaveState extends State<FavoriteSave> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 8,left: 16,right: 16),
-      height: 400,  // You can adjust the height as needed
+      padding: EdgeInsets.only(top: 8, left: 16, right: 16),
+      height: 400, // You can adjust the height as needed
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -64,6 +64,7 @@ class _FavoriteSaveState extends State<FavoriteSave> {
                 return CheckboxListTile(
                   title: Text(groups[index]['name']),
                   value: groups[index]['checked'],
+                  controlAffinity: ListTileControlAffinity.leading,
                   onChanged: (value) {
                     _toggleCheckbox(index, value);
                   },
