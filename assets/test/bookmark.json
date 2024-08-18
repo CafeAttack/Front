@@ -1,0 +1,43 @@
+{
+  "status" : 200,
+  "message" : "즐겨찾기가 열렸습니다.",
+  "groups" : [
+    {
+      "groupId" : 0,
+      "groupName" : "내 즐겨찾기",
+      "cafes" : [
+
+      ]
+    },
+    {
+      "groupId" : 1,
+      "groupName" : "학교 앞 카페",
+      "cafes" : [
+        {
+          "cafeId" : 0,
+          "cafeName" : "설빙 광운대점",
+          "categories" : [
+            {
+              "categoryId" : 1
+            },
+            {
+              "categoryId" : 2
+            }
+          ]
+        },
+        {
+          "cafeId" : 1,
+          "cafeName" : "베르데",
+          "categories" : [
+            {
+              "categoryId" : 1
+            },
+            {
+              "categoryId" : 4
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

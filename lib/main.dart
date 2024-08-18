@@ -1,4 +1,7 @@
+import 'package:cafe_attack/view/BookmarkView.dart';
+import 'package:cafe_attack/view/CafeView.dart';
 import 'package:cafe_attack/view/MapView.dart';
+import 'package:cafe_attack/view/SearchView.dart';
 import 'package:flutter/material.dart';
 import 'package:cafe_attack/view/LoginView.dart';
 import 'package:cafe_attack/view/SignupView.dart';
@@ -21,7 +24,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFF564646)),
       ),
-      home: MenuPage(),
+      home: BookmarkPage(),
     );
   }
 }
