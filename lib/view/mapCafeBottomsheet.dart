@@ -19,7 +19,7 @@ class _CafeDetailBottomSheetState extends State<CafeDetailBottomSheet> {
     return Container(
       padding: EdgeInsets.only(right: 16.0,left: 16.0,top: 8),
       width: BreakPoint.tablet,
-      height: 530, // 높이는 필요에 따라 조정하세요
+      height: 400, // 높이는 필요에 따라 조정하세요
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
