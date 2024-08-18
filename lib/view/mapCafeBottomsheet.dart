@@ -109,7 +109,7 @@ class _CafeDetailBottomSheetState extends State<CafeDetailBottomSheet> {
                       backgroundColor: Colors.white,
                     );
                   },
-                  icon: Icon(Icons.favorite_border),
+                  icon: data.heart==0?Icon(Icons.favorite_border):Icon(Icons.favorite),
                 ),
               ],
             ),
