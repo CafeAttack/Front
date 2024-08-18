@@ -1,0 +1,31 @@
+{
+  "status" : 200,
+  "message" : "간략한 카페 정보를 불러왔습니다.",
+  "data" : {
+    "cafeName" : "설빙 광운대점",
+    "categoryId" : [1, 3],
+    "address" : "서울 노원구 광운로 25 2층",
+    "time" : "매일 11:00 ~ 23:00 영업",
+    "phone" : "02-6953-9749",
+    "avgScore" : "4.6",
+    "reviewCnt" : 15,
+    "review" : [
+      {
+        "reviewId" : 15,
+        "reviewDate" : "24.6.14",
+        "reviewPhoto" : "https://example.com/review15.jpg"
+      },
+      {
+        "reviewId" : 14,
+        "reviewDate" : "24.5.26",
+        "reviewPhoto" : "https://example.com/review14.jpg"
+      },
+      {
+        "reviewId" : 13,
+        "reviewDate" : "20.6.5",
+        "reviewPhoto" : "https://example.com/review13.jpg"
+      }
+    ],
+    "heart" : 1
+  }
+}

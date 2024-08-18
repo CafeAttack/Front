@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFF564646)),
       ),
-      home: CafePage(),
+      home: MapPage(),
     );
   }
 }

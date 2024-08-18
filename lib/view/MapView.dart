@@ -1,9 +1,12 @@
 import 'package:cafe_attack/MetaData.dart';
+import 'package:cafe_attack/controller/MapInfoController.dart';
+import 'package:cafe_attack/model/MapInfoModel.dart';
 import 'package:cafe_attack/view/mapFloatingButton.dart';
 import 'package:cafe_attack/view/mapCafeBottomsheet.dart';
 import 'package:cafe_attack/view/resposive/BreakPoint.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/services.dart';
@@ -14,6 +17,7 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
+
   var centerLng;
   var centerLat;
   late KakaoMapController mapController;
@@ -83,6 +87,7 @@ class _MapPageState extends State<MapPage> {
       print(e);
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -165,6 +170,8 @@ class _MapPageState extends State<MapPage> {
                       await showModalBottomSheet(
                         context: context,
                         builder: (BuildContext context) {
+
+
                           return CafeDetailBottomSheet(latlag: latLng);
                         },
                       );
