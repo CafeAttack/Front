@@ -118,36 +118,76 @@ class _MapPageState extends State<MapPage> {
           : Stack(
               children: [
                 KakaoMap(
-                  onMapCreated: ((controller) async {
-                    mapController = controller;
+                    onMapCreated: ((controller) async {
+                      mapController = controller;
 
-                    for (int i = 0; i < positions.length; i++) {
-                      markers.add(Marker(
-                        markerId: markers.length.toString(),
-                        // 각 마커에 고유한 ID 부여
-                        latLng: positions[i],
-                        // positions 리스트의 각 위치 사용
-                        markerImageSrc: mapMaker_unclicked,
-                        //infoWindowContent: positions_name[i],
-                        width: 38,
-                        height: 38,
-                        offsetX: 15,
-                        offsetY: 44,
-                      ));
-                    }
-                    setState(() {});
-                  }),
-                  center: LatLng(centerLat, centerLng),
-                  markers: markers.toList(),
-                    onMarkerTap: (markerId, latLng, zoomLevel) {
-                      showModalBottomSheet(
+                      for (int i = 0; i < positions.length; i++) {
+                        markers.add(Marker(
+                          markerId: markers.length.toString(),
+                          // 각 마커에 고유한 ID 부여
+                          latLng: positions[i],
+                          // positions 리스트의 각 위치 사용
+                          markerImageSrc: mapMaker_unclicked,
+                          //infoWindowContent: positions_name[i],
+                          width: 38,
+                          height: 38,
+                          offsetX: 15,
+                          offsetY: 44,
+                        ));
+                      }
+                      setState(() {});
+                    }),
+                    center: LatLng(centerLat, centerLng),
+                    markers: markers.toList(),
+                    onMarkerTap: (markerId, latLng, zoomLevel) async {
+                     mapController.setCenter(latLng);
+
+                      setState(() {
+                        // 해당 마커를 찾아서 업데이트
+                        int index = markers.toList().indexWhere((marker) => marker.markerId == markerId);
+                        if (index != -1) {
+                          Marker oldMarker = markers.elementAt(index);
+                          markers.remove(oldMarker);
+                          markers.add(Marker(
+                            markerId: markerId,
+                            latLng: latLng,
+                            markerImageSrc: mapMaker_clicked,
+                            // 새 이미지 경로
+                            width: 38,
+                            height: 38,
+                            offsetX: oldMarker.offsetX,
+                            offsetY: oldMarker.offsetY,
+                          ));
+                        }
+                      });
+                      print("Marker ID: ${markerId}");
+
+                      await showModalBottomSheet(
                         context: context,
                         builder: (BuildContext context) {
                           return CafeDetailBottomSheet(latlag: latLng);
                         },
                       );
-                    }
-                ),
+
+                      setState(() {
+                        // 모달이 닫힐 때 원래 이미지로 복원
+                        int index = markers.toList().indexWhere((marker) => marker.markerId == markerId);
+                        if (index != -1) {
+                          Marker selectedMarker = markers.elementAt(index);
+                          markers.remove(selectedMarker);
+                          markers.add(Marker(
+                            markerId: markerId,
+                            latLng: latLng,
+                            markerImageSrc: mapMaker_unclicked,
+                            // 원래 이미지
+                            width: 38,
+                            height: 38,
+                            offsetX: selectedMarker.offsetX,
+                            offsetY: selectedMarker.offsetY,
+                          ));
+                        }
+                      });
+                    }),
                 Positioned(
                   top: 35,
                   left: 20,
