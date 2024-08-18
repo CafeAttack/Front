@@ -11,3 +11,10 @@ List<String> categoryId = [
   "assets/Images/categoryId_3.png",
   "assets/Images/categoryId_4.png"
 ];
+
+List<String> categoryId_text = [
+  "테이크아웃",
+  "감성",
+  "프랜차이즈",
+  "카공"
+];

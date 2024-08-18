@@ -2,7 +2,21 @@ import 'package:cafe_attack/MetaData.dart';
 import 'package:flutter/material.dart';
 
 class ReviewContainer extends StatefulWidget {
-  const ReviewContainer({super.key});
+  const ReviewContainer(
+      {super.key,
+      required this.reviewId,
+      required this.reviewWriter,
+      required this.reviewDate,
+      required this.reviewScore,
+      required this.reviewText,
+      required this.reviewPhoto});
+
+  final int reviewId;
+  final String reviewWriter;
+  final String reviewDate;
+  final int reviewScore;
+  final String reviewText;
+  final String reviewPhoto;
 
   @override
   State<ReviewContainer> createState() => _ReviewContainerState();
@@ -19,7 +33,7 @@ class _ReviewContainerState extends State<ReviewContainer> {
           Row(
             children: [
               Text(
-                "체세연",
+                widget.reviewWriter,
                 style: TextStyle(
                   fontSize: 17,
                   fontFamily: freesentation,
@@ -30,7 +44,7 @@ class _ReviewContainerState extends State<ReviewContainer> {
                 width: 5,
               ),
               Text(
-                "24.06.14",
+                widget.reviewDate,
                 style: TextStyle(
                   fontSize: 11,
                   fontFamily: freesentation,
@@ -42,28 +56,13 @@ class _ReviewContainerState extends State<ReviewContainer> {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Icon(
-                    Icons.star,
+                children: List.generate(5, (index) {
+                  // reviewScore 값에 따라 꽉 찬 별 또는 빈 별 표시
+                  return Icon(
+                    index < widget.reviewScore ? Icons.star : Icons.star_border,
                     color: Colors.yellow,
-                  ),
-                  Icon(
-                    Icons.star,
-                    color: Colors.yellow,
-                  ),
-                  Icon(
-                    Icons.star,
-                    color: Colors.yellow,
-                  ),
-                  Icon(
-                    Icons.star,
-                    color: Colors.yellow,
-                  ),
-                  Icon(
-                    Icons.star_border,
-                    color: Colors.yellow,
-                  ),
-                ],
+                  );
+                }),
               ),
             ],
           ),
@@ -73,8 +72,7 @@ class _ReviewContainerState extends State<ReviewContainer> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "손님도 많이 없고, 종업원이 매우 친절해요!!!"
-                  " \n다시 갈 거 같아요!!",
+                  widget.reviewText,
                   style: TextStyle(
                     fontSize: 11,
                     fontFamily: freesentation,
@@ -89,7 +87,7 @@ class _ReviewContainerState extends State<ReviewContainer> {
                     children: [
                       for (int i = 0; i < 5; i++)
                         Image.asset(
-                          basic_image,
+                          basic_image, // todo 백엔드 연결 시 network image로
                           width: 90,
                           height: 90,
                         ),

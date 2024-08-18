@@ -1,4 +1,6 @@
 import 'package:cafe_attack/MetaData.dart';
+import 'package:cafe_attack/controller/MapMoreController.dart';
+import 'package:cafe_attack/model/MapMoreModel.dart';
 import 'package:cafe_attack/view/cafeReviewContainer.dart';
 import 'package:cafe_attack/view/favoriteSaveBottomsheet.dart';
 import 'package:cafe_attack/view/resposive/BreakPoint.dart';
@@ -6,6 +8,7 @@ import 'package:cafe_attack/view/resposive/ResponsiveCenter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 
 class CafePage extends StatefulWidget {
   const CafePage({super.key});
@@ -18,299 +21,356 @@ class _CafePageState extends State<CafePage> {
   GlobalKey _appBarKey = GlobalKey();
   GlobalKey _containerKey = GlobalKey();
   double? _remainingHeight;
-
+  final MapMoreController _mapMoreController = Get.put(MapMoreController());
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _calculateRemainingHeight());
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => _calculateRemainingHeight());
   }
 
-  void _calculateRemainingHeight() {
-    final RenderBox appBarBox = _appBarKey.currentContext!.findRenderObject() as RenderBox;
-    final RenderBox containerBox = _containerKey.currentContext!.findRenderObject() as RenderBox;
+  Future<void> _calculateRemainingHeight() async {
+    await Future.delayed(Duration(milliseconds: 20)); // 0.02초 정도 대기
+    final RenderBox appBarBox =
+        _appBarKey.currentContext!.findRenderObject() as RenderBox;
+    final RenderBox containerBox =
+        _containerKey.currentContext!.findRenderObject() as RenderBox;
     final appBarHeight = appBarBox.size.height;
     final containerHeight = containerBox.size.height;
     final screenHeight = MediaQuery.of(context).size.height;
 
     setState(() {
-      _remainingHeight = screenHeight - appBarHeight - containerHeight - kToolbarHeight;
+      _remainingHeight =
+          screenHeight - appBarHeight - containerHeight - kToolbarHeight;
     });
+  }
+
+  String _cafeCategory(int num, List<int> _categoryId) {
+    if (_categoryId == null || _categoryId.isEmpty) return "";
+
+    String result = "";
+
+    for (int i = 0; i < num && i < _categoryId.length; i++) {
+      result += categoryId_text[_categoryId[i] - 1];
+      if (i != num - 1 && i != _categoryId.length - 1) {
+        result += " / ";
+      }
+    }
+
+    return result;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        key: _appBarKey,
-        leading: IconButton(
-          onPressed: () {},
-          icon: Icon(Icons.expand_more),
-        ),
-        title: Text(
-          "설빙 광운대점",
-          style: TextStyle(
-            fontWeight: FontWeight.w400,
-            fontFamily: freesentation,
-            fontSize: 24,
+    return Obx(() {
+      if (_mapMoreController.isLoading.value) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text("Loading..."),
           ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                builder: (context) => FavoriteSave(),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(0), // No rounding for a rectangular shape
-                  ),
-                ),
-                backgroundColor: Colors.white,
-              );
-              // 좋아요 색칠은 백엔드에서 받기
-            },
-            icon: Icon(Icons.favorite_border),
+          body: Center(
+            child: CircularProgressIndicator(),
           ),
-        ],
-      ),
-      body: ResponsiveCenter(
-        child: Column(children: [
-          Container(
-            key: _containerKey,
-            decoration: BoxDecoration(
-              border: Border(
-                top: BorderSide(
-                  color: Colors.black,
-                  width: 0.5,
-                ),
-                bottom: BorderSide(
-                  color: Colors.black,
-                  width: 0.5,
-                ),
+        );
+      } else {
+        MapMoreModel mapMore = _mapMoreController.mapMore.value;
+        return Scaffold(
+          appBar: AppBar(
+            key: _appBarKey,
+            leading: IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.expand_more),
+            ),
+            title: Text(
+              mapMore.data!.cafeName!,
+              style: TextStyle(
+                fontWeight: FontWeight.w400,
+                fontFamily: freesentation,
+                fontSize: 24,
               ),
             ),
-            padding: EdgeInsets.only(right: 10, left: 10, top: 8, bottom: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      child: Text(
-                        "위치",
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontFamily: freesentation,
-                            fontWeight: FontWeight.w500),
-                        textAlign: TextAlign.center,
+            actions: [
+              IconButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (context) => FavoriteSave(),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(
+                            0), // No rounding for a rectangular shape
                       ),
-                      width: 80,
-                      height: 23,
                     ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    SizedBox(
-                      child: Text(
-                        "서울 노원구 광운로 25 2층",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w300,
-                            fontFamily: freesentation,
-                            fontSize: 20),
-                      ),
-                      height: 23,
-                    ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  ],
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      child: Text(
-                        "영업시간",
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontFamily: freesentation,
-                            fontWeight: FontWeight.w500),
-                        textAlign: TextAlign.center,
-                      ),
-                      width: 80,
-                      height: 23,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    SizedBox(
-                      child: Text(
-                        "매일 11:00 ~ 23:00 영업",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w300,
-                            fontFamily: freesentation,
-                            fontSize: 20),
-                      ),
-                      height: 23,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      child: Text(
-                        "전화번호",
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontFamily: freesentation,
-                            fontWeight: FontWeight.w500),
-                        textAlign: TextAlign.center,
-                      ),
-                      width: 80,
-                      height: 23,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    SizedBox(
-                      child: Text(
-                        "02-6953-0749",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w300,
-                            fontFamily: freesentation,
-                            fontSize: 20),
-                      ),
-                      height: 23,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      child: Text(
-                        "카페유형",
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontFamily: freesentation,
-                            fontWeight: FontWeight.w500),
-                        textAlign: TextAlign.center,
-                      ),
-                      width: 80,
-                      height: 23,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    SizedBox(
-                      child: Text(
-                        "프랜차이즈 / 테이크 아웃",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w300,
-                            fontFamily: freesentation,
-                            fontSize: 20),
-                      ),
-                      height: 23,
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                    backgroundColor: Colors.white,
+                  );
+                },
+                icon: mapMore.data!.heart == 0
+                    ? Icon(Icons.favorite_border)
+                    : Icon(Icons.favorite),
+              ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.only(right: 20, left: 20, top: 8,),
-            child: Column(
-              children: [
-                Row(
+          body: ResponsiveCenter(
+            child: Column(children: [
+              Container(
+                key: _containerKey,
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(
+                      color: Colors.black,
+                      width: 0.5,
+                    ),
+                    bottom: BorderSide(
+                      color: Colors.black,
+                      width: 0.5,
+                    ),
+                  ),
+                ),
+                padding:
+                    EdgeInsets.only(right: 10, left: 10, top: 8, bottom: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "사용자 리뷰",
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontFamily: freesentation,
-                          fontWeight: FontWeight.w600),
-                    ),
-                    SizedBox(
-                      width: 3,
-                    ),
-                    Text(
-                      "15건",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w300,
-                        fontFamily: freesentation,
-                        fontSize: 12,
-                      ),
-                    ),
-                    SizedBox(width: 8,),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Icon(
-                          Icons.star,
-                          color: Colors.yellow,
-                        ),
-                        Icon(
-                          Icons.star,
-                          color: Colors.yellow,
-                        ),
-                        Icon(
-                          Icons.star,
-                          color: Colors.yellow,
-                        ),
-                        Icon(
-                          Icons.star,
-                          color: Colors.yellow,
-                        ),
-                        Icon(
-                          Icons.star_half,
-                          color: Colors.yellow,
-                        ),
-                        SizedBox(width: 5),
-                        Text(
-                          "4.6/5.0",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w300,
-                            fontFamily: freesentation,
-                            fontSize: 13,
+                        SizedBox(
+                          child: Text(
+                            "위치",
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontFamily: freesentation,
+                                fontWeight: FontWeight.w500),
+                            textAlign: TextAlign.center,
                           ),
+                          width: 80,
+                          height: 23,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        SizedBox(
+                          child: Text(
+                            mapMore.data!.address!,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w300,
+                                fontFamily: freesentation,
+                                fontSize: 20),
+                          ),
+                          height: 23,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          child: Text(
+                            "영업시간",
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontFamily: freesentation,
+                                fontWeight: FontWeight.w500),
+                            textAlign: TextAlign.center,
+                          ),
+                          width: 80,
+                          height: 23,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        SizedBox(
+                          child: Text(
+                            mapMore.data!.time!,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w300,
+                                fontFamily: freesentation,
+                                fontSize: 20),
+                          ),
+                          height: 23,
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          child: Text(
+                            "전화번호",
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontFamily: freesentation,
+                                fontWeight: FontWeight.w500),
+                            textAlign: TextAlign.center,
+                          ),
+                          width: 80,
+                          height: 23,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        SizedBox(
+                          child: Text(
+                            mapMore.data!.phone!,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w300,
+                                fontFamily: freesentation,
+                                fontSize: 20),
+                          ),
+                          height: 23,
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          child: Text(
+                            "카페유형",
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontFamily: freesentation,
+                                fontWeight: FontWeight.w500),
+                            textAlign: TextAlign.center,
+                          ),
+                          width: 80,
+                          height: 23,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        SizedBox(
+                          child: Text(
+                            _cafeCategory(mapMore.data!.categoryId!.length,
+                                mapMore.data!.categoryId!),
+                            style: TextStyle(
+                                fontWeight: FontWeight.w300,
+                                fontFamily: freesentation,
+                                fontSize: 20),
+                          ),
+                          height: 23,
                         ),
                       ],
                     ),
                   ],
                 ),
-                SizedBox(width: 10,),
-                SizedBox(
-                  height: _remainingHeight, // Set the calculated height here
-                  child: ListView(
-                    children: [
-                      ReviewContainer(),
-                      ReviewContainer(),
-                      ReviewContainer(),
-                      ReviewContainer(),
-                      ReviewContainer(),
-                      ReviewContainer(),
-                    ],
-                  ),
-                )
-              ],
-            ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  right: 20,
+                  left: 20,
+                  top: 8,
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          "사용자 리뷰",
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontFamily: freesentation,
+                              fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(
+                          width: 3,
+                        ),
+                        Text(
+                          mapMore.data!.reviewCnt.toString() + "건",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w300,
+                            fontFamily: freesentation,
+                            fontSize: 12,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            ...List.generate(
+                              double.parse(mapMore.data!.avgScore!).floor(),
+                              // Full stars based on the integer part of AvgScore
+                              (index) => Icon(
+                                Icons.star,
+                                color: Colors.yellow,
+                              ),
+                            ),
+                            if (double.parse(mapMore.data!.avgScore!) -
+                                    double.parse(mapMore.data!.avgScore!)
+                                        .floor() >=
+                                0.5) // Adding a half star if the fractional part is >= 0.5
+                              Icon(
+                                Icons.star_half,
+                                color: Colors.yellow,
+                              ),
+                            if (double.parse(mapMore.data!.avgScore!) -
+                                        double.parse(mapMore.data!.avgScore!)
+                                            .floor() <
+                                    0.5 &&
+                                double.parse(mapMore.data!.avgScore!) !=
+                                    double.parse(mapMore.data!.avgScore!)
+                                        .floor())
+                              Icon(
+                                Icons.star_border,
+                                color: Colors.yellow,
+                              ),
+                            SizedBox(width: 5),
+                            Text(
+                              mapMore.data!.avgScore! + "/5.0",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w300,
+                                fontFamily: freesentation,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    SizedBox(
+                      height: _remainingHeight,
+                      // Set the calculated height here
+                      child: ListView.builder(
+                          itemCount: 3,
+                          itemBuilder: (context, index) {
+                            List<Review> reviews = mapMore.data!.review!;
+
+                            return ReviewContainer(
+                              reviewId: reviews[index].reviewId!,
+                              reviewWriter: reviews[index].reviewWriter!,
+                              reviewDate: reviews[index].reviewDate!,
+                              reviewScore: reviews[index].reviewScore!,
+                              reviewText: reviews[index].reviewText!,
+                              reviewPhoto: reviews[index].reviewPhoto!,);
+                          }),
+                    )
+                  ],
+                ),
+              ),
+            ]),
+            padding: EdgeInsets.zero,
+            maxContentWidth: BreakPoint.tablet,
           ),
-        ]),
-        padding: EdgeInsets.zero,
-        maxContentWidth: BreakPoint.tablet,
-      ),
-    );
+        );
+      }
+    });
   }
 }
