@@ -194,6 +194,5 @@ class _CafeDetailBottomSheetState extends State<CafeDetailBottomSheet> {
         ],
       ),
     );
-    ;
   }
 }
