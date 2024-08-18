@@ -1,3 +1,4 @@
+import 'package:cafe_attack/MetaData.dart';
 import 'package:cafe_attack/view/resposive/ResponsiveCenter.dart';
 import 'package:flutter/material.dart';
 
@@ -9,10 +10,9 @@ class BookmarkPage extends StatefulWidget {
 }
 
 class _BookmarkPageState extends State<BookmarkPage> {
-  List<Map<String, dynamic>> groups = [
-    {'name': '학교 앞 카페', 'checked': false},
-    {'name': '홍대 카페', 'checked': true},
-  ];
+  List<int> list = [1, 2];
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -45,13 +45,50 @@ class _BookmarkPageState extends State<BookmarkPage> {
                 itemBuilder: (context, index) {
                   return ExpansionTile(
                     title: ListTile(
-                      title: Text("학교 앞 카페"),
+                      title: Text("학교 앞 카페",
+                      style: TextStyle(
+                        fontSize: 27,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: freesentation
+                      ),),
                     ),
                     children: [
                       Container(
-                        height: 100,
                         color: Color(0xffFFF2EE),
+                        child: Column(
+                          children: List.generate(5, (index) {
+                            return Padding(
+                              padding: const EdgeInsets.only(left: 30,bottom: 5),
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                    width: 180,
+                                    height: 40,
+                                    child: Text(
+                                      "설빙 광운대점",
+                                      style: TextStyle(
+                                       fontFamily: freesentation,
+                                       fontWeight: FontWeight.w300,
+                                        fontSize: 24,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 10,),
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      for (int i = 0; i < list.length; i++) ...[
+                                        Image.asset(categoryId[list[i]]),
+                                        SizedBox(width: 5),
+                                      ]
+                                    ],
+                                  )
+                                ],
+                              ),
+                            );
+                          }),
                         ),
+                      )
                     ],
                     shape: null,
                     collapsedShape: null,
