@@ -1,9 +1,8 @@
 import 'package:cafe_attack/MetaData.dart';
 import 'package:cafe_attack/controller/MapInfoController.dart';
-import 'package:cafe_attack/model/MapInfoModel.dart';
+import 'package:cafe_attack/controller/MapMainController.dart';
 import 'package:cafe_attack/view/mapFloatingButton.dart';
 import 'package:cafe_attack/view/mapCafeBottomsheet.dart';
-import 'package:cafe_attack/view/resposive/BreakPoint.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,17 +15,17 @@ class MapPage extends StatefulWidget {
   _MapPageState createState() => _MapPageState();
 }
 
-class _MapPageState extends State<MapPage> {
-
+class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   var centerLng;
   var centerLat;
   late KakaoMapController mapController;
+  final MapMainController _mapMainController = Get.put(MapMainController());
   bool loading = true;
-  List<LatLng> positions = [
-    LatLng(37.6198, 127.0598),
-    LatLng(37.6184, 127.0581),
-    LatLng(37.6203, 127.0583)
-  ];
+  bool loading2 = true;
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
+  List<LatLng> positions = [];
   List<String> positions_name = [
     '<div>광운대학교</div>',
     '<div>서울 선곡초등학교</div>',
@@ -38,7 +37,37 @@ class _MapPageState extends State<MapPage> {
   void initState() {
     super.initState();
     loading = true;
-    getPosition();
+    loading2 = true;
+
+    // Initialize the animation controller
+    _animationController = AnimationController(
+      duration: const Duration(seconds: 2), // Animation duration
+      vsync: this,
+    )..repeat(reverse: true); // Loop the animation
+
+    _animation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    );
+
+    Future.delayed(Duration(seconds: 1), () {
+      getPosition();
+      makePositionList();
+    });
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose(); // Dispose the animation controller
+    super.dispose();
+  }
+
+  makePositionList() {
+    for (int i = 0; i < _mapMainController.mapMain.value.data!.length; i++) {
+      positions.add(LatLng(_mapMainController.mapMain.value.data![i].latitude!,
+          _mapMainController.mapMain.value.data![i].longitude!));
+    }
+    loading2 = false;
   }
 
   getPosition() async {
@@ -48,9 +77,6 @@ class _MapPageState extends State<MapPage> {
     // Test if location services are enabled.
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      // Location services are not enabled don't continue
-      // accessing the position and request users of the
-      // App to enable the location services.
       return Future.error('Location services are disabled.');
     }
 
@@ -58,17 +84,11 @@ class _MapPageState extends State<MapPage> {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        // Permissions are denied, next time you could try
-        // requesting permissions again (this is also where
-        // Android's shouldShowRequestPermissionRationale
-        // returned true. According to Android guidelines
-        // your App should show an explanatory UI now.
         return Future.error('Location permissions are denied');
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately.
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
     }
@@ -78,7 +98,6 @@ class _MapPageState extends State<MapPage> {
 
     try {
       setState(() {
-        // print("경도: ${position.longitude}, 위도: ${position.latitude}");
         centerLng = position.longitude;
         centerLat = position.latitude;
         loading = false;
@@ -88,39 +107,49 @@ class _MapPageState extends State<MapPage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-      floatingActionButton: Stack(children: [
-        Align(
-          alignment:
-              Alignment(Alignment.bottomRight.x - 0.2, Alignment.bottomRight.y),
-          child: SizedBox(
-            width: 50,
-            height: 50,
-            child: FloatingActionButton(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(50),
+        floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+        floatingActionButton: Stack(children: [
+          Align(
+            alignment: Alignment(
+                Alignment.bottomRight.x - 0.2, Alignment.bottomRight.y),
+            child: SizedBox(
+              width: 50,
+              height: 50,
+              child: FloatingActionButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                onPressed: () async {
+                  LatLng currentPosition = new LatLng(centerLat, centerLng);
+                  mapController.setCenter(currentPosition);
+                },
+                backgroundColor: Colors.white,
+                child: Icon(Icons.my_location_rounded),
               ),
-              onPressed: () async {
-                LatLng currentPosition = new LatLng(centerLat, centerLng);
-                mapController.setCenter(currentPosition);
-              },
-              backgroundColor: Colors.white,
-              child: Icon(Icons.my_location_rounded),
             ),
           ),
-        ),
-        Align(
-          alignment: Alignment.bottomLeft,
-          child: LabelChange(),
-        )
-      ]),
-      body: centerLat == null
-          ? Center(child: CircularProgressIndicator())
-          : Stack(
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: LabelChange(),
+          )
+        ]),
+        body: Obx(() {
+          if (loading || loading2 || _mapMainController.isLoading.value) {
+            return Center(
+              child: FadeTransition(
+                opacity: _animation,
+                child: Icon(
+                  Icons.coffee, // You can replace this with your desired icon or image
+                  size: 100,
+                  color: Colors.brown,
+                ),
+              ),
+            );
+          } else {
+            return Stack(
               children: [
                 KakaoMap(
                     onMapCreated: ((controller) async {
@@ -129,11 +158,8 @@ class _MapPageState extends State<MapPage> {
                       for (int i = 0; i < positions.length; i++) {
                         markers.add(Marker(
                           markerId: markers.length.toString(),
-                          // 각 마커에 고유한 ID 부여
                           latLng: positions[i],
-                          // positions 리스트의 각 위치 사용
                           markerImageSrc: mapMaker_unclicked,
-                          //infoWindowContent: positions_name[i],
                           width: 38,
                           height: 38,
                           offsetX: 15,
@@ -145,11 +171,11 @@ class _MapPageState extends State<MapPage> {
                     center: LatLng(centerLat, centerLng),
                     markers: markers.toList(),
                     onMarkerTap: (markerId, latLng, zoomLevel) async {
-                     mapController.setCenter(latLng);
+                      mapController.setCenter(latLng);
 
                       setState(() {
-                        // 해당 마커를 찾아서 업데이트
-                        int index = markers.toList().indexWhere((marker) => marker.markerId == markerId);
+                        int index = markers.toList().indexWhere(
+                                (marker) => marker.markerId == markerId);
                         if (index != -1) {
                           Marker oldMarker = markers.elementAt(index);
                           markers.remove(oldMarker);
@@ -157,7 +183,6 @@ class _MapPageState extends State<MapPage> {
                             markerId: markerId,
                             latLng: latLng,
                             markerImageSrc: mapMaker_clicked,
-                            // 새 이미지 경로
                             width: 38,
                             height: 38,
                             offsetX: oldMarker.offsetX,
@@ -165,20 +190,17 @@ class _MapPageState extends State<MapPage> {
                           ));
                         }
                       });
-                      print("Marker ID: ${markerId}");
 
                       await showModalBottomSheet(
                         context: context,
                         builder: (BuildContext context) {
-
-
                           return CafeDetailBottomSheet(latlag: latLng);
                         },
                       );
 
                       setState(() {
-                        // 모달이 닫힐 때 원래 이미지로 복원
-                        int index = markers.toList().indexWhere((marker) => marker.markerId == markerId);
+                        int index = markers.toList().indexWhere(
+                                (marker) => marker.markerId == markerId);
                         if (index != -1) {
                           Marker selectedMarker = markers.elementAt(index);
                           markers.remove(selectedMarker);
@@ -186,7 +208,6 @@ class _MapPageState extends State<MapPage> {
                             markerId: markerId,
                             latLng: latLng,
                             markerImageSrc: mapMaker_unclicked,
-                            // 원래 이미지
                             width: 38,
                             height: 38,
                             offsetX: selectedMarker.offsetX,
@@ -229,7 +250,8 @@ class _MapPageState extends State<MapPage> {
                   ),
                 ),
               ],
-            ),
-    );
+            );
+          }
+        }));
   }
 }

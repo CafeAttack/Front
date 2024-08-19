@@ -1,0 +1,24 @@
+{
+  "status" : 200,
+  "message" : "지도를 성공적으로 불러왔습니다.",
+  "data" : [
+    {
+      "cafeId" : 1,
+      "cafeName" : "설빙 광운대점",
+      "latitude" : 37.620062,
+      "longitude" : 127.058204
+    },
+    {
+      "cafeId" : 2,
+      "cafeName" : "카페 베르데",
+      "latitude" : 37.619498,
+      "longitude" : 127.057803
+    },
+    {
+      "cafeId" : 3,
+      "cafeName" : "카페니니",
+      "latitude" : 37.622784,
+      "longitude" : 127.059717
+    }
+  ]
+}
