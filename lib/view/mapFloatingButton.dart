@@ -170,6 +170,31 @@ class _LabelChangeState extends State<LabelChange> {
             onLabelChange("카공");
           },
         ),
+        SpeedDialChild(
+          labelWidget: SizedBox(
+            width: 80,
+            height: 40,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: Colors.white),
+              child: Text(
+                "테마",
+                style: TextStyle(
+                    fontFamily: 'Freesentation',
+                    fontWeight: FontWeight.w600,
+                    color: Colors.purple,
+                    fontSize: 14.0),
+              ),
+            ),
+          ),
+          backgroundColor: Colors.white,
+          onTap: () {
+            onLabelChange("카공");
+          },
+        ),
       ],
     );
   }

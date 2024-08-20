@@ -168,6 +168,18 @@ class _SearchPageState extends State<SearchPage> {
                             ),
                           ),
                         ),
+                        TextButton(
+                          onPressed: () {},
+                          child: Text(
+                            "테마",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 17,
+                              fontFamily: freesentation,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
