@@ -1,4 +1,5 @@
 import 'package:cafe_attack/MetaData.dart';
+import 'package:cafe_attack/controller/MapAllController.dart';
 import 'package:cafe_attack/controller/MapInfoController.dart';
 import 'package:cafe_attack/controller/MapMainController.dart';
 import 'package:cafe_attack/view/mapFloatingButton.dart';
@@ -19,7 +20,8 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   var centerLng;
   var centerLat;
   late KakaoMapController mapController;
-  final MapMainController _mapMainController = Get.put(MapMainController());
+  // final MapMainController _mapMainController = Get.put(MapMainController());
+  final MapAllController _mapAllController = Get.put(MapAllController());
   bool loading = true;
   bool loading2 = true;
   late AnimationController _animationController;
@@ -63,9 +65,9 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   }
 
   makePositionList() {
-    for (int i = 0; i < _mapMainController.mapMain.value.data!.length; i++) {
-      positions.add(LatLng(_mapMainController.mapMain.value.data![i].latitude!,
-          _mapMainController.mapMain.value.data![i].longitude!));
+    for (int i = 0; i < _mapAllController.mapAll.value.data!.length; i++) {
+      positions.add(LatLng(_mapAllController.mapAll.value.data![i].latitude!,
+          _mapAllController.mapAll.value.data![i].longitude!));
     }
     loading2 = false;
   }
@@ -137,7 +139,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
           )
         ]),
         body: Obx(() {
-          if (loading || loading2 || _mapMainController.isLoading.value) {
+          if (loading || loading2 || _mapAllController.isLoading.value) {
             return Center(
               child: FadeTransition(
                 opacity: _animation,
@@ -190,7 +192,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                           ));
                         }
                       });
-
+                      print("$latLng");
                       await showModalBottomSheet(
                         context: context,
                         builder: (BuildContext context) {
@@ -235,7 +237,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                             fillColor: Colors.white,
                             hintText: '카페를 검색하세요...',
                             enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(80),
                               borderSide: BorderSide.none,
                             ),
                           ),
