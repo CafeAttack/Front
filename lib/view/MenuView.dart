@@ -1,5 +1,7 @@
+import 'package:cafe_attack/model/MemberMenuModel.dart';
 import 'package:cafe_attack/view/resposive/BreakPoint.dart';
 import 'package:cafe_attack/view/resposive/ResponsiveCenter.dart';
+import 'package:cafe_attack/controller/MemberMenuController.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,10 +13,9 @@ class MenuPage extends StatefulWidget {
   State<MenuPage> createState() => _MenuPageState();
 }
 
-int favor_count = 0;
-String? nickname;
-
 class _MenuPageState extends State<MenuPage> {
+  final MemberMenuController _memberMenuController = Get.put(MemberMenuController());
+
   void LogoutDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -69,6 +70,9 @@ class _MenuPageState extends State<MenuPage> {
 
   @override
   Widget build(BuildContext context) {
+    int? favor_count = _memberMenuController.Membermenu.value.data!.favorCount;
+    String? nickname = _memberMenuController.Membermenu.value.data!.nickname;
+
     return Scaffold(
         backgroundColor: Color(0xffFFF2EE),
         body: SingleChildScrollView(
