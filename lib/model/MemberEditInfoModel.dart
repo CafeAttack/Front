@@ -5,6 +5,7 @@ class MemberEditInfoModel {
   String? nickname;
   String? email;
   String? birth;
+  String? password;
 
   MemberEditInfoModel(
       {this.status,
@@ -12,7 +13,8 @@ class MemberEditInfoModel {
         this.name,
         this.nickname,
         this.email,
-        this.birth});
+        this.birth,
+        this.password});
 
   MemberEditInfoModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
@@ -21,6 +23,7 @@ class MemberEditInfoModel {
     nickname = json['nickname'];
     email = json['email'];
     birth = json['birth'];
+    password = json['password'];
   }
 
   Map<String, dynamic> toJson() {
@@ -31,6 +34,7 @@ class MemberEditInfoModel {
     data['nickname'] = this.nickname;
     data['email'] = this.email;
     data['birth'] = this.birth;
+    data['password'] = this.password;
     return data;
   }
 }

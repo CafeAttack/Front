@@ -1,5 +1,7 @@
+import 'package:cafe_attack/model/MemberEditInfoModel.dart';
 import 'package:cafe_attack/view/resposive/BreakPoint.dart';
 import 'package:cafe_attack/view/resposive/ResponsiveCenter.dart';
+import 'package:cafe_attack/controller/MemberEditInfoController.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,6 +14,7 @@ class ResetInfoPage extends StatefulWidget {
 }
 
 class _ResetInfoPageState extends State<ResetInfoPage> {
+  final MemberEditInfoController _memberEditInfoController = Get.put(MemberEditInfoController());
   String? id;
   String? name;
   String? originNickname;
@@ -27,11 +30,18 @@ class _ResetInfoPageState extends State<ResetInfoPage> {
   @override
   void initstate() {
     super.initState();
-    nicknameController = TextEditingController(text: '$originNickname');
   }
 
   @override
   Widget build(BuildContext context) {
+    id = _memberEditInfoController.MemberEditInfo.value.signid;
+    name = _memberEditInfoController.MemberEditInfo.value.name;
+    originNickname = _memberEditInfoController.MemberEditInfo.value.nickname;
+    e_mail = _memberEditInfoController.MemberEditInfo.value.email;
+    birth = _memberEditInfoController.MemberEditInfo.value.birth;
+
+    nicknameController = TextEditingController(text: '$originNickname');
+
     return Scaffold(
         backgroundColor: Color(0xffFFF2EE),
         body: SingleChildScrollView(
@@ -195,7 +205,7 @@ class _ResetInfoPageState extends State<ResetInfoPage> {
                     Container(
                       width: 226,
                       child: Text(
-                        'E-mail',
+                        '$e_mail',
                         style: TextStyle(
                           fontFamily: 'Freesensation',
                           fontWeight: FontWeight.w400,
