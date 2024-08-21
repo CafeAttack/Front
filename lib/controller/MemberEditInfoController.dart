@@ -1,10 +1,9 @@
 import 'package:cafe_attack/model/MemberEditInfoModel.dart';
-import 'package:cafe_attack/model/MemberMenuModel.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'dart:convert';
 
-class MemeberEditInfocontroller extends GetxController{
+class MemberEditInfoController extends GetxController{
   var MemberEditInfo = MemberEditInfoModel().obs;
 
   @override
