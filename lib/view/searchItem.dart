@@ -2,19 +2,29 @@ import 'package:cafe_attack/MetaData.dart';
 import 'package:flutter/material.dart';
 
 class SearchItem extends StatefulWidget {
-  const SearchItem({super.key});
+  final String placeName;
+  final String id;
+  final String roadAddressName;
+  final int distance;
+
+  const SearchItem(
+      {super.key,
+      required this.distance,
+      required this.id,
+      required this.placeName,
+      required this.roadAddressName});
 
   @override
   State<SearchItem> createState() => _SearchItemState();
 }
 
 class _SearchItemState extends State<SearchItem> {
-  int a=0;
+  int a = 0;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
-
+      onTap: () {
         print("${a}");
         a++;
       },
@@ -31,18 +41,22 @@ class _SearchItemState extends State<SearchItem> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("설빙 광운대점", style: TextStyle(
-              fontSize: 20,
-              fontFamily: freesentation,
-              fontWeight: FontWeight.w300,
+            Text(
+              widget.placeName,
+              style: TextStyle(
+                fontSize: 20,
+                fontFamily: freesentation,
+                fontWeight: FontWeight.w300,
+              ),
+              textAlign: TextAlign.right,
             ),
-            textAlign: TextAlign.right,),
             SizedBox(height: 4), // 간격 추가
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween, // 주소와 거리를 좌우로 배치
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              // 주소와 거리를 좌우로 배치
               children: [
                 Text(
-                  '서울 노원구 광운로 25 2층',
+                  widget.roadAddressName,
                   style: TextStyle(
                     color: Colors.grey.shade600,
                     fontFamily: freesentation,
@@ -51,7 +65,7 @@ class _SearchItemState extends State<SearchItem> {
                   ),
                 ),
                 Text(
-                  '358m',
+                  widget.distance.toString()+'m',
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 14,

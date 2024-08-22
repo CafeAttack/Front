@@ -1,0 +1,28 @@
+{
+  "documents": [
+    {
+      "place_name": "설빙 광운대점",
+      "id": "530741465",
+      "road_address_name": "서울 노원구 광운로 25",
+      "distance": 159
+    },
+    {
+      "place_name": "설빙 묵동점",
+      "id": "1261194641",
+      "road_address_name": "서울 중랑구 중랑역로 242",
+      "distance": 1477
+    },
+    {
+      "place_name": "설빙 서울과기대점",
+      "id": "1302193543",
+      "road_address_name": "서울 노원구 동일로192길 88",
+      "distance": 1797
+    },
+    {
+      "place_name": "설빙 월곡역점",
+      "id": "26644172",
+      "road_address_name": "서울 성북구 화랑로11길 27",
+      "distance": 2361
+    }
+  ]
+}
