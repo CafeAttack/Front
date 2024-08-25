@@ -15,11 +15,13 @@ class MapAllController extends GetxController {
 
   void fetchMapAllFromJson() async {
     try {
+      print("Start loading");
       isLoading.value = true;
       String _data = await rootBundle.loadString('assets/test/map_all.json');
       Map<String, dynamic> data = json.decode(_data);
       mapAll.value = MapAllModel.fromJson(data);
       isLoading.value = false;
+      print("Finished loading");
     } catch (e) {
       print("Error: $e");
     }

@@ -457,18 +457,13 @@ class _SignupPageState extends State<SignupPage> {
                             padding: EdgeInsets.only(bottom: bottomPadding),
                             child: Container(
                               height: MediaQuery.of(context).size.height * 0.8,
-                              margin:
-                              const EdgeInsets.only(left: 25, right: 25, bottom: 10),
                               decoration: const BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(20),
-                                ),
+
                               ),
                               child: Scrollbar(
                                 thumbVisibility: true,
                                 thickness: 6.0,
-                                radius: const Radius.circular(10),
                                 child: SingleChildScrollView(
                                   physics: const ClampingScrollPhysics(),
                                   child: Padding(

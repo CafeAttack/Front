@@ -1,5 +1,7 @@
 import 'package:cafe_attack/MetaData.dart';
+import 'package:cafe_attack/view/MapView.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class SearchItem extends StatefulWidget {
   final String placeName;
@@ -25,8 +27,11 @@ class _SearchItemState extends State<SearchItem> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print("${a}");
+
+        print("${a}, ${widget.id}");
         a++;
+
+        Get.offAll(()=>MapPage(act: 1, cafeId: widget.id,));
       },
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),

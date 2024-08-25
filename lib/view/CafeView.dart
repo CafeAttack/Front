@@ -52,7 +52,7 @@ class _CafePageState extends State<CafePage> {
     String result = "";
 
     for (int i = 0; i < num && i < _categoryId.length; i++) {
-      result += categoryId_text[_categoryId[i] - 1];
+      result += categoryId_text[_categoryId[i]];
       if (i != num - 1 && i != _categoryId.length - 1) {
         result += " / ";
       }
@@ -66,12 +66,7 @@ class _CafePageState extends State<CafePage> {
     return Obx(() {
       if (_mapMoreController.isLoading.value) {
         return Scaffold(
-          appBar: AppBar(
-            title: Text("Loading..."),
-          ),
-          body: Center(
-            child: CircularProgressIndicator(),
-          ),
+          body: LoadingScreen()
         );
       } else {
         MapMoreModel mapMore = _mapMoreController.mapMore.value;
@@ -79,8 +74,10 @@ class _CafePageState extends State<CafePage> {
           appBar: AppBar(
             key: _appBarKey,
             leading: IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.expand_more),
+              onPressed: () {
+                Get.back();
+              },
+              icon: Icon(Icons.arrow_back_ios),
             ),
             title: Text(
               mapMore.data!.cafeName!,
@@ -346,10 +343,10 @@ class _CafePageState extends State<CafePage> {
                       width: 10,
                     ),
                     SizedBox(
-                      height: _remainingHeight,
+                      height: _remainingHeight??400,
                       // Set the calculated height here
                       child: ListView.builder(
-                          itemCount: 3,
+                          itemCount: _mapMoreController.mapMore.value.data!.reviewCnt,
                           itemBuilder: (context, index) {
                             List<Review> reviews = mapMore.data!.review!;
 

@@ -2,16 +2,24 @@ import 'package:cafe_attack/MetaData.dart';
 import 'package:cafe_attack/controller/MapAllController.dart';
 import 'package:cafe_attack/controller/MapInfoController.dart';
 import 'package:cafe_attack/controller/MapMainController.dart';
+import 'package:cafe_attack/view/MenuView.dart';
+import 'package:cafe_attack/view/SearchView.dart';
 import 'package:cafe_attack/view/mapFloatingButton.dart';
 import 'package:cafe_attack/view/mapCafeBottomsheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/services.dart';
 
 class MapPage extends StatefulWidget {
+  final int act;
+  final String cafeId;
+
+  const MapPage({required this.act, this.cafeId = ""});
+
   @override
   _MapPageState createState() => _MapPageState();
 }
@@ -20,48 +28,28 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   var centerLng;
   var centerLat;
   late KakaoMapController mapController;
-  // final MapMainController _mapMainController = Get.put(MapMainController());
-  final MapAllController _mapAllController = Get.put(MapAllController());
-  bool loading = true;
-  bool loading2 = true;
-  late AnimationController _animationController;
-  late Animation<double> _animation;
 
+  // final MapMainController _mapMainController = Get.put(MapMainController());
+  var loading = true.obs;
+  final MapAllController _mapAllController = Get.put(MapAllController());
   List<LatLng> positions = [];
-  List<String> positions_name = [
-    '<div>광운대학교</div>',
-    '<div>서울 선곡초등학교</div>',
-    '<div>설빙 광운대점</div>'
-  ];
   Set<Marker> markers = {};
 
   @override
   void initState() {
     super.initState();
-    loading = true;
-    loading2 = true;
 
-    // Initialize the animation controller
-    _animationController = AnimationController(
-      duration: const Duration(seconds: 2), // Animation duration
-      vsync: this,
-    )..repeat(reverse: true); // Loop the animation
+    // loading.value = true;
 
-    _animation = CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    );
-
-    Future.delayed(Duration(seconds: 1), () {
+    // 실제 작업을 시작
+    Future(() {
       getPosition();
       makePositionList();
+      setState(() {
+        // 로딩 상태를 true로 설정
+        loading(false);
+      });
     });
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose(); // Dispose the animation controller
-    super.dispose();
   }
 
   makePositionList() {
@@ -69,7 +57,68 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
       positions.add(LatLng(_mapAllController.mapAll.value.data![i].latitude!,
           _mapAllController.mapAll.value.data![i].longitude!));
     }
-    loading2 = false;
+  }
+
+  void _highlightMarker(String cafeId) async {
+    int markerId = int.parse(cafeId) - 1; // cafeId를 인덱스로 변환 (cafeId는 1부터 시작한다고 가정)
+    print("cafe maker index: $markerId");
+
+    if (markerId >= 0 && markerId < markers.length) {
+      // 해당 마커를 찾고 활성화
+      int index = markers.toList().indexWhere(
+              (marker) => marker.markerId == markerId.toString());
+      Marker targetMarker = markers.elementAt(index);
+      mapController.setCenter(targetMarker.latLng);
+
+      // 마커 클릭과 같은 동작 수행
+      setState(() {
+        int index = markers.toList().indexWhere(
+                (marker) => marker.markerId == markerId.toString());
+        Marker targetMarker = markers.elementAt(index);
+        if (index != -1) {
+          print("${targetMarker.latLng}, $index, ${markerId}");
+          Marker oldMarker = markers.elementAt(index);
+          markers.remove(oldMarker);
+          markers.add(Marker(
+            markerId: markerId.toString(),
+            latLng: targetMarker.latLng,
+            markerImageSrc: mapMaker_clicked,
+            width: 38,
+            height: 38,
+            offsetX: oldMarker.offsetX,
+            offsetY: oldMarker.offsetY,
+          ));
+        }
+      });
+
+       await showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return CafeDetailBottomSheet(latlag: targetMarker.latLng);
+        },
+      );
+
+      setState(() {
+        int index = markers.toList().indexWhere(
+                (marker) => marker.markerId == markerId.toString());
+        Marker targetMarker = markers.elementAt(index);
+        if (index != -1) {
+          print("${targetMarker.latLng}, $index, $markerId");
+          Marker selectedMarker = markers.elementAt(index);
+          markers.remove(selectedMarker);
+          markers.add(Marker(
+            markerId: markerId.toString(),
+            latLng: targetMarker.latLng,
+            markerImageSrc: mapMaker_unclicked,
+            width: 38,
+            height: 38,
+            offsetX: selectedMarker.offsetX,
+            offsetY: selectedMarker.offsetY,
+          ));
+        }
+      });
+
+    }
   }
 
   getPosition() async {
@@ -102,7 +151,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
       setState(() {
         centerLng = position.longitude;
         centerLat = position.latitude;
-        loading = false;
+        loading(false);
       });
     } on PlatformException catch (e) {
       print(e);
@@ -111,149 +160,161 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-        floatingActionButton: Stack(children: [
-          Align(
-            alignment: Alignment(
-                Alignment.bottomRight.x - 0.2, Alignment.bottomRight.y),
-            child: SizedBox(
-              width: 50,
-              height: 50,
-              child: FloatingActionButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50),
+    return Obx(() {
+      return loading.value || _mapAllController.isLoading.value
+          ? Scaffold(
+              body: LoadingScreen(),
+            )
+          : Scaffold(
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.startFloat,
+              floatingActionButton: Stack(children: [
+                Align(
+                  alignment: Alignment(
+                      Alignment.bottomRight.x - 0.2, Alignment.bottomRight.y),
+                  child: SizedBox(
+                    width: 50,
+                    height: 50,
+                    child: FloatingActionButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      onPressed: () async {
+                        LatLng currentPosition =
+                            new LatLng(centerLat, centerLng);
+                        mapController.setCenter(currentPosition);
+                      },
+                      backgroundColor: Colors.white,
+                      child: Icon(Icons.my_location_rounded),
+                    ),
+                  ),
                 ),
-                onPressed: () async {
-                  LatLng currentPosition = new LatLng(centerLat, centerLng);
-                  mapController.setCenter(currentPosition);
-                },
-                backgroundColor: Colors.white,
-                child: Icon(Icons.my_location_rounded),
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: LabelChange(),
-          )
-        ]),
-        body: Obx(() {
-          if (loading || loading2 || _mapAllController.isLoading.value) {
-            return Center(
-              child: FadeTransition(
-                opacity: _animation,
-                child: Icon(
-                  Icons.coffee, // You can replace this with your desired icon or image
-                  size: 100,
-                  color: Colors.brown,
-                ),
-              ),
-            );
-          } else {
-            return Stack(
-              children: [
-                KakaoMap(
-                    onMapCreated: ((controller) async {
-                      mapController = controller;
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: LabelChange(),
+                )
+              ]),
+              body: Stack(
+                children: [
+                  KakaoMap(
+                      onMapCreated: ((controller) async {
+                        mapController = controller;
 
-                      for (int i = 0; i < positions.length; i++) {
-                        markers.add(Marker(
-                          markerId: markers.length.toString(),
-                          latLng: positions[i],
-                          markerImageSrc: mapMaker_unclicked,
-                          width: 38,
-                          height: 38,
-                          offsetX: 15,
-                          offsetY: 44,
-                        ));
-                      }
-                      setState(() {});
-                    }),
-                    center: LatLng(centerLat, centerLng),
-                    markers: markers.toList(),
-                    onMarkerTap: (markerId, latLng, zoomLevel) async {
-                      mapController.setCenter(latLng);
-
-                      setState(() {
-                        int index = markers.toList().indexWhere(
-                                (marker) => marker.markerId == markerId);
-                        if (index != -1) {
-                          Marker oldMarker = markers.elementAt(index);
-                          markers.remove(oldMarker);
+                        for (int i = 0; i < positions.length; i++) {
                           markers.add(Marker(
-                            markerId: markerId,
-                            latLng: latLng,
-                            markerImageSrc: mapMaker_clicked,
-                            width: 38,
-                            height: 38,
-                            offsetX: oldMarker.offsetX,
-                            offsetY: oldMarker.offsetY,
-                          ));
-                        }
-                      });
-                      print("$latLng");
-                      await showModalBottomSheet(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return CafeDetailBottomSheet(latlag: latLng);
-                        },
-                      );
-
-                      setState(() {
-                        int index = markers.toList().indexWhere(
-                                (marker) => marker.markerId == markerId);
-                        if (index != -1) {
-                          Marker selectedMarker = markers.elementAt(index);
-                          markers.remove(selectedMarker);
-                          markers.add(Marker(
-                            markerId: markerId,
-                            latLng: latLng,
+                            markerId: markers.length.toString(),
+                            latLng: positions[i],
                             markerImageSrc: mapMaker_unclicked,
                             width: 38,
                             height: 38,
-                            offsetX: selectedMarker.offsetX,
-                            offsetY: selectedMarker.offsetY,
+                            offsetX: 15,
+                            offsetY: 44,
                           ));
                         }
-                      });
-                    }),
-                Positioned(
-                  top: 35,
-                  left: 20,
-                  right: 20,
-                  child: Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.menu),
-                        iconSize: 30,
-                      ),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white,
-                            hintText: '카페를 검색하세요...',
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(80),
-                              borderSide: BorderSide.none,
+                        setState(() {});
+
+                        // 여기에서 마커가 설정된 후에 act 값에 따라 특정 마커 활성화
+                        if (widget.act == 1 && widget.cafeId.isNotEmpty) {
+                          print("start _highlightMarker");
+                          _highlightMarker(widget.cafeId);
+                        }
+                      }),
+                      center: LatLng(centerLat, centerLng),
+                      markers: markers.toList(),
+                      onMarkerTap: (markerId, latLng, zoomLevel) async {
+                        mapController.setCenter(latLng);
+
+                        setState(() {
+                          int index = markers.toList().indexWhere(
+                              (marker) => marker.markerId == markerId);
+                          if (index != -1) {
+                            print("${latLng}, $index, $markerId");
+                            Marker oldMarker = markers.elementAt(index);
+                            markers.remove(oldMarker);
+                            markers.add(Marker(
+                              markerId: markerId,
+                              latLng: latLng,
+                              markerImageSrc: mapMaker_clicked,
+                              width: 38,
+                              height: 38,
+                              offsetX: oldMarker.offsetX,
+                              offsetY: oldMarker.offsetY,
+                            ));
+                          }
+                        });
+                        // print("$latLng, $markerId");
+
+                        await showModalBottomSheet(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return CafeDetailBottomSheet(latlag: latLng);
+                          },
+                        );
+
+                        setState(() {
+                          int index = markers.toList().indexWhere(
+                              (marker) => marker.markerId == markerId);
+                          if (index != -1) {
+                            print("${latLng}, $index, $markerId");
+                            Marker selectedMarker = markers.elementAt(index);
+                            markers.remove(selectedMarker);
+                            markers.add(Marker(
+                              markerId: markerId,
+                              latLng: latLng,
+                              markerImageSrc: mapMaker_unclicked,
+                              width: 38,
+                              height: 38,
+                              offsetX: selectedMarker.offsetX,
+                              offsetY: selectedMarker.offsetY,
+                            ));
+                          }
+                        });
+                      }),
+                  Positioned(
+                    top: 35,
+                    left: 20,
+                    right: 20,
+                    child: Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            Get.to(()=>MenuPage());
+                          },
+                          icon: Icon(Icons.menu),
+                          iconSize: 30,
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              Get.to(() => SearchPage());
+                            },
+                            child: TextFormField(
+                              enabled: false,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.white,
+                                hintText: '카페를 검색하세요...',
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(80),
+                                  borderSide: BorderSide.none,
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.search),
-                        iconSize: 30,
-                      )
-                    ],
+                        IconButton(
+                          onPressed: () {
+                            Get.to(() => SearchPage());
+                          },
+                          icon: Icon(Icons.search),
+                          iconSize: 30,
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            );
-          }
-        }));
+                ],
+              ));
+    });
   }
 }

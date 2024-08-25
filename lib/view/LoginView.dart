@@ -1,3 +1,5 @@
+import 'package:cafe_attack/view/MapView.dart';
+import 'package:cafe_attack/view/SignupView.dart';
 import 'package:cafe_attack/view/resposive/BreakPoint.dart';
 import 'package:cafe_attack/view/resposive/ResponsiveCenter.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
                   fit: BoxFit.fill,
                 ),
                 SizedBox(
-                  height: 70,
+                  height: 50,
                 ),
                 Row(
                   children: [
@@ -87,57 +89,54 @@ class _LoginPageState extends State<LoginPage> {
                   height: 11,
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    SizedBox(
-                      width: 116,
+                    Text(
+                      "계정이 없다면? ",
+                      style: TextStyle(
+                        fontFamily: 'Freesentation',
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16,
+                      ),
                     ),
-                    Row(
-                      mainAxisSize: MainAxisSize.min, // Row의 크기를 최소로 설정
-                      children: [
-                        Text(
-                          "계정이 없다면? ",
-                          style: TextStyle(
-                            fontFamily: 'Freesentation',
-                            fontWeight: FontWeight.w400,
-                            fontSize: 16,
-                          ),
+                    TextButton(
+                      onPressed: () {
+                        Get.to(() => SignupPage());
+                      },
+                      style: ButtonStyle(
+                        padding: MaterialStateProperty.all<EdgeInsets>(
+                            EdgeInsets.zero),
+                        minimumSize:
+                            MaterialStateProperty.all<Size>(Size.zero),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      child: Text(
+                        "회원가입",
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontFamily: 'Freesentation',
+                          fontWeight: FontWeight.w400,
+                          fontSize: 16,
                         ),
-                        TextButton(
-                          onPressed: () {},
-                          style: ButtonStyle(
-                            padding: MaterialStateProperty.all<EdgeInsets>(
-                                EdgeInsets.zero),
-                            minimumSize:
-                                MaterialStateProperty.all<Size>(Size.zero),
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                          child: Text(
-                            "회원가입",
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontFamily: 'Freesentation',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                        Text(
-                          "하기",
-                          style: TextStyle(
-                            fontFamily: 'Freesentation',
-                            fontWeight: FontWeight.w400,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
+                      ),
+                    ),
+                    Text(
+                      "하기",
+                      style: TextStyle(
+                        fontFamily: 'Freesentation',
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16,
+                      ),
                     )
                   ],
                 ),
                 SizedBox(
-                  height: 24,
+                  height: 50,
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Get.off(()=>MapPage(act: 0,));
+                  },
                   child: Text(
                     "로그인",
                     style: TextStyle(

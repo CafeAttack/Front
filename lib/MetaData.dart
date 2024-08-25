@@ -15,6 +15,7 @@ List<String> categoryId = [
 ];
 
 List<String> categoryId_text = [
+  "All",
   "테이크아웃",
   "감성",
   "프랜차이즈",

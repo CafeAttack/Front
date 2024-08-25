@@ -5,6 +5,7 @@ import 'dart:convert';
 
 class MemberMenuController extends GetxController{
   var Membermenu = MemberMenuModel().obs;
+  var isLoading = true.obs;
 
   @override
   void onInit() {
@@ -13,8 +14,14 @@ class MemberMenuController extends GetxController{
   }
 
   void fetchMemberMenuFromJson() async {
-    String _data = await rootBundle.loadString('assets/test/MemberMenu.json');
-    Map<String, dynamic> data = json.decode(_data);
-    Membermenu.value = MemberMenuModel.fromJson(data);
+    try{
+      isLoading(true);
+      String _data = await rootBundle.loadString('assets/test/MemberMenu.json');
+      Map<String, dynamic> data = json.decode(_data);
+      Membermenu.value = MemberMenuModel.fromJson(data);
+      isLoading(false);
+    }catch(e){
+      print("Error: $e");
+    }
   }
 }
