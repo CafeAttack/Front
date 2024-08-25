@@ -39,8 +39,6 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    // loading.value = true;
-
     // 실제 작업을 시작
     Future(() {
       getPosition();
