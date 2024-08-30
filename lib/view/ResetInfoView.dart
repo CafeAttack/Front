@@ -378,7 +378,7 @@ class _ResetInfoPageState extends State<ResetInfoPage> {
                 )
               ],
             ),
-            padding: EdgeInsets.zero,
+            padding: EdgeInsets.all(30)
             maxContentWidth: BreakPoint.tablet,
           ),
         )
