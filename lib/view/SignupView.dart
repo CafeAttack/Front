@@ -3,12 +3,14 @@ import 'package:cafe_attack/view/resposive/BreakPoint.dart';
 import 'package:cafe_attack/view/resposive/ResponsiveCenter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 final TextEditingController _idController = TextEditingController();
 final TextEditingController _nameController = TextEditingController();
 final TextEditingController _nicknameController = TextEditingController();
 final TextEditingController _emailController = TextEditingController();
+final TextEditingController _emailConfirmController = TextEditingController();
 final TextEditingController _pwController = TextEditingController();
 final TextEditingController _pwcController = TextEditingController();
 final TextEditingController _birthController = TextEditingController();
@@ -22,6 +24,7 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   bool _IDButtonClick = false;
+  bool _emailConfirmClick = false;
   bool _IDduplication = false;
   bool _emailCertification = false;
   bool _IsCheck = false;
@@ -30,6 +33,7 @@ class _SignupPageState extends State<SignupPage> {
   String? _nameField;
   String? _nicknameField;
   String? _emailField;
+  String? _emailConfirmField;
   String? _pwField;
   String? _pwcField;
   String? _birthField;
@@ -49,7 +53,7 @@ class _SignupPageState extends State<SignupPage> {
         child: ResponsiveCenter(
           child: Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               Text(
@@ -305,6 +309,96 @@ class _SignupPageState extends State<SignupPage> {
                   SizedBox(
                     width: 8,
                   )
+                ],
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Row(
+                children: [
+                  SizedBox(
+                    height: 25,
+                    width: 60,
+                    child: Text(
+                      '이메일\n인증번호',
+                      style: TextStyle(
+                        fontFamily: 'Freesentation',
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 26.6,
+                  ),
+                  Expanded(
+                    child: Stack(
+                      alignment: Alignment.centerRight,
+                      children: [
+                        TextFormField(
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(6),
+                          ],
+                          controller: _emailConfirmController,
+                          decoration: InputDecoration(
+                            border: UnderlineInputBorder(),
+                            helperText: _emailConfirmField,
+                            helperStyle: TextStyle(
+                              color: Colors.red,
+                              fontSize: 14,
+                              fontFamily: 'Freesentation',
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          right: 8,
+                          top: 5,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                _emailConfirmClick = true;
+
+                                if (_emailConfirmController.text.isEmpty) {
+                                  _emailConfirmField = "인증번호를 입력하세요";
+                                } /*else if (!_IDduplication) {
+                                  _idField = "사용 가능한 아이디입니다";
+                                } else if (_IDduplication) {
+                                  _idField = "이미 존재하는 아이디입니다";
+                                }*/ else {
+                                  _emailConfirmField = null;
+                                }
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              side: BorderSide(
+                                  color: Color(0x50564646), width: 2),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 5, vertical: 2),
+                              // padding 조정
+                              backgroundColor: Color(0x00564646),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(7)),
+                              minimumSize: Size(55, 20),
+                              // 최소 크기 설정
+                              maximumSize: Size(55, 40), // 최대 크기 설정
+                            ),
+                            child: Text(
+                              '인증확인',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                                fontFamily: 'Freesentation',
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
               SizedBox(
