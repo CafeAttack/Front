@@ -42,8 +42,8 @@ class _SearchPageState extends State<SearchPage> {
 
   void _makeItemContent() {
     for (int i = 0;
-    i < _searchAllController.searchAll.value.documents!.length!;
-    i++) {
+        i < _searchAllController.searchAll.value.documents!.length!;
+        i++) {
       itemContents
           .add(_searchAllController.searchAll.value.documents![i].placeName!);
     }
@@ -54,14 +54,11 @@ class _SearchPageState extends State<SearchPage> {
     if (_appBarKey.currentContext != null &&
         _searchBarKey.currentContext != null) {
       final RenderBox appBarBox =
-      _appBarKey.currentContext!.findRenderObject() as RenderBox;
+          _appBarKey.currentContext!.findRenderObject() as RenderBox;
       final RenderBox searchBarBox =
-      _searchBarKey.currentContext!.findRenderObject() as RenderBox;
+          _searchBarKey.currentContext!.findRenderObject() as RenderBox;
       final searchBarHeight = searchBarBox.size.height;
-      final screenHeight = MediaQuery
-          .of(context)
-          .size
-          .height;
+      final screenHeight = MediaQuery.of(context).size.height;
       final appBarHeight = appBarBox.size.height;
 
       // 높이를 계산하여 상태 업데이트
@@ -77,123 +74,120 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(()
-    // 로딩이 끝나면 실제 화면을 보여줌
-    {
-      return _searchAllController.isLoading.value || loading.value ?
-      Scaffold(body: LoadingScreen(),)
+    return Obx(() {
+      return _searchAllController.isLoading.value || loading.value
+          ? Scaffold(
+              body: LoadingScreen(),
+            )
           : Scaffold(
-        appBar: PreferredSize(
-            preferredSize: Size.fromHeight(0),
-            child: AppBar(
-              key: _appBarKey,
-            )),
-        body: SingleChildScrollView(
-          physics: NeverScrollableScrollPhysics(),
-          child: ResponsiveCenter(
-            child: Column(
-              children: [
-                SearchBar(
-                  key: _searchBarKey,
-                  controller: _serchText,
-                  onChanged: (value) {
-                    setState(() {
-                      searchText = value;
-                    });
-                  },
-                  trailing: [
-                    IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () {
-                        _serchText.clear();
-                        FocusManager.instance.primaryFocus?.unfocus();
-                      },
-                    ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(Icons.search),
-                    ),
-                  ],
-                  backgroundColor: MaterialStatePropertyAll(Colors.white),
-                  side: MaterialStateProperty.all(
-                    BorderSide(
-                      color: Colors.black,
-                      width: 1,
-                    ),
-                  ),
-                  shadowColor: MaterialStatePropertyAll(Colors.transparent),
-                  shape: MaterialStateProperty.all(
-                    ContinuousRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  textStyle: MaterialStateProperty.all(
-                    TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: 'Freesentation',
-                    ),
-                  ),
-                  hintText: "카페를 검색하세요...",
-                  hintStyle: MaterialStateProperty.all(
-                    TextStyle(
-                      color: Colors.grey.shade400,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: 'Freesentation',
-                    ),
-                  ),
-                ),
-                Column(
-                  // key: _columnKey,
-                  children: [
-                    SizedBox(height: 5),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
+              appBar: PreferredSize(
+                  preferredSize: Size.fromHeight(0),
+                  child: AppBar(
+                    key: _appBarKey,
+                  )),
+              body: SingleChildScrollView(
+                physics: NeverScrollableScrollPhysics(),
+                child: ResponsiveCenter(
+                  child: Column(
+                    children: [
+                      Row(
                         children: [
-                          ...buttons
+                          Expanded(
+                            child: TextFormField(
+                              key: _searchBarKey,
+                              controller: _serchText,
+                              onChanged: (value) {
+                                setState(() {
+                                  searchText = value;
+                                });
+                              },
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.white,
+                                hintText: "카페를 검색하세요...",
+                                hintStyle: TextStyle(
+                                  color: Colors.grey.shade400,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: 'Freesentation',
+                                ),
+                                /*enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(80),
+                                  borderSide: BorderSide.none,
+                                ),*/
+                                suffixIcon: IconButton(
+                                  icon: Icon(Icons.close),
+                                  onPressed: () {
+                                    setState(() {
+                                      _serchText.clear();
+                                      searchText = _serchText.text;
+                                    });
+                                    FocusManager.instance.primaryFocus?.unfocus();
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              Get.to(() => SearchPage());
+                            },
+                            icon: Icon(Icons.search),
+                            iconSize: 30,
+                          )
                         ],
                       ),
-                    ),
-                    SizedBox(
-                      height: _remainingHeight ?? 400,
-                      child: ListView.builder(
-                        itemCount: _searchAllController.searchAll.value
-                            .documents!.length ?? 0,
-                        itemBuilder: (context, idx) {
-                          // 검색 기능, 검색어가 있을 경우
-                          if (searchText.isNotEmpty &&
-                              !_searchAllController.searchAll.value
-                                  .documents![idx].placeName!
-                                  .toLowerCase()
-                                  .contains(searchText.toLowerCase())) {
-                            return SizedBox.shrink(); // 검색어와 일치하지 않는 항목은 숨기기
-                          } else {
-                            return SearchItem(
-                              distance: _searchAllController.searchAll.value
-                                  .documents![idx].distance!,
-                              id: _searchAllController.searchAll.value
-                                  .documents![idx].id!,
-                              placeName: _searchAllController.searchAll.value
-                                  .documents![idx].placeName!,
-                              roadAddressName: _searchAllController.searchAll
-                                  .value.documents![idx].roadAddressName!,
-                            );
-                          }
-                        },
+                      Column(
+                        children: [
+                          SizedBox(height: 5),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [...buttons],
+                            ),
+                          ),
+                          SizedBox(
+                            height: _remainingHeight ?? 400,
+                            child: ListView.builder(
+                              itemCount: _searchAllController
+                                      .searchAll.value.documents!.length ??
+                                  0,
+                              itemBuilder: (context, idx) {
+                                // 검색 기능, 검색어가 있을 경우
+                                if (searchText.isNotEmpty &&
+                                    !_searchAllController.searchAll.value
+                                        .documents![idx].placeName!
+                                        .toLowerCase()
+                                        .contains(searchText.toLowerCase())) {
+                                  return SizedBox
+                                      .shrink(); // 검색어와 일치하지 않는 항목은 숨기기
+                                } else {
+                                  return SearchItem(
+                                    distance: _searchAllController.searchAll
+                                        .value.documents![idx].distance!,
+                                    id: _searchAllController
+                                        .searchAll.value.documents![idx].id!,
+                                    placeName: _searchAllController.searchAll
+                                        .value.documents![idx].placeName!,
+                                    roadAddressName: _searchAllController
+                                        .searchAll
+                                        .value
+                                        .documents![idx]
+                                        .roadAddressName!,
+                                  );
+                                }
+                              },
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
+                  padding: EdgeInsets.only(top: 10, left: 15, right: 15),
+                  maxContentWidth: BreakPoint.tablet,
                 ),
-              ],
-            ),
-            padding: EdgeInsets.only(top: 10, left: 15, right: 15),
-            maxContentWidth: BreakPoint.tablet,
-          ),
-        ),
-      );
-    }
-    );
+              ),
+            );
+    });
   }
 }
 
@@ -209,8 +203,8 @@ const buttons = [
 
 class SearchButton extends StatelessWidget {
   final String text;
-  const SearchButton({super.key, required this.text});
 
+  const SearchButton({super.key, required this.text});
 
   @override
   Widget build(BuildContext context) {

@@ -313,9 +313,18 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                                 filled: true,
                                 fillColor: Colors.white,
                                 hintText: '카페를 검색하세요...',
-                                enabledBorder: OutlineInputBorder(
+                                hintStyle: TextStyle(
+                                  color: Colors.grey.shade400,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: 'Freesentation',
+                                ),
+                                /*enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(80),
                                   borderSide: BorderSide.none,
+                                ),*/
+                                suffixIcon: IconButton(
+                                  icon: Icon(Icons.close),
+                                  onPressed: () {},
                                 ),
                               ),
                             ),
