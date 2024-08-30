@@ -1,6 +1,7 @@
 import 'package:cafe_attack/MetaData.dart';
 import 'package:cafe_attack/controller/MapMoreController.dart';
 import 'package:cafe_attack/model/MapMoreModel.dart';
+import 'package:cafe_attack/view/cafeAppBar.dart';
 import 'package:cafe_attack/view/cafeReviewContainer.dart';
 import 'package:cafe_attack/view/favoriteSaveBottomsheet.dart';
 import 'package:cafe_attack/view/resposive/BreakPoint.dart';
@@ -65,49 +66,14 @@ class _CafePageState extends State<CafePage> {
   Widget build(BuildContext context) {
     return Obx(() {
       if (_mapMoreController.isLoading.value) {
-        return Scaffold(
-          body: LoadingScreen()
-        );
+        return Scaffold(body: LoadingScreen());
       } else {
         MapMoreModel mapMore = _mapMoreController.mapMore.value;
         return Scaffold(
-          appBar: AppBar(
-            key: _appBarKey,
-            leading: IconButton(
-              onPressed: () {
-                Get.back();
-              },
-              icon: Icon(Icons.arrow_back_ios),
-            ),
-            title: Text(
-              mapMore.data!.cafeName!,
-              style: TextStyle(
-                fontWeight: FontWeight.w400,
-                fontFamily: freesentation,
-                fontSize: 24,
-              ),
-            ),
-            actions: [
-              IconButton(
-                onPressed: () {
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (context) => FavoriteSave(),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(
-                            0), // No rounding for a rectangular shape
-                      ),
-                    ),
-                    backgroundColor: Colors.white,
-                  );
-                },
-                icon: mapMore.data!.heart == 0
-                    ? Icon(Icons.favorite_border)
-                    : Icon(Icons.favorite),
-              ),
-            ],
-          ),
+          appBar: CafeAppBar(
+              appBarKey: _appBarKey,
+              cafeName: mapMore.data!.cafeName!,
+              heart: mapMore.data!.heart!),
           body: ResponsiveCenter(
             child: Column(children: [
               Container(
@@ -343,10 +309,11 @@ class _CafePageState extends State<CafePage> {
                       width: 10,
                     ),
                     SizedBox(
-                      height: _remainingHeight??400,
+                      height: _remainingHeight ?? 400,
                       // Set the calculated height here
                       child: ListView.builder(
-                          itemCount: _mapMoreController.mapMore.value.data!.reviewCnt,
+                          itemCount:
+                              _mapMoreController.mapMore.value.data!.reviewCnt,
                           itemBuilder: (context, index) {
                             List<Review> reviews = mapMore.data!.review!;
 
@@ -356,7 +323,8 @@ class _CafePageState extends State<CafePage> {
                               reviewDate: reviews[index].reviewDate!,
                               reviewScore: reviews[index].reviewScore!,
                               reviewText: reviews[index].reviewText!,
-                              reviewPhoto: reviews[index].reviewPhoto!,);
+                              reviewPhoto: reviews[index].reviewPhoto!,
+                            );
                           }),
                     )
                   ],
