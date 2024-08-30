@@ -1,5 +1,7 @@
 import 'package:cafe_attack/MetaData.dart';
 import 'package:cafe_attack/model/MemberMenuModel.dart';
+import 'package:cafe_attack/view/BookmarkView.dart';
+import 'package:cafe_attack/view/ResetInfoView.dart';
 import 'package:cafe_attack/view/resposive/BreakPoint.dart';
 import 'package:cafe_attack/view/resposive/ResponsiveCenter.dart';
 import 'package:cafe_attack/controller/MemberMenuController.dart';
@@ -162,7 +164,9 @@ class _MenuPageState extends State<MenuPage> {
                                           width: 10,
                                         ),
                                         TextButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            Get.to(()=>ResetInfoPage());
+                                          },
                                           child: Text(
                                             '내 정보 수정',
                                             style: TextStyle(
@@ -190,7 +194,9 @@ class _MenuPageState extends State<MenuPage> {
                             width: 31,
                           ),
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.to(()=>BookmarkPage());
+                            },
                             child: Text(
                               '즐겨찾기 목록',
                               style: TextStyle(
