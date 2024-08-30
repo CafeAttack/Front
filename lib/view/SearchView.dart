@@ -151,78 +151,7 @@ class _SearchPageState extends State<SearchPage> {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: [
-                          TextButton(
-                            onPressed: () {},
-                            child: Text(
-                              "All",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 17,
-                                fontFamily: freesentation,
-                              ),
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {},
-                            child: Text(
-                              "카공",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 17,
-                                fontFamily: freesentation,
-                              ),
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {},
-                            child: Text(
-                              "프랜차이즈",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 17,
-                                fontFamily: freesentation,
-                              ),
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {},
-                            child: Text(
-                              "감성",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 17,
-                                fontFamily: freesentation,
-                              ),
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {},
-                            child: Text(
-                              "테이크아웃",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 17,
-                                fontFamily: freesentation,
-                              ),
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {},
-                            child: Text(
-                              "테마",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 17,
-                                fontFamily: freesentation,
-                              ),
-                            ),
-                          ),
+                          ...buttons
                         ],
                       ),
                     ),
@@ -264,6 +193,38 @@ class _SearchPageState extends State<SearchPage> {
         ),
       );
     }
+    );
+  }
+}
+
+const buttons = [
+  SearchButton(text: "All"),
+  SearchButton(text: "카공"),
+  SearchButton(text: "프렌차이즈"),
+  SearchButton(text: "감성"),
+  SearchButton(text: "테이크아웃"),
+  SearchButton(text: "테마"),
+  SearchButton(text: "무인카페"),
+];
+
+class SearchButton extends StatelessWidget {
+  final String text;
+  const SearchButton({super.key, required this.text});
+
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () {},
+      child: Text(
+        text,
+        style: TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.w400,
+          fontSize: 17,
+          fontFamily: freesentation,
+        ),
+      ),
     );
   }
 }

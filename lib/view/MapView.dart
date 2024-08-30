@@ -27,6 +27,8 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   var centerLng;
   var centerLat;
+  var actLatLng;
+  var actMarkId;
   late KakaoMapController mapController;
 
   // final MapMainController _mapMainController = Get.put(MapMainController());
@@ -42,7 +44,10 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
     // 실제 작업을 시작
     Future(() {
       getPosition();
-      makePositionList();
+      if(widget.act==0)
+        makePositionList();
+      else
+        actMakePositionList();
       setState(() {
         // 로딩 상태를 true로 설정
         loading(false);
@@ -50,14 +55,29 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
     });
   }
 
-  makePositionList() {
+  void makePositionList() {
     for (int i = 0; i < _mapAllController.mapAll.value.data!.length; i++) {
       positions.add(LatLng(_mapAllController.mapAll.value.data![i].latitude!,
           _mapAllController.mapAll.value.data![i].longitude!));
     }
   }
 
+  void actMakePositionList() {
+    for (int i = 0; i < _mapAllController.mapAll.value.data!.length; i++) {
+      positions.add(LatLng(_mapAllController.mapAll.value.data![i].latitude!,
+          _mapAllController.mapAll.value.data![i].longitude!));
+      if(_mapAllController.mapAll.value.data![i].cafeid==widget.cafeId){
+        actLatLng = LatLng(_mapAllController.mapAll.value.data![i].latitude!,
+            _mapAllController.mapAll.value.data![i].longitude!);
+      }
+    }
+  }
+
   void _highlightMarker(String cafeId) async {
+    // 마커 찾기
+    mapController.setCenter(actLatLng);
+
+
     int markerId = int.parse(cafeId) - 1; // cafeId를 인덱스로 변환 (cafeId는 1부터 시작한다고 가정)
     print("cafe maker index: $markerId");
 
@@ -66,7 +86,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
       int index = markers.toList().indexWhere(
               (marker) => marker.markerId == markerId.toString());
       Marker targetMarker = markers.elementAt(index);
-      mapController.setCenter(targetMarker.latLng);
+
 
       // 마커 클릭과 같은 동작 수행
       setState(() {
