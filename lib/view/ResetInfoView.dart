@@ -67,9 +67,6 @@ class _ResetInfoPageState extends State<ResetInfoPage> {
                 ),
                 Row(
                   children: [
-                    SizedBox(
-                      width: 60,
-                    ),
                     Text(
                       '아이디',
                       style: TextStyle(
@@ -106,9 +103,6 @@ class _ResetInfoPageState extends State<ResetInfoPage> {
                 ),
                 Row(
                   children: [
-                    SizedBox(
-                      width: 65,
-                    ),
                     Text(
                       '이름',
                       style: TextStyle(
@@ -146,9 +140,6 @@ class _ResetInfoPageState extends State<ResetInfoPage> {
                 ),
                 Row(
                   children: [
-                    SizedBox(
-                      width: 60,
-                    ),
                     Text(
                       '닉네임',
                       style: TextStyle(
@@ -188,9 +179,6 @@ class _ResetInfoPageState extends State<ResetInfoPage> {
                 ),
                 Row(
                   children: [
-                    SizedBox(
-                      width: 60,
-                    ),
                     Text(
                       '이메일',
                       style: TextStyle(
@@ -228,9 +216,6 @@ class _ResetInfoPageState extends State<ResetInfoPage> {
                 ),
                 Row(
                   children: [
-                    SizedBox(
-                      width: 55,
-                    ),
                     Text(
                       '비밀번호',
                       style: TextStyle(
@@ -266,9 +251,6 @@ class _ResetInfoPageState extends State<ResetInfoPage> {
                 ),
                 Row(
                   children: [
-                    SizedBox(
-                      width: 60,
-                    ),
                     Text(
                       '비밀번호\n확인',
                       textAlign: TextAlign.center,
@@ -311,9 +293,6 @@ class _ResetInfoPageState extends State<ResetInfoPage> {
                 ),
                 Row(
                   children: [
-                    SizedBox(
-                      width: 55,
-                    ),
                     Text(
                       '생년월일',
                       style: TextStyle(
