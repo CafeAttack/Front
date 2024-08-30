@@ -31,7 +31,7 @@ class Data {
   int? reviewCnt;
   String? avgScore;
   List<Review>? review;
-  int? heart;
+  bool? heart;
 
   Data(
       {this.cafeName,

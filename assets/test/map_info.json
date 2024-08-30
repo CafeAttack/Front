@@ -26,6 +26,6 @@
         "reviewPhoto" : "https://example.com/review13.jpg"
       }
     ],
-    "heart" : 1
+    "heart" : true
   }
 }
