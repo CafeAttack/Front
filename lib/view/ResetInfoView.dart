@@ -42,7 +42,12 @@ class _ResetInfoPageState extends State<ResetInfoPage> {
 
     nicknameController = TextEditingController(text: '$originNickname');
 
-    return Scaffold(
+    return Obx(() {
+      return loading.value
+          ? Scaffold(
+        body: LoadingScreen(),
+      )
+          : Scaffold(
         backgroundColor: Color(0xffFFF2EE),
         body: SingleChildScrollView(
           child: ResponsiveCenter(
@@ -373,7 +378,7 @@ class _ResetInfoPageState extends State<ResetInfoPage> {
                 )
               ],
             ),
-
+            padding: EdgeInsets.zero,
             maxContentWidth: BreakPoint.tablet,
           ),
         )
