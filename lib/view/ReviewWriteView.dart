@@ -18,12 +18,11 @@ class _ReviewWritePageState extends State<ReviewWritePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      return Scaffold(
-        appBar: CafeAppBar(appBarKey: _appBarKey,
-            cafeName: widget.cafeName,
-            heart: widget.heart),
-      );
-    });
+    return Scaffold(
+      appBar: CafeAppBar(
+          appBarKey: _appBarKey,
+          cafeName: widget.cafeName,
+          heart: widget.heart),
+    );
   }
 }

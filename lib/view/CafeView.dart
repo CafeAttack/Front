@@ -1,6 +1,7 @@
 import 'package:cafe_attack/MetaData.dart';
 import 'package:cafe_attack/controller/MapMoreController.dart';
 import 'package:cafe_attack/model/MapMoreModel.dart';
+import 'package:cafe_attack/view/ReviewWriteView.dart';
 import 'package:cafe_attack/view/cafeAppBar.dart';
 import 'package:cafe_attack/view/cafeReviewContainer.dart';
 import 'package:cafe_attack/view/favoriteSaveBottomsheet.dart';
@@ -240,6 +241,7 @@ class _CafePageState extends State<CafePage> {
                 child: Column(
                   children: [
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           "사용자 리뷰",
@@ -249,7 +251,7 @@ class _CafePageState extends State<CafePage> {
                               fontWeight: FontWeight.w600),
                         ),
                         SizedBox(
-                          width: 3,
+                          width: 5,
                         ),
                         Text(
                           mapMore.data!.reviewCnt.toString() + "건",
@@ -260,7 +262,7 @@ class _CafePageState extends State<CafePage> {
                           ),
                         ),
                         SizedBox(
-                          width: 8,
+                          width: 5,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -292,7 +294,6 @@ class _CafePageState extends State<CafePage> {
                                 Icons.star_border,
                                 color: Colors.yellow,
                               ),
-                            SizedBox(width: 5),
                             Text(
                               mapMore.data!.avgScore! + "/5.0",
                               style: TextStyle(
@@ -302,6 +303,33 @@ class _CafePageState extends State<CafePage> {
                               ),
                             ),
                           ],
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        OutlinedButton(
+                          onPressed: () {
+                            Get.to(() => ReviewWritePage(
+                                cafeName: mapMore.data!.cafeName!,
+                                heart: mapMore.data!.heart!));
+                          },
+                          child: Text(
+                            "리뷰쓰기",
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w300,
+                                fontFamily: freesentation,
+                                color: Color(0xFF0075FF)),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            fixedSize: Size(53.0, 20.0),
+                            minimumSize: Size.zero,
+                            padding: EdgeInsets.zero,
+                            backgroundColor: Color(0x200075FF),
+                            side: BorderSide(color: Color(0xff0075FF)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5)),
+                          ),
                         )
                       ],
                     ),
