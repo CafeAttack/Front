@@ -19,8 +19,8 @@ class CafePage extends StatefulWidget {
 }
 
 class _CafePageState extends State<CafePage> {
-  GlobalKey _appBarKey = GlobalKey();
-  GlobalKey _containerKey = GlobalKey();
+  final GlobalKey _appBarKey = GlobalKey();
+  final GlobalKey _containerKey = GlobalKey();
   double? _remainingHeight;
   final MapMoreController _mapMoreController = Get.put(MapMoreController());
 
