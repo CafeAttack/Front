@@ -1,73 +1,12 @@
+import 'dart:io';
+
 import 'package:cafe_attack/MetaData.dart';
 import 'package:cafe_attack/view/cafeAppBar.dart';
 import 'package:cafe_attack/view/resposive/BreakPoint.dart';
 import 'package:cafe_attack/view/resposive/ResponsiveCenter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-void _showImagePicker(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    backgroundColor: Colors.white,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(
-        top: Radius.circular(
-            0), // No rounding for a rectangular shape
-      ),
-    ),
-    builder: (BuildContext context) {
-      return SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min, // 내용의 크기에 맞게 Bottom Sheet의 크기를 조정합니다.
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(left: 25, top: 13, bottom: 13),
-              child: Text(
-                "사진 추가",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontFamily: freesentation,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            const Divider(thickness: 0.5, height: 1, color: Colors.black),
-            const SizedBox(height: 5),
-            ListTile(
-              leading: const Icon(Icons.camera_alt),
-              title: const Text('카메라 촬영',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontFamily: freesentation,
-                  fontWeight: FontWeight.w300,
-                ),),
-              onTap: () {
-                // 카메라 촬영 기능을 호출하는 코드 추가
-                Navigator.pop(context);
-              },
-            ),
-            const SizedBox(height: 5),
-            ListTile(
-              leading: const Icon(Icons.photo_library),
-              title: const Text('갤러리에서 선택',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontFamily: freesentation,
-                  fontWeight: FontWeight.w300,
-                ),),
-              onTap: () {
-                // 갤러리에서 이미지를 선택하는 기능을 호출하는 코드 추가
-                Navigator.pop(context);
-              },
-            ),
-            const SizedBox(height: 10),
-          ],
-        ),
-      );
-    },
-  );
-}
+import 'package:image_picker/image_picker.dart';
 
 class ReviewWritePage extends StatefulWidget {
   final cafeName;
@@ -88,7 +27,90 @@ class _ReviewWritePageState extends State<ReviewWritePage> {
   var _selectStar3 = false;
   var _selectStar4 = false;
   var _selectStar5 = false;
+  XFile? _image; //이미지를 담을 변수 선언
+  final ImagePicker picker = ImagePicker(); //ImagePicker 초기화
+  final List<XFile> _images = []; // 선택된 이미지를 담는 리스트
 
+
+  // 이미지를 가져오는 함수
+  Future getImage(ImageSource imageSource) async {
+    if (_images.length < 10) { // 이미지 10개 제한
+      final XFile? pickedFile = await picker.pickImage(source: imageSource);
+      if (pickedFile != null) {
+        setState(() {
+          _images.add(pickedFile); // 선택된 이미지를 리스트에 추가
+        });
+      }
+    } else {
+      Get.snackbar('이미지 선택 불가', '최대 10개의 이미지까지 업로드할 수 있습니다.');
+    }
+  }
+  void _showImagePicker(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(0), // No rounding for a rectangular shape
+        ),
+      ),
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min, // 내용의 크기에 맞게 Bottom Sheet의 크기를 조정합니다.
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(left: 25, top: 13, bottom: 13),
+                child: Text(
+                  "사진 추가",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontFamily: freesentation,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              const Divider(thickness: 0.5, height: 1, color: Colors.black),
+              const SizedBox(height: 5),
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: const Text(
+                  '카메라 촬영',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: freesentation,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+                onTap: () {
+                  getImage(ImageSource.camera);
+                  Navigator.pop(context);
+                },
+              ),
+              const SizedBox(height: 5),
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text(
+                  '갤러리에서 선택',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: freesentation,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+                onTap: () {
+                  getImage(ImageSource.gallery);
+                  Navigator.pop(context);
+                },
+              ),
+              const SizedBox(height: 10),
+            ],
+          ),
+        );
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -276,7 +298,7 @@ class _ReviewWritePageState extends State<ReviewWritePage> {
                                     ],
                                   ),
                                   Text(
-                                    _selectStarNum.toString() + "/5",
+                                      "$_selectStarNum/5",
                                     style: const TextStyle(
                                         fontSize: 19,
                                         fontFamily: freesentation,
@@ -328,7 +350,7 @@ class _ReviewWritePageState extends State<ReviewWritePage> {
                                         fontWeight: FontWeight.w300),
                                   ),
                                   Text(
-                                    "5/10",
+                                      "${_images.length}/10",
                                     style: const TextStyle(
                                         fontSize: 19,
                                         fontFamily: freesentation,
@@ -363,12 +385,14 @@ class _ReviewWritePageState extends State<ReviewWritePage> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    for (int i = 0; i < 5; i++)
-                                      Image.asset(
-                                        basic_image,
-                                        // todo 백엔드 연결 시 network image로
-                                        width: 90,
-                                        height: 90,
+                                    for (XFile image in _images)
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: 8.0),
+                                        child: Image.file(
+                                          File(image.path),
+                                          width: 90,
+                                          height: 90,
+                                        ),
                                       ),
                                   ],
                                 ),
