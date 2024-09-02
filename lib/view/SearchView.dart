@@ -42,7 +42,7 @@ class _SearchPageState extends State<SearchPage> {
 
   void _makeItemContent() {
     for (int i = 0;
-        i < _searchAllController.searchAll.value.documents!.length!;
+        i < _searchAllController.searchAll.value.documents!.length;
         i++) {
       itemContents
           .add(_searchAllController.searchAll.value.documents![i].placeName!);
@@ -80,9 +80,11 @@ class _SearchPageState extends State<SearchPage> {
               body: LoadingScreen(),
             )
           : Scaffold(
+        backgroundColor: Colors.white,
               appBar: PreferredSize(
                   preferredSize: Size.fromHeight(0),
                   child: AppBar(
+                    backgroundColor: Colors.white,
                     key: _appBarKey,
                   )),
               body: SingleChildScrollView(

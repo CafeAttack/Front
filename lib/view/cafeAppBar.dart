@@ -17,6 +17,8 @@ class CafeAppBar extends StatelessWidget implements PreferredSizeWidget{
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      surfaceTintColor: Colors.white,
+      backgroundColor: Colors.white,
       key: appBarKey,
       leading: IconButton(
         onPressed: () {

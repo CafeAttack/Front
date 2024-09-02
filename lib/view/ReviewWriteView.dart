@@ -114,6 +114,7 @@ class _ReviewWritePageState extends State<ReviewWritePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: CafeAppBar(
           appBarKey: _appBarKey,
           cafeName: widget.cafeName,

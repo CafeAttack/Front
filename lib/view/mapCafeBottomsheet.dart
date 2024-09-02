@@ -60,9 +60,11 @@ class _CafeDetailBottomSheetState extends State<CafeDetailBottomSheet> {
       return Obx(() {
           return _mapInfoController.isLoading.value?
               Container(
+                color: Colors.white,
                 child: Text("wait..."),
               )
           :Container(
+            color: Colors.white,
             padding: EdgeInsets.only(right: 16.0, left: 16.0, top: 8),
             width: BreakPoint.tablet,
             height: 400, // Adjust the height as needed

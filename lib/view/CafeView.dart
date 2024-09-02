@@ -71,6 +71,7 @@ class _CafePageState extends State<CafePage> {
       } else {
         MapMoreModel mapMore = _mapMoreController.mapMore.value;
         return Scaffold(
+          backgroundColor: Colors.white,
           appBar: CafeAppBar(
               appBarKey: _appBarKey,
               cafeName: mapMore.data!.cafeName!,
