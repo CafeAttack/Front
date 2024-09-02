@@ -25,34 +25,36 @@ class _FavoriteSaveState extends State<FavoriteSave> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-        return Container(
-          padding: EdgeInsets.only(top: 8, left: 16, right: 16),
-          height: 400, // You can adjust the height as needed
+        return SafeArea(
           child: Column(
+            mainAxisSize: MainAxisSize.min, // 내용의 크기에 맞게 Bottom Sheet의 크기를 조정합니다.
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "즐겨찾기 추가",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: freesentation,
+              Padding(
+                padding: EdgeInsets.only(left: 25, top: 13, bottom: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "즐겨찾기 추가",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: freesentation,
+                      ),
                     ),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.create_new_folder_outlined),
-                    onPressed: () async {
-                      String? result = await showInputTextDialog(context, "새로운 그룹 생성", "생성");
-                      // print("${result}");
-                      // todo 수정하기
-                    },
-                  ),
-                ],
+                    IconButton(
+                      icon: Icon(Icons.create_new_folder_outlined),
+                      onPressed: () async {
+                        String? result = await showInputTextDialog(context, "새로운 그룹 생성", "생성");
+                        // print("${result}");
+                        // todo 수정하기
+                      },
+                    ),
+                  ],
+                ),
               ),
-              Divider(),
+              const Divider(thickness: 0.5, height: 1, color: Colors.black),
               Expanded(
                 child: ListView.builder(
                   itemCount: _bookmarkController.bookmarkAdd.value.groups!.length,
