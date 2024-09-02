@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-String freesentation = 'Freesentation';
+const String freesentation = 'Freesentation';
 String mapMaker_unclicked = 'https://i.ibb.co/WpvynM0/1.png';
 String mapMaker_clicked = 'https://i.ibb.co/j5b0gpj/image.png';
 String basic_image = 'assets/Images/temporary_logo.png';
