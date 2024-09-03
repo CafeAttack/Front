@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SearchItem extends StatefulWidget {
-  final String placeName;
+  final RichText placeName;
   final String id;
   final String roadAddressName;
   final int distance;
@@ -27,11 +27,13 @@ class _SearchItemState extends State<SearchItem> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-
         print("${a}, ${widget.id}");
         a++;
 
-        Get.offAll(()=>MapPage(act: 1, cafeId: widget.id,));
+        Get.offAll(() => MapPage(
+              act: 1,
+              cafeId: widget.id,
+            ));
       },
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
@@ -46,15 +48,7 @@ class _SearchItemState extends State<SearchItem> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              widget.placeName,
-              style: TextStyle(
-                fontSize: 20,
-                fontFamily: freesentation,
-                fontWeight: FontWeight.w300,
-              ),
-              textAlign: TextAlign.right,
-            ),
+            widget.placeName,
             SizedBox(height: 4), // 간격 추가
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -70,7 +64,7 @@ class _SearchItemState extends State<SearchItem> {
                   ),
                 ),
                 Text(
-                  widget.distance.toString()+'m',
+                  widget.distance.toString() + 'm',
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 14,

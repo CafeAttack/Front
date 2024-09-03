@@ -35,7 +35,6 @@ class _SearchPageState extends State<SearchPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _makeItemContent();
       _calculateRemainingHeight();
-
     });
     loading(false);
   }
@@ -72,6 +71,75 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
+  RichText _buildHighlightedText(String text, String searchText) {
+    if (searchText.isEmpty) {
+      return RichText(
+        text: TextSpan(
+          text: text,
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w300,
+            fontFamily: freesentation,
+            fontSize: 20,
+          ), // 기본 텍스트 스타일
+        ),
+      );
+    } else {
+      List<TextSpan> spans = [];
+      int start = 0;
+
+      while (true) {
+        // 검색어가 포함된 위치를 찾음
+        final int index = text.toLowerCase().indexOf(searchText, start);
+
+        if (index == -1) {
+          // 검색어 이후의 남은 텍스트를 추가
+          spans.add(TextSpan(
+            text: text.substring(start),
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w300,
+              fontFamily: freesentation,
+              fontSize: 20,
+            ),
+          ));
+          break;
+        }
+
+        // 검색어 이전의 텍스트를 추가
+        if (index > start) {
+          spans.add(TextSpan(
+            text: text.substring(start, index),
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w300,
+              fontFamily: freesentation,
+              fontSize: 20,
+            ),
+          ));
+        }
+
+        // 검색어 텍스트를 파란색으로 강조
+        spans.add(TextSpan(
+          text: text.substring(index, index + searchText.length),
+          style: TextStyle(
+            color: Colors.blue,
+            fontWeight: FontWeight.w300,
+            fontFamily: freesentation,
+            fontSize: 20,
+          ),
+        ));
+
+        // 검색어 이후의 텍스트를 시작점으로 설정
+        start = index + searchText.length;
+      }
+
+      return RichText(
+        text: TextSpan(children: spans),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -80,7 +148,8 @@ class _SearchPageState extends State<SearchPage> {
               body: LoadingScreen(),
             )
           : Scaffold(
-        backgroundColor: Colors.white,
+
+              backgroundColor: Colors.white,
               appBar: PreferredSize(
                   preferredSize: Size.fromHeight(0),
                   child: AppBar(
@@ -112,7 +181,7 @@ class _SearchPageState extends State<SearchPage> {
                                 hintStyle: TextStyle(
                                   color: Colors.grey.shade400,
                                   fontWeight: FontWeight.w500,
-                                  fontFamily: 'Freesentation',
+                                  fontFamily: freesentation,
                                 ),
                                 suffixIcon: IconButton(
                                   icon: Icon(Icons.close),
@@ -121,7 +190,8 @@ class _SearchPageState extends State<SearchPage> {
                                       _serchText.clear();
                                       searchText = _serchText.text;
                                     });
-                                    FocusManager.instance.primaryFocus?.unfocus();
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
                                   },
                                 ),
                               ),
@@ -131,7 +201,7 @@ class _SearchPageState extends State<SearchPage> {
                             onPressed: () {
                               Get.to(() => SearchPage());
                             },
-                            icon: Icon(Icons.search),
+                            icon: const Icon(Icons.search),
                             iconSize: 30,
                           )
                         ],
@@ -152,27 +222,25 @@ class _SearchPageState extends State<SearchPage> {
                                       .searchAll.value.documents!.length ??
                                   0,
                               itemBuilder: (context, idx) {
+                                final document = _searchAllController
+                                    .searchAll.value.documents![idx];
+                                final placeName = document.placeName!;
+                                final lowerPlaceName = placeName.toLowerCase();
+                                final lowerSearchText =
+                                    searchText.toLowerCase();
+
                                 // 검색 기능, 검색어가 있을 경우
                                 if (searchText.isNotEmpty &&
-                                    !_searchAllController.searchAll.value
-                                        .documents![idx].placeName!
-                                        .toLowerCase()
-                                        .contains(searchText.toLowerCase())) {
+                                    !lowerPlaceName.contains(lowerSearchText)) {
                                   return SizedBox
                                       .shrink(); // 검색어와 일치하지 않는 항목은 숨기기
                                 } else {
                                   return SearchItem(
-                                    distance: _searchAllController.searchAll
-                                        .value.documents![idx].distance!,
-                                    id: _searchAllController
-                                        .searchAll.value.documents![idx].id!,
-                                    placeName: _searchAllController.searchAll
-                                        .value.documents![idx].placeName!,
-                                    roadAddressName: _searchAllController
-                                        .searchAll
-                                        .value
-                                        .documents![idx]
-                                        .roadAddressName!,
+                                    distance: document.distance!,
+                                    id: document.id!,
+                                    placeName: _buildHighlightedText(
+                                        placeName, lowerSearchText),
+                                    roadAddressName: document.roadAddressName!,
                                   );
                                 }
                               },
@@ -182,7 +250,6 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                     ],
                   ),
-
                 ),
               ),
             );
