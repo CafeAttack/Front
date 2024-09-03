@@ -32,12 +32,12 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
-    // 딜레이 함수 추가
-    Future(() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       _makeItemContent();
       _calculateRemainingHeight();
-      loading(false);
+
     });
+    loading(false);
   }
 
   void _makeItemContent() {
@@ -88,8 +88,10 @@ class _SearchPageState extends State<SearchPage> {
                     key: _appBarKey,
                   )),
               body: SingleChildScrollView(
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 child: ResponsiveCenter(
+                  padding: const EdgeInsets.only(top: 10, left: 15, right: 15),
+                  maxContentWidth: BreakPoint.tablet,
                   child: Column(
                     children: [
                       Row(
@@ -112,10 +114,6 @@ class _SearchPageState extends State<SearchPage> {
                                   fontWeight: FontWeight.w500,
                                   fontFamily: 'Freesentation',
                                 ),
-                                /*enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(80),
-                                  borderSide: BorderSide.none,
-                                ),*/
                                 suffixIcon: IconButton(
                                   icon: Icon(Icons.close),
                                   onPressed: () {
@@ -184,8 +182,7 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                     ],
                   ),
-                  padding: EdgeInsets.only(top: 10, left: 15, right: 15),
-                  maxContentWidth: BreakPoint.tablet,
+
                 ),
               ),
             );

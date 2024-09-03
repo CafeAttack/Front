@@ -34,7 +34,7 @@ class _ReviewWritePageState extends State<ReviewWritePage> {
 
   // 이미지를 가져오는 함수
   Future getImage(ImageSource imageSource) async {
-    if (_images.length < 10) { // 이미지 10개 제한
+    if (_images.length < 5) { // 이미지 10개 제한
       final XFile? pickedFile = await picker.pickImage(source: imageSource);
       if (pickedFile != null) {
         setState(() {
@@ -42,7 +42,7 @@ class _ReviewWritePageState extends State<ReviewWritePage> {
         });
       }
     } else {
-      Get.snackbar('이미지 선택 불가', '최대 10개의 이미지까지 업로드할 수 있습니다.');
+      Get.snackbar('이미지 선택 불가', '최대 5개의 이미지까지 업로드할 수 있습니다.');
     }
   }
   void _showImagePicker(BuildContext context) {
@@ -351,7 +351,7 @@ class _ReviewWritePageState extends State<ReviewWritePage> {
                                         fontWeight: FontWeight.w300),
                                   ),
                                   Text(
-                                      "${_images.length}/10",
+                                      "${_images.length}/5",
                                     style: const TextStyle(
                                         fontSize: 19,
                                         fontFamily: freesentation,
