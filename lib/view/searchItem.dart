@@ -66,6 +66,8 @@ class _SearchItemState extends State<SearchItem> {
                 Text(
                   widget.distance.toString() + 'm',
                   style: TextStyle(
+                    fontFamily: freesentation,
+                    fontWeight: FontWeight.w300,
                     color: Colors.grey,
                     fontSize: 14,
                   ),
