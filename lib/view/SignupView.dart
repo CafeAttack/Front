@@ -290,8 +290,10 @@ class _SignupPageState extends State<SignupPage> {
                       });
                     },
                     style: ElevatedButton.styleFrom(
-                      side: const BorderSide(color: Color(0x50564646), width: 2),
-                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                      side:
+                          const BorderSide(color: Color(0x50564646), width: 2),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 5, vertical: 5),
                       backgroundColor: const Color(0x00564646),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(7)),
@@ -361,19 +363,23 @@ class _SignupPageState extends State<SignupPage> {
                           top: 5,
                           child: ElevatedButton(
                             onPressed: () {
-                              setState(() {
-                                _emailConfirmClick = true;
+                              setState(
+                                () {
+                                  _emailConfirmClick = true;
 
-                                if (_emailConfirmController.text.isEmpty) {
-                                  _emailConfirmField = "인증번호를 입력하세요";
-                                } /*else if (!_IDduplication) {
+                                  if (_emailConfirmController.text.isEmpty) {
+                                    _emailConfirmField = "인증번호를 입력하세요";
+                                  }
+                                  /*else if (!_IDduplication) {
                                   _idField = "사용 가능한 아이디입니다";
                                 } else if (_IDduplication) {
                                   _idField = "이미 존재하는 아이디입니다";
-                                }*/ else {
-                                  _emailConfirmField = null;
-                                }
-                              });
+                                }*/
+                                  else {
+                                    _emailConfirmField = null;
+                                  }
+                                },
+                              );
                             },
                             style: ElevatedButton.styleFrom(
                               side: const BorderSide(
@@ -549,27 +555,28 @@ class _SignupPageState extends State<SignupPage> {
                         context: context,
                         isScrollControlled: true,
                         builder: (BuildContext context) {
-                          double bottomPadding = MediaQuery.of(context).viewInsets.bottom;
+                          double bottomPadding =
+                              MediaQuery.of(context).viewInsets.bottom;
                           return Padding(
                             padding: EdgeInsets.only(bottom: bottomPadding),
                             child: Container(
                               height: MediaQuery.of(context).size.height * 0.8,
                               decoration: const BoxDecoration(
                                 color: Colors.white,
-
                               ),
                               child: const Scrollbar(
                                 thumbVisibility: true,
                                 thickness: 6.0,
                                 child: SingleChildScrollView(
-                                  physics:  ClampingScrollPhysics(),
+                                  physics: ClampingScrollPhysics(),
                                   child: Padding(
                                     padding: EdgeInsets.all(20.0),
                                     child: Column(
                                       children: [
-                                         SizedBox(height: 10),
-                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                        SizedBox(height: 10),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
                                             Text(
                                               '이용약관',
@@ -582,8 +589,6 @@ class _SignupPageState extends State<SignupPage> {
                                             ),
                                           ],
                                         ),
-
-
                                       ],
                                     ),
                                   ),
@@ -593,7 +598,8 @@ class _SignupPageState extends State<SignupPage> {
                           );
                           // 모달 내부 디자인 영역
                         },
-                        backgroundColor: Colors.transparent, // 앱 <=> 모달의 여백 부분을 투명하게 처리
+                        backgroundColor:
+                            Colors.transparent, // 앱 <=> 모달의 여백 부분을 투명하게 처리
                       );
                     },
                     style: TextButton.styleFrom(
@@ -608,7 +614,6 @@ class _SignupPageState extends State<SignupPage> {
                         fontSize: 16,
                       ),
                     ),
-
                   ),
                   const Text(
                     "에 동의합니다",
@@ -702,11 +707,11 @@ class _SignupPageState extends State<SignupPage> {
                       success = true;
                     }
 
-                    if (success&&!_IsCheck) {
-                      showErrorDialog(context, "개인정보 수집 동의", "개인 정보 수집에 동의하지 않으면 가입이 불가합니다", "확인");
+                    if (success && !_IsCheck) {
+                      showErrorDialog(context, "개인정보 수집 동의",
+                          "개인 정보 수집에 동의하지 않으면 가입이 불가합니다", "확인");
                     }
                   });
-
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0x20564646),
