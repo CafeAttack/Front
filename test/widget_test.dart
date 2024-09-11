@@ -7,13 +7,17 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:cafe_attack/main.dart';
 
-void main() {
+void main() async {
+  // .env 파일 로드
+  await dotenv.load(fileName: ".env.test");
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    String serverUrl = dotenv.env['SERVER_URL'] ?? 'default-server-url';
+
+    await tester.pumpWidget(MyApp(serverUrl: serverUrl!));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
