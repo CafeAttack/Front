@@ -1,3 +1,4 @@
+import 'package:cafe_attack/MetaData.dart';
 import 'package:cafe_attack/view/dialog.dart';
 import 'package:cafe_attack/view/resposive/BreakPoint.dart';
 import 'package:cafe_attack/view/resposive/ResponsiveCenter.dart';
@@ -48,15 +49,17 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffFFF2EE),
+      backgroundColor: const Color(0xffFFF2EE),
       body: SingleChildScrollView(
         child: ResponsiveCenter(
+          padding: const EdgeInsets.all(30),
+          maxContentWidth: BreakPoint.tablet,
           child: Column(
             children: [
               const SizedBox(
                 height: 15,
               ),
-              Text(
+              const Text(
                 "회원가입",
                 style: TextStyle(
                     fontFamily: 'Cafe24',
@@ -65,25 +68,25 @@ class _SignupPageState extends State<SignupPage> {
                     color: Color(0xFF564646)),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 55,
               ),
               Row(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 25,
                     width: 60,
                     child: Text(
                       '아이디',
                       style: TextStyle(
-                        fontFamily: 'Freesentation',
+                        fontFamily: freesentation,
                         fontWeight: FontWeight.w500,
                         fontSize: 20,
                       ),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 26.6,
                   ),
                   Expanded(
@@ -93,12 +96,12 @@ class _SignupPageState extends State<SignupPage> {
                         TextFormField(
                           controller: _idController,
                           decoration: InputDecoration(
-                            border: UnderlineInputBorder(),
+                            border: const UnderlineInputBorder(),
                             helperText: _idField,
-                            helperStyle: TextStyle(
+                            helperStyle: const TextStyle(
                               color: Colors.red,
                               fontSize: 14,
-                              fontFamily: 'Freesentation',
+                              fontFamily: freesentation,
                               fontWeight: FontWeight.w400,
                             ),
                           ),
@@ -124,24 +127,24 @@ class _SignupPageState extends State<SignupPage> {
                               });
                             },
                             style: ElevatedButton.styleFrom(
-                              side: BorderSide(
+                              side: const BorderSide(
                                   color: Color(0x50564646), width: 2),
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   horizontal: 5, vertical: 2),
                               // padding 조정
-                              backgroundColor: Color(0x00564646),
+                              backgroundColor: const Color(0x00564646),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(7)),
-                              minimumSize: Size(55, 20),
+                              minimumSize: const Size(55, 20),
                               // 최소 크기 설정
-                              maximumSize: Size(55, 40), // 최대 크기 설정
+                              maximumSize: const Size(55, 40), // 최대 크기 설정
                             ),
-                            child: Text(
+                            child: const Text(
                               '중복확인',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 14,
-                                fontFamily: 'Freesentation',
+                                fontFamily: freesentation,
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
@@ -152,37 +155,37 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 27,
               ),
               Row(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     width: 60,
                     height: 25,
                     child: Text(
                       '이름',
                       style: TextStyle(
-                        fontFamily: 'Freesentation',
+                        fontFamily: freesentation,
                         fontWeight: FontWeight.w500,
                         fontSize: 20,
                       ),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 26.6,
                   ),
                   Expanded(
                     child: TextFormField(
                       controller: _nameController,
                       decoration: InputDecoration(
-                        border: UnderlineInputBorder(),
+                        border: const UnderlineInputBorder(),
                         helperText: _nameField,
-                        helperStyle: TextStyle(
+                        helperStyle: const TextStyle(
                           color: Colors.red,
                           fontSize: 14,
-                          fontFamily: 'Freesentation',
+                          fontFamily: freesentation,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
@@ -190,34 +193,34 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 27,
               ),
               Row(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     width: 60,
                     height: 25,
                     child: Text(
                       '닉네임',
                       style: TextStyle(
-                        fontFamily: 'Freesentation',
+                        fontFamily: freesentation,
                         fontWeight: FontWeight.w500,
                         fontSize: 20,
                       ),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 26.6,
                   ),
                   Expanded(
                     child: TextFormField(
                       controller: _nicknameController,
                       decoration: InputDecoration(
-                        border: UnderlineInputBorder(),
+                        border: const UnderlineInputBorder(),
                         helperText: _nicknameField,
-                        helperStyle: TextStyle(
+                        helperStyle: const TextStyle(
                           color: Colors.red,
                           fontSize: 14,
                           fontFamily: 'Freesentation',
@@ -228,34 +231,34 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 27,
               ),
               Row(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     width: 60,
                     height: 25,
                     child: Text(
                       '이메일',
                       style: TextStyle(
-                        fontFamily: 'Freesentation',
+                        fontFamily: freesentation,
                         fontWeight: FontWeight.w500,
                         fontSize: 20,
                       ),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 26.6,
                   ),
                   Expanded(
                     child: TextFormField(
                       controller: _emailController,
                       decoration: InputDecoration(
-                        border: UnderlineInputBorder(),
+                        border: const UnderlineInputBorder(),
                         helperText: _emailField,
-                        helperStyle: TextStyle(
+                        helperStyle: const TextStyle(
                           color: Colors.red,
                           fontSize: 14,
                           fontFamily: 'Freesentation',
@@ -266,12 +269,12 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 5,
               ),
               Row(
                 children: [
-                  Expanded(child: SizedBox()),
+                  const Expanded(child: SizedBox()),
                   ElevatedButton(
                     onPressed: () {
                       setState(() {
@@ -287,49 +290,49 @@ class _SignupPageState extends State<SignupPage> {
                       });
                     },
                     style: ElevatedButton.styleFrom(
-                      side: BorderSide(color: Color(0x50564646), width: 2),
-                      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                      backgroundColor: Color(0x00564646),
+                      side: const BorderSide(color: Color(0x50564646), width: 2),
+                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                      backgroundColor: const Color(0x00564646),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(7)),
-                      minimumSize: Size(68, 20),
+                      minimumSize: const Size(68, 20),
                       // 최소 크기 설정
-                      maximumSize: Size(68, 40), // 최대 크기 설정
+                      maximumSize: const Size(68, 40), // 최대 크기 설정
                     ),
-                    child: Text(
+                    child: const Text(
                       '이메일 인증',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 14,
-                        fontFamily: 'Freesentation',
+                        fontFamily: freesentation,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 8,
                   )
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 5,
               ),
               Row(
                 children: [
-                  SizedBox(
-                    height: 25,
-                    width: 60,
+                  const SizedBox(
+                    width: 65,
+                    height: 55,
                     child: Text(
                       '이메일\n인증번호',
                       style: TextStyle(
-                        fontFamily: 'Freesentation',
+                        fontFamily: freesentation,
                         fontWeight: FontWeight.w500,
                         fontSize: 20,
                       ),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 26.6,
                   ),
                   Expanded(
@@ -343,12 +346,12 @@ class _SignupPageState extends State<SignupPage> {
                           ],
                           controller: _emailConfirmController,
                           decoration: InputDecoration(
-                            border: UnderlineInputBorder(),
+                            border: const UnderlineInputBorder(),
                             helperText: _emailConfirmField,
-                            helperStyle: TextStyle(
+                            helperStyle: const TextStyle(
                               color: Colors.red,
                               fontSize: 14,
-                              fontFamily: 'Freesentation',
+                              fontFamily: freesentation,
                               fontWeight: FontWeight.w400,
                             ),
                           ),
@@ -373,24 +376,24 @@ class _SignupPageState extends State<SignupPage> {
                               });
                             },
                             style: ElevatedButton.styleFrom(
-                              side: BorderSide(
+                              side: const BorderSide(
                                   color: Color(0x50564646), width: 2),
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   horizontal: 5, vertical: 2),
                               // padding 조정
-                              backgroundColor: Color(0x00564646),
+                              backgroundColor: const Color(0x00564646),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(7)),
-                              minimumSize: Size(55, 20),
+                              minimumSize: const Size(55, 20),
                               // 최소 크기 설정
-                              maximumSize: Size(55, 40), // 최대 크기 설정
+                              maximumSize: const Size(55, 40), // 최대 크기 설정
                             ),
-                            child: Text(
+                            child: const Text(
                               '인증확인',
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 14,
-                                fontFamily: 'Freesentation',
+                                fontFamily: freesentation,
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
@@ -401,37 +404,37 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Row(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     width: 65,
                     height: 25,
                     child: Text(
                       '비밀번호',
                       style: TextStyle(
-                        fontFamily: 'Freesentation',
+                        fontFamily: freesentation,
                         fontWeight: FontWeight.w500,
                         fontSize: 20,
                       ),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 26.6,
                   ),
                   Expanded(
                     child: TextFormField(
                       controller: _pwController,
                       decoration: InputDecoration(
-                        border: UnderlineInputBorder(),
+                        border: const UnderlineInputBorder(),
                         helperText: _pwField,
-                        helperStyle: TextStyle(
+                        helperStyle: const TextStyle(
                           color: Colors.red,
                           fontSize: 14,
-                          fontFamily: 'Freesentation',
+                          fontFamily: freesentation,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
@@ -439,37 +442,37 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 27,
               ),
               Row(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     width: 65,
                     height: 55,
                     child: Text(
                       '비밀번호\n확인',
                       style: TextStyle(
-                        fontFamily: 'Freesentation',
+                        fontFamily: freesentation,
                         fontWeight: FontWeight.w500,
                         fontSize: 20,
                       ),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 26.6,
                   ),
                   Expanded(
                     child: TextFormField(
                       controller: _pwcController,
                       decoration: InputDecoration(
-                        border: UnderlineInputBorder(),
+                        border: const UnderlineInputBorder(),
                         helperText: _pwcField,
-                        helperStyle: TextStyle(
+                        helperStyle: const TextStyle(
                           color: Colors.red,
                           fontSize: 14,
-                          fontFamily: 'Freesentation',
+                          fontFamily: freesentation,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
@@ -477,44 +480,44 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 27,
               ),
               Row(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     width: 65,
                     height: 25,
                     child: Text(
                       '생년월일',
                       style: TextStyle(
-                        fontFamily: 'Freesentation',
+                        fontFamily: freesentation,
                         fontWeight: FontWeight.w500,
                         fontSize: 20,
                       ),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 26.6,
                   ),
                   Expanded(
                     child: TextFormField(
                       controller: _birthController,
                       decoration: InputDecoration(
-                        border: UnderlineInputBorder(),
+                        border: const UnderlineInputBorder(),
                         hintText: "yyddmm의 형식으로 입력해주세요",
-                        hintStyle: TextStyle(
+                        hintStyle: const TextStyle(
                           color: Colors.grey,
                           fontSize: 14,
-                          fontFamily: 'Freesentation',
+                          fontFamily: freesentation,
                           fontWeight: FontWeight.w400,
                         ),
                         helperText: _birthField,
-                        helperStyle: TextStyle(
+                        helperStyle: const TextStyle(
                           color: Colors.red,
                           fontSize: 14,
-                          fontFamily: 'Freesentation',
+                          fontFamily: freesentation,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
@@ -522,7 +525,7 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 16,
               ),
               Row(
@@ -537,7 +540,7 @@ class _SignupPageState extends State<SignupPage> {
                         ? Icon(Icons.check_box_outlined)
                         : Icon(Icons.check_box_outline_blank),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 5,
                   ),
                   TextButton(
@@ -555,17 +558,17 @@ class _SignupPageState extends State<SignupPage> {
                                 color: Colors.white,
 
                               ),
-                              child: Scrollbar(
+                              child: const Scrollbar(
                                 thumbVisibility: true,
                                 thickness: 6.0,
                                 child: SingleChildScrollView(
-                                  physics: const ClampingScrollPhysics(),
+                                  physics:  ClampingScrollPhysics(),
                                   child: Padding(
-                                    padding: const EdgeInsets.all(20.0),
+                                    padding: EdgeInsets.all(20.0),
                                     child: Column(
                                       children: [
-                                        const SizedBox(height: 10),
-                                        const Row(
+                                         SizedBox(height: 10),
+                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             Text(
@@ -574,6 +577,7 @@ class _SignupPageState extends State<SignupPage> {
                                                 fontSize: 25,
                                                 fontWeight: FontWeight.bold,
                                                 fontStyle: FontStyle.italic,
+                                                fontFamily: freesentation,
                                               ),
                                             ),
                                           ],
@@ -592,31 +596,32 @@ class _SignupPageState extends State<SignupPage> {
                         backgroundColor: Colors.transparent, // 앱 <=> 모달의 여백 부분을 투명하게 처리
                       );
                     },
-                    child: Text(
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                    ),
+                    child: const Text(
                       "개인정보 수집",
                       style: TextStyle(
                         color: Colors.blue,
-                        fontFamily: 'Freesentation',
+                        fontFamily: freesentation,
                         fontWeight: FontWeight.w400,
                         fontSize: 16,
                       ),
                     ),
-                    style: TextButton.styleFrom(
-                      padding: EdgeInsets.zero,
-                    ),
+
                   ),
-                  Text(
+                  const Text(
                     "에 동의합니다",
                     style: TextStyle(
                       color: Colors.black,
-                      fontFamily: 'Freesentation',
+                      fontFamily: freesentation,
                       fontWeight: FontWeight.w400,
                       fontSize: 16,
                     ),
                   )
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
               ElevatedButton(
@@ -703,14 +708,6 @@ class _SignupPageState extends State<SignupPage> {
                   });
 
                 },
-                child: Text(
-                  "회원가입 완료",
-                  style: TextStyle(
-                      fontFamily: 'Freesentation',
-                      fontWeight: FontWeight.w400,
-                      fontSize: 20,
-                      color: Colors.black),
-                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0x20564646),
                   side: BorderSide(color: Color(0x50564646), width: 2),
@@ -720,11 +717,17 @@ class _SignupPageState extends State<SignupPage> {
                   // 최소 크기 설정
                   maximumSize: Size(145, 35), // 최대 크기 설정
                 ),
+                child: const Text(
+                  "회원가입 완료",
+                  style: TextStyle(
+                      fontFamily: freesentation,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 20,
+                      color: Colors.black),
+                ),
               ),
             ],
           ),
-          padding: EdgeInsets.all(30),
-          maxContentWidth: BreakPoint.tablet,
         ),
       ),
     );
