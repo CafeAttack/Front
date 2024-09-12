@@ -1,4 +1,6 @@
 import 'package:cafe_attack/MetaData.dart';
+import 'package:cafe_attack/controller/SignUpController.dart';
+import 'package:cafe_attack/model/SignUpModel.dart';
 import 'package:cafe_attack/view/dialog.dart';
 import 'package:cafe_attack/view/resposive/BreakPoint.dart';
 import 'package:cafe_attack/view/resposive/ResponsiveCenter.dart';
@@ -6,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 
 final TextEditingController _idController = TextEditingController();
 final TextEditingController _nameController = TextEditingController();
@@ -17,7 +20,9 @@ final TextEditingController _pwcController = TextEditingController();
 final TextEditingController _birthController = TextEditingController();
 
 class SignupPage extends StatefulWidget {
-  const SignupPage({super.key});
+  final String serverUrl;
+
+  const SignupPage({super.key, required this.serverUrl});
 
   @override
   State<SignupPage> createState() => _SignupPageState();
@@ -44,6 +49,39 @@ class _SignupPageState extends State<SignupPage> {
     final RegExp regex =
         RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
     return regex.hasMatch(email);
+  }
+
+  void _showErrorMessage(String variableType, String message) {
+    setState(() {
+      switch (variableType) {
+        case 'id':
+          _idField = message;
+          break;
+        case 'name':
+          _nameField = message;
+          break;
+        case 'nickname':
+          _nicknameField = message;
+          break;
+        case 'email':
+          _emailField = message;
+          break;
+        case 'emailConfirm':
+          _emailConfirmField = message;
+          break;
+        case 'password':
+          _pwField = message;
+          break;
+        case 'passwordConfirm':
+          _pwcField = message;
+          break;
+        case 'birth':
+          _birthField = message;
+          break;
+        default:
+          print('Unknown field');
+      }
+    });
   }
 
   @override
@@ -261,7 +299,7 @@ class _SignupPageState extends State<SignupPage> {
                         helperStyle: const TextStyle(
                           color: Colors.red,
                           fontSize: 14,
-                          fontFamily: 'Freesentation',
+                          fontFamily: freesentation,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
@@ -276,18 +314,32 @@ class _SignupPageState extends State<SignupPage> {
                 children: [
                   const Expanded(child: SizedBox()),
                   ElevatedButton(
-                    onPressed: () {
-                      setState(() {
+                    onPressed: () async {
+                      SignUpModel signupModel =
+                          SignUpModel(email: _emailController.text);
+                      SignUpController signupController = SignUpController();
+
                         if (_emailController.text.isEmpty) {
-                          _emailField = "이메일을 입력하세요";
+                          _showErrorMessage("email", "이메일을 입력하세요");
                         } else if (!_isValidEmail(_emailController.text)) {
-                          _emailField = "유효한 이메일을 입력하세요";
+                          _showErrorMessage("email", "유효한 이메일을 입력하세요");
                         } else {
-                          _emailCertification = true;
-                          print(_emailController.text);
-                          _emailField = null;
+                          try {
+                            int email_dup = await signupController.email_dup(
+                                signupModel, widget.serverUrl);
+
+                            if (email_dup == 400) {
+                              Get.snackbar("중복된 이메일", "이미 회원가입된 이메일입니다");
+                              _emailCertification = false;
+                            } else if (email_dup == 200) {
+                              _emailCertification = true;
+                            }
+                          } catch (e) {
+                            print('이메일 인증 시도 중 문제 발생: $e');
+                          }
+                          // _emailField = null;
                         }
-                      });
+
                     },
                     style: ElevatedButton.styleFrom(
                       side:

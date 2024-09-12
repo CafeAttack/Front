@@ -116,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   TextButton(
                     onPressed: () {
-                      Get.to(() => SignupPage());
+                      Get.to(() => SignupPage(serverUrl: widget.serverUrl,));
                     },
                     style: ButtonStyle(
                       padding: MaterialStateProperty.all<EdgeInsets>(
