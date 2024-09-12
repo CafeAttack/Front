@@ -319,27 +319,26 @@ class _SignupPageState extends State<SignupPage> {
                           SignUpModel(email: _emailController.text);
                       SignUpController signupController = SignUpController();
 
-                        if (_emailController.text.isEmpty) {
-                          _showErrorMessage("email", "이메일을 입력하세요");
-                        } else if (!_isValidEmail(_emailController.text)) {
-                          _showErrorMessage("email", "유효한 이메일을 입력하세요");
-                        } else {
-                          try {
-                            int email_dup = await signupController.email_dup(
-                                signupModel, widget.serverUrl);
+                      if (_emailController.text.isEmpty) {
+                        _showErrorMessage("email", "이메일을 입력하세요");
+                      } else if (!_isValidEmail(_emailController.text)) {
+                        _showErrorMessage("email", "유효한 이메일을 입력하세요");
+                      } else {
+                        try {
+                          int email_dup = await signupController.email_dup(
+                              signupModel, widget.serverUrl);
 
-                            if (email_dup == 400) {
-                              Get.snackbar("중복된 이메일", "이미 회원가입된 이메일입니다");
-                              _emailCertification = false;
-                            } else if (email_dup == 200) {
-                              _emailCertification = true;
-                            }
-                          } catch (e) {
-                            print('이메일 인증 시도 중 문제 발생: $e');
+                          if (email_dup == 400) {
+                            Get.snackbar("중복된 이메일", "이미 회원가입된 이메일입니다");
+                            _emailCertification = false;
+                          } else if (email_dup == 200) {
+                            _emailCertification = true;
                           }
-                          // _emailField = null;
+                        } catch (e) {
+                          print('이메일 인증 시도 중 문제 발생: $e');
                         }
-
+                        // _emailField = null;
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       side:
@@ -414,24 +413,36 @@ class _SignupPageState extends State<SignupPage> {
                           right: 8,
                           top: 5,
                           child: ElevatedButton(
-                            onPressed: () {
-                              setState(
-                                () {
-                                  _emailConfirmClick = true;
+                            onPressed: () async {
+                              SignUpModel signupModel = SignUpModel(
+                                  authentication: _emailConfirmController.text);
+                              SignUpController signupController =
+                                  SignUpController();
 
-                                  if (_emailConfirmController.text.isEmpty) {
-                                    _emailConfirmField = "인증번호를 입력하세요";
+                              if (_emailConfirmController.text.isEmpty) {
+                                _showErrorMessage(
+                                    "emailConfirm", "인증번호를 입력하세요");
+                              } else {
+                                try {
+                                  int email_veri =
+                                      await signupController.email_verifi(
+                                          signupModel, widget.serverUrl);
+
+                                  if (email_veri == 400) {
+                                    _showErrorMessage(
+                                        "emailConfirm", "인증번호가 일치하지 않습니다");
+                                    _emailConfirmClick = false;
+                                  } else if (email_veri == 200) {
+                                    _showErrorMessage(
+                                        "emailConfirm", "인증되었습니다");
+                                    _emailConfirmClick = true;
                                   }
-                                  /*else if (!_IDduplication) {
-                                  _idField = "사용 가능한 아이디입니다";
-                                } else if (_IDduplication) {
-                                  _idField = "이미 존재하는 아이디입니다";
-                                }*/
-                                  else {
-                                    _emailConfirmField = null;
-                                  }
-                                },
-                              );
+                                } catch (e) {
+                                  print('이메일 인증 시도 중 문제 발생: $e');
+                                }
+                              }
+
+                              //_emailConfirmField = null;
                             },
                             style: ElevatedButton.styleFrom(
                               side: const BorderSide(
