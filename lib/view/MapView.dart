@@ -8,7 +8,6 @@ import 'package:cafe_attack/view/mapFloatingButton.dart';
 import 'package:cafe_attack/view/mapCafeBottomsheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:geolocator/geolocator.dart';
@@ -17,8 +16,9 @@ import 'package:flutter/services.dart';
 class MapPage extends StatefulWidget {
   final int act;
   final String cafeId;
+  final String serverUrl;
 
-  const MapPage({required this.act, this.cafeId = ""});
+  const MapPage({required this.act, this.cafeId = "", required this.serverUrl});
 
   @override
   _MapPageState createState() => _MapPageState();
@@ -30,21 +30,36 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   var actLatLng;
   var actMarkId;
   late KakaoMapController mapController;
+  var serverUrl;
 
   // final MapMainController _mapMainController = Get.put(MapMainController());
   var loading = true.obs;
-  final MapAllController _mapAllController = Get.put(MapAllController());
+  late MapAllController _mapAllController;
   List<LatLng> positions = [];
   Set<Marker> markers = {};
 
   @override
   void initState() {
     super.initState();
+    serverUrl = widget.serverUrl;
+    getPosition().then((position) {
+      setState(() {
+        centerLng = position.longitude;
+        centerLat = position.latitude;
+
+        // 컨트롤러에 서버 URL과 좌표를 전달합니다.
+        _mapAllController =
+            Get.put(MapAllController(widget.serverUrl, centerLng, centerLat));
+
+        // 서버에서 데이터를 가져오는 함수 호출
+        _mapAllController.fetchMapAllFromServer();
+      });
+    });
 
     // 실제 작업을 시작
     Future(() {
       getPosition();
-      if(widget.act==0)
+      if (widget.act == 0)
         makePositionList();
       else
         actMakePositionList();
@@ -56,19 +71,22 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   }
 
   void makePositionList() {
-    for (int i = 0; i < _mapAllController.mapAll.value.data!.length; i++) {
-      positions.add(LatLng(_mapAllController.mapAll.value.data![i].latitude!,
-          _mapAllController.mapAll.value.data![i].longitude!));
+    for (int i = 0; i < _mapAllController.mapAll.value.documents!.length; i++) {
+      positions.add(LatLng(
+          double.parse(_mapAllController.mapAll.value.documents![i].y!),
+          double.parse(_mapAllController.mapAll.value.documents![i].x!)));
     }
   }
 
   void actMakePositionList() {
-    for (int i = 0; i < _mapAllController.mapAll.value.data!.length; i++) {
-      positions.add(LatLng(_mapAllController.mapAll.value.data![i].latitude!,
-          _mapAllController.mapAll.value.data![i].longitude!));
-      if(_mapAllController.mapAll.value.data![i].cafeid==widget.cafeId){
-        actLatLng = LatLng(_mapAllController.mapAll.value.data![i].latitude!,
-            _mapAllController.mapAll.value.data![i].longitude!);
+    for (int i = 0; i < _mapAllController.mapAll.value.documents!.length; i++) {
+      positions.add(LatLng(
+          double.parse(_mapAllController.mapAll.value.documents![i].y!),
+          double.parse(_mapAllController.mapAll.value.documents![i].x!)));
+      if (_mapAllController.mapAll.value.documents![i].id == widget.cafeId) {
+        actLatLng = LatLng(
+            double.parse(_mapAllController.mapAll.value.documents![i].y!),
+            double.parse(_mapAllController.mapAll.value.documents![i].x!));
       }
     }
   }
@@ -77,21 +95,22 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
     // 마커 찾기
     mapController.setCenter(actLatLng);
 
-
-    int markerId = int.parse(cafeId) - 1; // cafeId를 인덱스로 변환 (cafeId는 1부터 시작한다고 가정)
+    int markerId =
+        int.parse(cafeId) - 1; // cafeId를 인덱스로 변환 (cafeId는 1부터 시작한다고 가정)
     print("cafe maker index: $markerId");
 
     if (markerId >= 0 && markerId < markers.length) {
       // 해당 마커를 찾고 활성화
-      int index = markers.toList().indexWhere(
-              (marker) => marker.markerId == markerId.toString());
+      int index = markers
+          .toList()
+          .indexWhere((marker) => marker.markerId == markerId.toString());
       Marker targetMarker = markers.elementAt(index);
-
 
       // 마커 클릭과 같은 동작 수행
       setState(() {
-        int index = markers.toList().indexWhere(
-                (marker) => marker.markerId == markerId.toString());
+        int index = markers
+            .toList()
+            .indexWhere((marker) => marker.markerId == markerId.toString());
         Marker targetMarker = markers.elementAt(index);
         if (index != -1) {
           print("${targetMarker.latLng}, $index, ${markerId}");
@@ -109,7 +128,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
         }
       });
 
-       await showModalBottomSheet(
+      await showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
           return CafeDetailBottomSheet(latlag: targetMarker.latLng);
@@ -117,8 +136,9 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
       );
 
       setState(() {
-        int index = markers.toList().indexWhere(
-                (marker) => marker.markerId == markerId.toString());
+        int index = markers
+            .toList()
+            .indexWhere((marker) => marker.markerId == markerId.toString());
         Marker targetMarker = markers.elementAt(index);
         if (index != -1) {
           print("${targetMarker.latLng}, $index, $markerId");
@@ -135,7 +155,6 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
           ));
         }
       });
-
     }
   }
 
@@ -296,7 +315,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                       children: [
                         IconButton(
                           onPressed: () {
-                            Get.to(()=>MenuPage());
+                            Get.to(() => MenuPage());
                           },
                           icon: Icon(Icons.menu),
                           iconSize: 30,
@@ -305,7 +324,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                         Expanded(
                           child: GestureDetector(
                             onTap: () {
-                              Get.to(() => SearchPage());
+                              Get.to(() => SearchPage(serverUrl: widget.serverUrl,));
                             },
                             child: TextFormField(
                               enabled: false,
@@ -332,7 +351,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                         ),
                         IconButton(
                           onPressed: () {
-                            Get.to(() => SearchPage());
+                            Get.to(() => SearchPage(serverUrl: widget.serverUrl,));
                           },
                           icon: Icon(Icons.search),
                           iconSize: 30,

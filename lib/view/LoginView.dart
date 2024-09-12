@@ -167,7 +167,7 @@ class _LoginPageState extends State<LoginPage> {
                     // 로그인 결과에 따른 행동
                     if (loginSuccess) {
                       // 로그인 성공 시 MapPage로 이동
-                      Get.off(() => MapPage(act: 0));
+                      Get.off(() => MapPage(act: 0, serverUrl: serverUrl,));
                     } else {
                       // 로그인 실패 시 에러 메시지 표시
                       Get.snackbar("로그인 실패", "아이디 또는 비밀번호가 잘못되었습니다.");
