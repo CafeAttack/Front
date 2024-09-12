@@ -19,7 +19,7 @@ class MapAllController extends GetxController {
     fetchMapAllFromServer();
   }
 
-  void fetchMapAllFromServer() async {
+  Future<void> fetchMapAllFromServer() async {
     try {
       print("Start loading from server");
       isLoading.value = true;

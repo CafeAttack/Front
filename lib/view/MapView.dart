@@ -32,7 +32,6 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   late KakaoMapController mapController;
   var serverUrl;
 
-  // final MapMainController _mapMainController = Get.put(MapMainController());
   var loading = true.obs;
   late MapAllController _mapAllController;
   List<LatLng> positions = [];
@@ -42,32 +41,58 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     serverUrl = widget.serverUrl;
-    getPosition().then((position) {
-      setState(() {
-        centerLng = position.longitude;
-        centerLat = position.latitude;
+    initialize();
+  }
 
-        // 컨트롤러에 서버 URL과 좌표를 전달합니다.
-        _mapAllController =
-            Get.put(MapAllController(widget.serverUrl, centerLng, centerLat));
+  Future<void> initialize() async {
+    try {
+      Position position = await getPosition(); // 위치 정보 가져오기
+      centerLng = position.longitude;
+      centerLat = position.latitude;
 
-        // 서버에서 데이터를 가져오는 함수 호출
-        _mapAllController.fetchMapAllFromServer();
-      });
-    });
+      // 위치 정보를 기반으로 컨트롤러 초기화
+      _mapAllController = Get.put(MapAllController(widget.serverUrl, centerLng, centerLat));
 
-    // 실제 작업을 시작
-    Future(() {
-      getPosition();
-      if (widget.act == 0)
+      // 서버에서 데이터 불러오기
+      await _mapAllController.fetchMapAllFromServer();
+
+      // 마커와 위치 목록 설정
+      if (widget.act == 0) {
         makePositionList();
-      else
+      } else {
         actMakePositionList();
+      }
+
       setState(() {
-        // 로딩 상태를 true로 설정
-        loading(false);
+        loading(false); // 모든 작업이 완료된 후 로딩 상태 변경
       });
-    });
+    } catch (e) {
+      print('Initialization error: $e');
+    }
+  }
+
+  Future<Position> getPosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      throw Exception('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        throw Exception('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      throw Exception('Location permissions are permanently denied.');
+    }
+
+    return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
   }
 
   void makePositionList() {
@@ -155,43 +180,6 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
           ));
         }
       });
-    }
-  }
-
-  getPosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    // Test if location services are enabled.
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
-    }
-
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.best);
-
-    try {
-      setState(() {
-        centerLng = position.longitude;
-        centerLat = position.latitude;
-        loading(false);
-      });
-    } on PlatformException catch (e) {
-      print(e);
     }
   }
 
