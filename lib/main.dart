@@ -1,4 +1,5 @@
 import 'package:cafe_attack/MetaData.dart';
+import 'package:cafe_attack/services/dio_client.dart';
 import 'package:cafe_attack/view/BookmarkView.dart';
 import 'package:cafe_attack/view/CafeView.dart';
 import 'package:cafe_attack/view/MapView.dart';
@@ -20,6 +21,9 @@ Future<void> main() async {
 
   final serverUrl = dotenv.env['SERVER_URL'];
   final apiKey = dotenv.env['API_KEY'];
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await DioClient.setupInterceptors();
 
   runApp(MyApp(serverUrl: serverUrl!));
   AuthRepository.initialize(appKey: apiKey!);
