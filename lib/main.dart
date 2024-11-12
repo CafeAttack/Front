@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFF564646)),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
       ),
       home: LoginPage(serverUrl: serverUrl),
     );

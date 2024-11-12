@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/services.dart';
+import 'dart:async';
 
 class MapPage extends StatefulWidget {
   final int act;
@@ -27,6 +28,7 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   var centerLng;
   var centerLat;
+  var radius;
   var actLatLng;
   var actMarkId;
   late KakaoMapController mapController;
@@ -36,6 +38,10 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   late MapAllController _mapAllController;
   List<LatLng> positions = [];
   Set<Marker> markers = {};
+  var zoomLevel;
+
+  Timer? debounceTimer;
+  bool isFetching = false; // 현재 데이터를 가져오는 중인지 표시
 
   @override
   void initState() {
@@ -44,14 +50,21 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
     initialize();
   }
 
+  @override
+  void dispose() {
+    debounceTimer?.cancel(); // 타이머를 해제
+    super.dispose();
+  }
+
   Future<void> initialize() async {
     try {
       Position position = await getPosition(); // 위치 정보 가져오기
       centerLng = position.longitude;
       centerLat = position.latitude;
 
-      // 위치 정보를 기반으로 컨트롤러 초기화
-      _mapAllController = Get.put(MapAllController(widget.serverUrl, centerLng, centerLat));
+
+      // 위치 정보를 기반으로 컨트롤러 초기화 (반경 값도 전달)
+      _mapAllController = Get.put(MapAllController(widget.serverUrl, centerLng, centerLat, 5000));
 
       // 서버에서 데이터 불러오기
       await _mapAllController.fetchMapAllFromServer();
@@ -63,9 +76,9 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
         actMakePositionList();
       }
 
-      setState(() {
+
         loading(false); // 모든 작업이 완료된 후 로딩 상태 변경
-      });
+
     } catch (e) {
       print('Initialization error: $e');
     }
@@ -96,10 +109,12 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   }
 
   void makePositionList() {
+    positions.clear(); // 기존 위치 리스트 초기화
     for (int i = 0; i < _mapAllController.mapAll.value.documents!.length; i++) {
       positions.add(LatLng(
-          double.parse(_mapAllController.mapAll.value.documents![i].y!),
-          double.parse(_mapAllController.mapAll.value.documents![i].x!)));
+        double.parse(_mapAllController.mapAll.value.documents![i].y!),
+        double.parse(_mapAllController.mapAll.value.documents![i].x!),
+      ));
     }
   }
 
@@ -183,11 +198,86 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
     }
   }
 
+  Future<void> getRadiusBasedOnZoom() async {
+    // 디바운스 타이머 설정 - 500ms 지연 후에만 실행
+    if (debounceTimer?.isActive ?? false) debounceTimer!.cancel();
+
+    debounceTimer = Timer(const Duration(milliseconds: 500), () async {
+      if (isFetching) return; // 데이터 가져오는 중이면 새 요청을 무시
+      isFetching = true; // 데이터 가져오는 중으로 표시
+
+      // 현재 카메라 중심 좌표와 줌 레벨 가져오기
+      LatLng centerPosition = await mapController.getCenter();
+      zoomLevel = await mapController.getLevel();
+      print("zoomlevel: $zoomLevel");
+
+      // 줌 레벨에 따른 반경 계산
+      int radius = calculateRadius(zoomLevel);
+
+      // 서버에서 데이터 가져오기
+      await fetchDataBasedOnRadius(_mapAllController, centerPosition, radius);
+
+      isFetching = false; // 데이터 가져오기가 끝나면 상태 변경
+      updateMarkers(); // 마커 업데이트 호출
+    });
+  }
+
+
+
+  // 줌 레벨에 따라 반경을 계산하는 예시 함수
+  int calculateRadius(int zoomlevel) {
+    if (zoomlevel == 0) {
+      return 500;
+    } else if (zoomlevel <= 5) {
+      return 2500;
+    } else if (zoomlevel <= 8) {
+      return 40000;
+    } else if (zoomlevel <= 10) {
+      return 150000;
+    } else {
+      return 200000;
+    }
+  }
+
+  // 서버에서 데이터를 가져오는 함수 수정
+  Future<void> fetchDataBasedOnRadius(MapAllController mapAllController, LatLng center, int radius) async {
+    if (isFetching) return; // 중복 호출 방지
+
+    // mapAllController에 새 중심 위치와 반경 반영
+    _mapAllController = Get.put(MapAllController(widget.serverUrl, center.longitude, center.latitude, radius));
+
+    print("Fetching data for radius: $radius meters around ${center.latitude}, ${center.longitude}");
+
+    // 새 데이터 불러오기
+    await mapAllController.fetchMapAllFromServer();
+    makePositionList(); // 새로운 데이터로 위치 목록 생성
+  }
+
+
+// 마커 데이터를 반영하는 함수
+  void updateMarkers() {
+    setState(() {
+      markers.clear(); // 기존 마커 제거
+      for (var position in positions) {
+        markers.add(Marker(
+          markerId: markers.length.toString(),
+          latLng: position,
+          markerImageSrc: mapMaker_unclicked,
+          width: 38,
+          height: 38,
+          offsetX: 15,
+          offsetY: 44,
+        ));
+      }
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Obx(() {
       return loading.value || _mapAllController.isLoading.value
-          ? Scaffold(
+          ? const Scaffold(
               body: LoadingScreen(),
             )
           : Scaffold(
@@ -217,13 +307,46 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                 Align(
                   alignment: Alignment.bottomLeft,
                   child: LabelChange(),
-                )
+                ),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Row(
+                    children: [
+                      MaterialButton(
+                        onPressed: () {
+                          if (zoomLevel > 0) {
+                            zoomLevel-=1;
+                            mapController.setLevel(zoomLevel);
+                          }
+                          print("확대 : $zoomLevel");
+                          setState(() {});
+                        },
+                        color: Colors.white,
+                        child: const Text("확대"),
+                      ),
+                      const SizedBox(width: 8),
+                      MaterialButton(
+                        onPressed: () {
+                          if (zoomLevel < 15 ) {
+                            zoomLevel+=1;
+                            mapController.setLevel(zoomLevel);
+                          }
+                          print("축소 : $zoomLevel");
+                          setState(() {});
+                        },
+                        color: Colors.white,
+                        child: const Text("축소"),
+                      )
+                    ],
+                  ),
+                ),
               ]),
               body: Stack(
                 children: [
                   KakaoMap(
                       onMapCreated: ((controller) async {
                         mapController = controller;
+                        getRadiusBasedOnZoom();
 
                         for (int i = 0; i < positions.length; i++) {
                           markers.add(Marker(
@@ -246,6 +369,9 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                       }),
                       center: LatLng(centerLat, centerLng),
                       markers: markers.toList(),
+                      onCameraIdle: (LatLng latLng, int zoomLevel) {
+                        getRadiusBasedOnZoom(); // 디바운스된 getRadiusBasedOnZoom 호출
+                      },
                       onMarkerTap: (markerId, latLng, zoomLevel) async {
                         mapController.setCenter(latLng);
 
