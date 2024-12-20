@@ -17,6 +17,8 @@ class LoginController {
         loginModel.toJson(),
       );
 
+      print("response: ${response.statusCode}");
+
       // 상태 코드 확인
       if (response.statusCode == 200) {
         var jwtToken = response.data['data']['jwtToken'];
@@ -29,7 +31,7 @@ class LoginController {
 
         // 토큰 저장
         var token = jwtToken['accessToken'];
-        var memberId = jwtToken['memberId'];
+        var memberId = jwtToken['memberid'];
 
         Map<String, dynamic> payload = JwtDecoder.decode(token);
         var loginID = payload['user_id'];
