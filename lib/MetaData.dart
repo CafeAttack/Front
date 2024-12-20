@@ -14,6 +14,7 @@ class MetaData {
   static String serverUrl = "";
   static String apiKey = "";
   static String accessToken = "";
+  static int _memberId = 0;
 
   static Future<void> initialize() async {
     await dotenv.load(fileName: "assets/config/.env");
@@ -31,6 +32,14 @@ class MetaData {
     accessToken = token;
     DioClient.updateHeaders();
   }
+
+  /// 멤버 ID 설정
+  static void setMemberId(int memberId) {
+    _memberId = memberId;
+  }
+
+  /// 멤버 ID 반환 (다른 클래스에서 읽기 전용으로 사용)
+  static int get memberId => _memberId;
 }
 
 List<String> categoryId = [
