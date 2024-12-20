@@ -26,6 +26,8 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
+  LatLng? previousCenter; // 이전 중심 좌표를 저장
+  int? previousZoomLevel; // 이전 줌 레벨을 저장
   var centerLng;
   var centerLat;
   var radius;
@@ -199,30 +201,65 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   }
 
   Future<void> getRadiusBasedOnZoom() async {
-    // 디바운스 타이머 설정 - 500ms 지연 후에만 실행
     if (debounceTimer?.isActive ?? false) debounceTimer!.cancel();
 
     debounceTimer = Timer(const Duration(milliseconds: 500), () async {
-      if (isFetching) return; // 데이터 가져오는 중이면 새 요청을 무시
-      isFetching = true; // 데이터 가져오는 중으로 표시
+      if (isFetching) {
+        print("Fetching in progress. Skipping request.");
+        return;
+      }
 
-      // 현재 카메라 중심 좌표와 줌 레벨 가져오기
-      LatLng centerPosition = await mapController.getCenter();
-      zoomLevel = await mapController.getLevel();
-      print("zoomlevel: $zoomLevel");
+      try {
+        LatLng centerPosition = await mapController.getCenter();
+        int currentZoomLevel = await mapController.getLevel();
 
-      // 줌 레벨에 따른 반경 계산
-      int radius = calculateRadius(zoomLevel);
+        if (previousCenter != null &&
+            !isCenterChanged(previousCenter!, centerPosition) &&
+            previousZoomLevel == currentZoomLevel) {
+          print("No significant changes in center or zoom level. Skipping fetch.");
+          return;
+        }
 
-      // 서버에서 데이터 가져오기
-      await fetchDataBasedOnRadius(_mapAllController, centerPosition, radius);
+        previousCenter = centerPosition;
+        previousZoomLevel = currentZoomLevel;
 
-      isFetching = false; // 데이터 가져오기가 끝나면 상태 변경
-      updateMarkers(); // 마커 업데이트 호출
+        print("Fetching data for updated center: ${centerPosition}, zoom: $currentZoomLevel");
+        int radius = calculateRadius(currentZoomLevel);
+
+        await fetchDataBasedOnRadius(_mapAllController, centerPosition, radius);
+        updateMarkers();
+      } catch (e) {
+        print("Error in getRadiusBasedOnZoom: $e");
+      } finally {
+        isFetching = false;
+      }
     });
   }
 
+  bool isCenterChanged(LatLng a, LatLng b) {
+    return (a.latitude.toStringAsFixed(6) != b.latitude.toStringAsFixed(6)) ||
+        (a.longitude.toStringAsFixed(6) != b.longitude.toStringAsFixed(6));
+  }
 
+  void updateMarkers() {
+    // 마커 업데이트 시 setState 최소화
+    Set<Marker> newMarkers = {};
+    for (var position in positions) {
+      newMarkers.add(Marker(
+        markerId: newMarkers.length.toString(),
+        latLng: position,
+        markerImageSrc: mapMaker_unclicked,
+        width: 38,
+        height: 38,
+        offsetX: 15,
+        offsetY: 44,
+      ));
+    }
+
+    setState(() {
+      markers = newMarkers;
+    });
+  }
 
   // 줌 레벨에 따라 반경을 계산하는 예시 함수
   int calculateRadius(int zoomlevel) {
@@ -239,38 +276,37 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
     }
   }
 
-  // 서버에서 데이터를 가져오는 함수 수정
-  Future<void> fetchDataBasedOnRadius(MapAllController mapAllController, LatLng center, int radius) async {
-    if (isFetching) return; // 중복 호출 방지
+  Future<void> fetchDataBasedOnRadius(
+      MapAllController mapAllController, LatLng center, int radius) async {
+    if (isFetching) {
+      print("Already fetching data. Skipping request.");
+      return; // 중복 호출 방지
+    }
 
-    // mapAllController에 새 중심 위치와 반경 반영
-    _mapAllController = Get.put(MapAllController(widget.serverUrl, center.longitude, center.latitude, radius));
+    isFetching = true;
+    print("Started fetching data for radius: $radius");
 
-    print("Fetching data for radius: $radius meters around ${center.latitude}, ${center.longitude}");
+    try {
+      // mapAllController에 새 중심 위치와 반경 반영
+      _mapAllController = Get.put(MapAllController(
+          widget.serverUrl, center.longitude, center.latitude, radius));
 
-    // 새 데이터 불러오기
-    await mapAllController.fetchMapAllFromServer();
-    makePositionList(); // 새로운 데이터로 위치 목록 생성
+      print(
+          "Fetching data for radius: $radius meters around ${center.latitude}, ${center.longitude}");
+
+      // 새 데이터 불러오기
+      await mapAllController.fetchMapAllFromServer();
+      makePositionList(); // 새로운 데이터로 위치 목록 생성
+
+      print("Data fetch complete. Markers updated.");
+    } catch (e) {
+      print("Error in fetchDataBasedOnRadius: $e");
+    } finally {
+      isFetching = false; // 비동기 작업 종료 후 항상 false로 설정
+      print("isFetching reset to false.");
+    }
   }
 
-
-// 마커 데이터를 반영하는 함수
-  void updateMarkers() {
-    setState(() {
-      markers.clear(); // 기존 마커 제거
-      for (var position in positions) {
-        markers.add(Marker(
-          markerId: markers.length.toString(),
-          latLng: position,
-          markerImageSrc: mapMaker_unclicked,
-          width: 38,
-          height: 38,
-          offsetX: 15,
-          offsetY: 44,
-        ));
-      }
-    });
-  }
 
 
   @override
@@ -308,7 +344,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                   alignment: Alignment.bottomLeft,
                   child: LabelChange(),
                 ),
-                Align(
+                /*Align(
                   alignment: Alignment.bottomRight,
                   child: Row(
                     children: [
@@ -339,7 +375,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                       )
                     ],
                   ),
-                ),
+                ),*/
               ]),
               body: Stack(
                 children: [
@@ -369,9 +405,10 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                       }),
                       center: LatLng(centerLat, centerLng),
                       markers: markers.toList(),
-                      onCameraIdle: (LatLng latLng, int zoomLevel) {
+                      /*onCameraIdle: (LatLng latLng, int zoomLevel) {
+
                         getRadiusBasedOnZoom(); // 디바운스된 getRadiusBasedOnZoom 호출
-                      },
+                      },*/
                       onMarkerTap: (markerId, latLng, zoomLevel) async {
                         mapController.setCenter(latLng);
 

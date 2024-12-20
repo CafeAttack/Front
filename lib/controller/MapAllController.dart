@@ -32,6 +32,13 @@ class MapAllController extends GetxController {
       if (response.statusCode == 200) {
         // 서버 응답에서 데이터를 파싱하여 MapAllModel에 저장
         mapAll.value = MapAllModel.fromJson(response.data);
+
+        // 받은 데이터를 콘솔에 출력
+        print("Response Data:");
+        print(response.data); // 전체 응답 데이터를 출력
+        print("Parsed Model Data:");
+        print(mapAll.value.toJson()); // 파싱한 모델 데이터를 JSON으로 출력
+
         print("Finished loading from server");
       } else {
         print("Error: ${response.statusCode} - ${response.statusMessage}");
