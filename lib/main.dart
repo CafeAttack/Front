@@ -1,5 +1,5 @@
-import 'package:cafe_attack/MetaData.dart';
-import 'package:cafe_attack/services/dio_client.dart';
+import 'package:cafe_attack/MetaData.dart' as customMetaData;
+import 'package:cafe_attack/dio_client.dart';
 import 'package:cafe_attack/view/BookmarkView.dart';
 import 'package:cafe_attack/view/CafeView.dart';
 import 'package:cafe_attack/view/MapView.dart';
@@ -10,29 +10,26 @@ import 'package:cafe_attack/view/LoginView.dart';
 import 'package:cafe_attack/view/SignupView.dart';
 import 'package:cafe_attack/view/MenuView.dart';
 import 'package:cafe_attack/view/ResetInfoView.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:get/get.dart';
 import 'package:cafe_attack/controller/LoginController.dart';
 
+
 Future<void> main() async {
-  await dotenv.load(fileName: "assets/config/.env");
-
-
-  final serverUrl = dotenv.env['SERVER_URL'];
-  final apiKey = dotenv.env['API_KEY'];
-
   WidgetsFlutterBinding.ensureInitialized();
-  await DioClient.setupInterceptors();
 
-  runApp(MyApp(serverUrl: serverUrl!));
-  AuthRepository.initialize(appKey: apiKey!);
+  // 환경 변수 및 Dio 설정
+  await customMetaData.MetaData.initialize();
+  DioClient.initialize();
+
+  runApp(MyApp());
+  AuthRepository.initialize(appKey: customMetaData.MetaData.apiKey);
 }
 
 class MyApp extends StatelessWidget {
-  final String serverUrl;
 
-  const MyApp({super.key, required this.serverUrl});
+  const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
@@ -41,7 +38,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
       ),
-      home: LoginPage(serverUrl: serverUrl),
+      home: LoginPage(),
     );
   }
 }

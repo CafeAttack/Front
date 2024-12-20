@@ -3,15 +3,15 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:cafe_attack/dio_client.dart';
 
 class LoginController {
   static final storage = FlutterSecureStorage();
 
-  Future<bool> login(LoginModel loginModel, String serverUrl) async {
-    Dio dio = Dio();
+  Future<bool> login(LoginModel loginModel) async {
 
     try {
-      Response response = await dio.post('$serverUrl/auth/login', data: loginModel.toJson());
+      Response response = await DioClient.getRequest('auth/login');
 
       if (response.statusCode == 200) {
         // 서버 응답에서 'jwtToken'이 null이 아닌지 확인

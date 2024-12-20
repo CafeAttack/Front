@@ -1,10 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:get/get.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:cafe_attack/dio_client.dart';
 
 const String freesentation = 'Freesentation';
 String mapMaker_unclicked = 'https://i.ibb.co/WpvynM0/1.png';
 String mapMaker_clicked = 'https://i.ibb.co/j5b0gpj/image.png';
 String basic_image = 'assets/Images/temporary_logo.png';
+
+class MetaData {
+  static String serverUrl = "";
+  static String apiKey = "";
+  static String accessToken = "";
+
+  static Future<void> initialize() async {
+    await dotenv.load(fileName: "assets/config/.env");
+
+    serverUrl = dotenv.env['SERVER_URL'] ?? "";
+    apiKey = dotenv.env['API_KEY'] ?? "";
+
+    if (serverUrl.isEmpty || apiKey.isEmpty) {
+      throw Exception("환경 변수 로드 실패: SERVER_URL 또는 API_KEY가 없습니다.");
+    }
+  }
+
+  /// 액세스 토큰 설정 (로그인 시 호출됨)
+  static void setAccessToken(String token) {
+    accessToken = token;
+    DioClient.updateHeaders();
+  }
+}
 
 List<String> categoryId = [
   "assets/Images/categoryId_1.png",
@@ -48,4 +75,5 @@ class _LoadingScreenState extends State<LoadingScreen> {
     );
   }
 }
+
 

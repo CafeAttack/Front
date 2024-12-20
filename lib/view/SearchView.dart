@@ -9,9 +9,8 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class SearchPage extends StatefulWidget {
-  final String serverUrl;
 
-  const SearchPage({super.key, required this.serverUrl});
+  const SearchPage({super.key});
 
   @override
   State<SearchPage> createState() => _SearchPageState();
@@ -201,7 +200,7 @@ class _SearchPageState extends State<SearchPage> {
                           ),
                           IconButton(
                             onPressed: () {
-                              Get.to(() => SearchPage(serverUrl: widget.serverUrl,));
+                              Get.to(() => SearchPage());
                             },
                             icon: const Icon(Icons.search),
                             iconSize: 30,
@@ -243,7 +242,7 @@ class _SearchPageState extends State<SearchPage> {
                                     placeName: _buildHighlightedText(
                                         placeName, lowerSearchText),
                                     roadAddressName: document.roadAddressName!,
-                                    serverUrl: widget.serverUrl,
+
                                   );
                                 }
                               },

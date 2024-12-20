@@ -17,9 +17,8 @@ import 'dart:async';
 class MapPage extends StatefulWidget {
   final int act;
   final String cafeId;
-  final String serverUrl;
 
-  const MapPage({required this.act, this.cafeId = "", required this.serverUrl});
+  const MapPage({required this.act, this.cafeId = ""});
 
   @override
   _MapPageState createState() => _MapPageState();
@@ -34,7 +33,6 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   var actLatLng;
   var actMarkId;
   late KakaoMapController mapController;
-  var serverUrl;
 
   var loading = true.obs;
   late MapAllController _mapAllController;
@@ -48,7 +46,6 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    serverUrl = widget.serverUrl;
     initialize();
   }
 
@@ -66,7 +63,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
 
 
       // 위치 정보를 기반으로 컨트롤러 초기화 (반경 값도 전달)
-      _mapAllController = Get.put(MapAllController(widget.serverUrl, centerLng, centerLat, 5000));
+      _mapAllController = Get.put(MapAllController( centerLng, centerLat, 5000));
 
       // 서버에서 데이터 불러오기
       await _mapAllController.fetchMapAllFromServer();
@@ -289,7 +286,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
     try {
       // mapAllController에 새 중심 위치와 반경 반영
       _mapAllController = Get.put(MapAllController(
-          widget.serverUrl, center.longitude, center.latitude, radius));
+          center.longitude, center.latitude, radius));
 
       print(
           "Fetching data for radius: $radius meters around ${center.latitude}, ${center.longitude}");
@@ -475,7 +472,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                         Expanded(
                           child: GestureDetector(
                             onTap: () {
-                              Get.to(() => SearchPage(serverUrl: widget.serverUrl,));
+                              Get.to(() => SearchPage());
                             },
                             child: TextFormField(
                               enabled: false,
@@ -502,7 +499,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                         ),
                         IconButton(
                           onPressed: () {
-                            Get.to(() => SearchPage(serverUrl: widget.serverUrl,));
+                            Get.to(() => SearchPage());
                           },
                           icon: Icon(Icons.search),
                           iconSize: 30,

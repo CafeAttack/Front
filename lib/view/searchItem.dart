@@ -8,15 +8,13 @@ class SearchItem extends StatefulWidget {
   final String id;
   final String roadAddressName;
   final int distance;
-  final String serverUrl;
 
   const SearchItem(
       {super.key,
       required this.distance,
       required this.id,
       required this.placeName,
-      required this.roadAddressName,
-      required this.serverUrl});
+      required this.roadAddressName});
 
   @override
   State<SearchItem> createState() => _SearchItemState();
@@ -35,7 +33,7 @@ class _SearchItemState extends State<SearchItem> {
         Get.offAll(() => MapPage(
               act: 1,
               cafeId: widget.id,
-              serverUrl: widget.serverUrl,
+
             ));
       },
       child: Container(
