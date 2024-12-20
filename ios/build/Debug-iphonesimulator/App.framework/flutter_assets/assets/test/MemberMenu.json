@@ -1,0 +1,8 @@
+{
+  "status" : 200,
+  "message" : "메뉴가 열렸습니다.",
+  "data" : {
+    "nickname" : "aqoom",
+    "favor_count" : 3
+  }
+}

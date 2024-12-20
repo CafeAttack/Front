@@ -1,29 +1,52 @@
 import 'package:cafe_attack/model/MapAllModel.dart';
 import 'package:get/get.dart';
-import 'dart:convert';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:dio/dio.dart' as Dioo;
 
 class MapAllController extends GetxController {
   var mapAll = MapAllModel().obs;
   var isLoading = true.obs;
+  Dioo.Dio dio = Dioo.Dio();
+
+  String serverUrl;
+  double longitude;
+  double latitude;
+  int radius;
+
+  MapAllController(this.serverUrl, this.longitude, this.latitude, this.radius);
 
   @override
   void onInit() {
     super.onInit();
-    fetchMapAllFromJson();
+    fetchMapAllFromServer();
   }
 
-  void fetchMapAllFromJson() async {
+  Future<void> fetchMapAllFromServer() async {
     try {
-      print("Start loading");
+      print("Start loading from server");
       isLoading.value = true;
-      String _data = await rootBundle.loadString('assets/test/map_all.json');
-      Map<String, dynamic> data = json.decode(_data);
-      mapAll.value = MapAllModel.fromJson(data);
-      isLoading.value = false;
-      print("Finished loading");
+
+      // 서버에서 데이터 요청
+      Dioo.Response response = await dio.get(
+          '$serverUrl/map/main?category_group_code=CE7&longitude=$longitude&latitude=$latitude&radius=$radius');
+
+      if (response.statusCode == 200) {
+        // 서버 응답에서 데이터를 파싱하여 MapAllModel에 저장
+        mapAll.value = MapAllModel.fromJson(response.data);
+
+        // 받은 데이터를 콘솔에 출력
+        print("Response Data:");
+        print(response.data); // 전체 응답 데이터를 출력
+        print("Parsed Model Data:");
+        print(mapAll.value.toJson()); // 파싱한 모델 데이터를 JSON으로 출력
+
+        print("Finished loading from server");
+      } else {
+        print("Error: ${response.statusCode} - ${response.statusMessage}");
+      }
     } catch (e) {
-      print("Error: $e");
+      print("Error fetching data: $e");
+    } finally {
+      isLoading.value = false;
     }
   }
 }

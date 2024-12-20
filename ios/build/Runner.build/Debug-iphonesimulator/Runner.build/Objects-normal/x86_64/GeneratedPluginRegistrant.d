@@ -1,0 +1,20 @@
+dependencies: \
+  /Users/o-eunjin/StudioProjects/cafe_attack/ios/Runner/GeneratedPluginRegistrant.m \
+  /Users/o-eunjin/StudioProjects/cafe_attack/ios/Runner/GeneratedPluginRegistrant.h \
+  /Users/o-eunjin/StudioProjects/cafe_attack/ios/build/Debug-iphonesimulator/Flutter.framework/Modules/module.modulemap \
+  /Users/o-eunjin/StudioProjects/cafe_attack/ios/build/Debug-iphonesimulator/Flutter.framework/Headers/Flutter.h \
+  /Users/o-eunjin/StudioProjects/cafe_attack/ios/build/Debug-iphonesimulator/Flutter.framework/Headers/FlutterAppDelegate.h \
+  /Users/o-eunjin/StudioProjects/cafe_attack/ios/build/Debug-iphonesimulator/Flutter.framework/Headers/FlutterMacros.h \
+  /Users/o-eunjin/StudioProjects/cafe_attack/ios/build/Debug-iphonesimulator/Flutter.framework/Headers/FlutterPlugin.h \
+  /Users/o-eunjin/StudioProjects/cafe_attack/ios/build/Debug-iphonesimulator/Flutter.framework/Headers/FlutterBinaryMessenger.h \
+  /Users/o-eunjin/StudioProjects/cafe_attack/ios/build/Debug-iphonesimulator/Flutter.framework/Headers/FlutterChannels.h \
+  /Users/o-eunjin/StudioProjects/cafe_attack/ios/build/Debug-iphonesimulator/Flutter.framework/Headers/FlutterCodecs.h \
+  /Users/o-eunjin/StudioProjects/cafe_attack/ios/build/Debug-iphonesimulator/Flutter.framework/Headers/FlutterPlatformViews.h \
+  /Users/o-eunjin/StudioProjects/cafe_attack/ios/build/Debug-iphonesimulator/Flutter.framework/Headers/FlutterTexture.h \
+  /Users/o-eunjin/StudioProjects/cafe_attack/ios/build/Debug-iphonesimulator/Flutter.framework/Headers/FlutterCallbackCache.h \
+  /Users/o-eunjin/StudioProjects/cafe_attack/ios/build/Debug-iphonesimulator/Flutter.framework/Headers/FlutterDartProject.h \
+  /Users/o-eunjin/StudioProjects/cafe_attack/ios/build/Debug-iphonesimulator/Flutter.framework/Headers/FlutterEngine.h \
+  /Users/o-eunjin/StudioProjects/cafe_attack/ios/build/Debug-iphonesimulator/Flutter.framework/Headers/FlutterEngineGroup.h \
+  /Users/o-eunjin/StudioProjects/cafe_attack/ios/build/Debug-iphonesimulator/Flutter.framework/Headers/FlutterHeadlessDartRunner.h \
+  /Users/o-eunjin/StudioProjects/cafe_attack/ios/build/Debug-iphonesimulator/Flutter.framework/Headers/FlutterPluginAppLifeCycleDelegate.h \
+  /Users/o-eunjin/StudioProjects/cafe_attack/ios/build/Debug-iphonesimulator/Flutter.framework/Headers/FlutterViewController.h

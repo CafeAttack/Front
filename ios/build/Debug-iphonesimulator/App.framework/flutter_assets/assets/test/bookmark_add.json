@@ -1,0 +1,21 @@
+{
+  "status" : 200,
+  "message" : "즐겨찾기 추가 화면입니다.",
+  "groups" : [
+    {
+      "groupId" : 0,
+      "groupName" : "내 즐겨찾기",
+      "checked" : true
+    },
+    {
+      "groupId" : 1,
+      "groupName" : "학교 앞 카페",
+      "checked" : false
+    },
+    {
+      "groupId" : 2,
+      "groupName" : "홍대 카페",
+      "checked" : true
+    }
+  ]
+}
