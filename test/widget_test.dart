@@ -17,7 +17,7 @@ void main() async {
     // Build our app and trigger a frame.
     String serverUrl = dotenv.env['SERVER_URL'] ?? 'default-server-url';
 
-    await tester.pumpWidget(MyApp(serverUrl: serverUrl!));
+    await tester.pumpWidget(MyApp());
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

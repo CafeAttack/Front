@@ -20,9 +20,8 @@ final TextEditingController _pwcController = TextEditingController();
 final TextEditingController _birthController = TextEditingController();
 
 class SignupPage extends StatefulWidget {
-  final String serverUrl;
 
-  const SignupPage({super.key, required this.serverUrl});
+  const SignupPage({super.key});
 
   @override
   State<SignupPage> createState() => _SignupPageState();
@@ -326,7 +325,7 @@ class _SignupPageState extends State<SignupPage> {
                       } else {
                         try {
                           int email_dup = await signupController.email_dup(
-                              signupModel, widget.serverUrl);
+                              signupModel);
 
                           if (email_dup == 400) {
                             Get.snackbar("중복된 이메일", "이미 회원가입된 이메일입니다");
@@ -426,7 +425,7 @@ class _SignupPageState extends State<SignupPage> {
                                 try {
                                   int email_veri =
                                       await signupController.email_verifi(
-                                          signupModel, widget.serverUrl);
+                                          signupModel);
 
                                   if (email_veri == 400) {
                                     _showErrorMessage(

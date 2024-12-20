@@ -10,8 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class LoginPage extends StatefulWidget {
-  final String serverUrl;
-  const LoginPage({super.key, required this.serverUrl});
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -116,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   TextButton(
                     onPressed: () {
-                      Get.to(() => SignupPage(serverUrl: widget.serverUrl,));
+                      Get.to(() => SignupPage());
                     },
                     style: ButtonStyle(
                       padding: MaterialStateProperty.all<EdgeInsets>(
@@ -152,7 +151,6 @@ class _LoginPageState extends State<LoginPage> {
                   // 로그인 시도 시 입력된 아이디와 비밀번호를 가져옵니다.
                   String signId = _IDcontroller.text;
                   String password = _PWcontroller.text;
-                  String serverUrl = widget.serverUrl;
 
                   // 로그인 요청을 보낼 LoginModel 생성
                   LoginModel loginModel = LoginModel(signId: signId, password: password);
@@ -162,12 +160,12 @@ class _LoginPageState extends State<LoginPage> {
 
                   try {
                     // 로그인 시도
-                    bool loginSuccess = await authController.login(loginModel, serverUrl);
+                    bool loginSuccess = await authController.login(loginModel);
 
                     // 로그인 결과에 따른 행동
                     if (loginSuccess) {
                       // 로그인 성공 시 MapPage로 이동
-                      Get.off(() => MapPage(act: 0, serverUrl: serverUrl,));
+                      Get.off(() => MapPage(act: 0));
                     } else {
                       // 로그인 실패 시 에러 메시지 표시
                       Get.snackbar("로그인 실패", "아이디 또는 비밀번호가 잘못되었습니다.");
