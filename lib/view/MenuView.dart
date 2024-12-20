@@ -5,6 +5,7 @@ import 'package:cafe_attack/view/ResetInfoView.dart';
 import 'package:cafe_attack/view/resposive/BreakPoint.dart';
 import 'package:cafe_attack/view/resposive/ResponsiveCenter.dart';
 import 'package:cafe_attack/controller/MemberMenuController.dart';
+import 'RecordMenu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -27,7 +28,7 @@ class _MenuPageState extends State<MenuPage> {
   void initState() {
     super.initState();
     // 실제 작업을 시작
-    Future.delayed(Duration(milliseconds : 90),() {
+    Future.delayed(Duration(milliseconds: 90), () {
       favor_count = _memberMenuController.Membermenu.value.data!.favorCount;
       nickname = _memberMenuController.Membermenu.value.data!.nickname;
 
@@ -165,7 +166,7 @@ class _MenuPageState extends State<MenuPage> {
                                         ),
                                         TextButton(
                                           onPressed: () {
-                                            Get.to(()=>ResetInfoPage());
+                                            Get.to(() => ResetInfoPage());
                                           },
                                           child: Text(
                                             '내 정보 수정',
@@ -195,7 +196,7 @@ class _MenuPageState extends State<MenuPage> {
                           ),
                           TextButton(
                             onPressed: () {
-                              Get.to(()=>BookmarkPage());
+                              Get.to(() => BookmarkPage());
                             },
                             child: Text(
                               '즐겨찾기 목록',
@@ -249,6 +250,31 @@ class _MenuPageState extends State<MenuPage> {
                             },
                             child: Text(
                               '계정 탈퇴',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontFamily: 'Freesentation',
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 24),
+                            ),
+                            style:
+                                TextButton.styleFrom(padding: EdgeInsets.zero),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 31,
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Get.to(() => RecordmenuPage());
+                            },
+                            child: Text(
+                              '나의 방문 카페',
                               style: TextStyle(
                                   color: Colors.black,
                                   fontFamily: 'Freesentation',

@@ -1,0 +1,18 @@
+{
+	"status" : 200,
+	"message" : "기록장이 열렸습니다.",
+	"cafes" : [
+		{
+			"cafeId" : 1,
+			"cafename" : "카페 베르데",
+			"visitcount" : 1,
+			"latestvisit" : "2024-05-29"
+		},
+		{
+			"cafeId" : 2,
+			"cafename" : "설빙 광운대점",
+			"visitcount" : 3,
+			"latestvisit" : "2024-05-26"
+		}
+	]
+}
