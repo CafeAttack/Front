@@ -1,6 +1,7 @@
 import 'package:cafe_attack/MetaData.dart';
 import 'package:cafe_attack/controller/SignUpController.dart';
 import 'package:cafe_attack/model/SignUpModel.dart';
+import 'package:cafe_attack/view/LoginView.dart';
 import 'package:cafe_attack/view/dialog.dart';
 import 'package:cafe_attack/view/resposive/BreakPoint.dart';
 import 'package:cafe_attack/view/resposive/ResponsiveCenter.dart';
@@ -28,9 +29,9 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  bool _IDButtonClick = false;
-  bool _emailConfirmClick = false;
-  bool _IDduplication = false;
+  // bool _IDButtonClick = false;
+   bool _emailConfirmClick = false;
+  // bool _IDduplication = false;
   bool _emailCertification = false;
   bool _IsCheck = false;
 
@@ -49,6 +50,109 @@ class _SignupPageState extends State<SignupPage> {
         RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
     return regex.hasMatch(email);
   }
+
+   void _validateAndSubmit() async {
+     bool success = true;
+     // print("_idField: ${_idController.text}");
+
+     // 입력값 검증
+     setState(() {
+       if (_idController.text.isEmpty) {
+         _idField = "아이디를 입력해주세요";
+         success = false;
+       } else {
+         _idField = null;
+       }
+
+       if (_nameController.text.isEmpty) {
+         _nameField = "이름을 입력해주세요";
+         success = false;
+       } else {
+         _nameField = null;
+       }
+
+       if (_nicknameController.text.isEmpty) {
+         _nicknameField = "닉네임을 입력해주세요";
+         success = false;
+       } else {
+         _nicknameField = null;
+       }
+
+       if (_emailController.text.isEmpty) {
+         _emailField = "이메일을 입력해주세요";
+         success = false;
+       } else if (!_emailCertification) {
+         _emailField = "이메일 인증을 진행해주세요";
+         success = false;
+       } else {
+         _emailField = null;
+       }
+
+       if (_pwController.text.isEmpty) {
+         _pwField = "비밀번호를 입력해주세요";
+         success = false;
+       } else {
+         _pwField = null;
+       }
+
+       if (_pwcController.text.isEmpty) {
+         _pwcField = "비밀번호를 확인해주세요";
+         success = false;
+       } else if (_pwcController.text != _pwController.text) {
+         _pwcField = "비밀번호가 일치하지 않습니다";
+         success = false;
+       } else {
+         _pwcField = null;
+       }
+
+       if (_birthController.text.isEmpty) {
+         _birthField = "생년월일을 입력해주세요";
+         success = false;
+       } else if (_birthController.text.length != 6) {
+         _birthField = "yymmdd 6자리로 입력바랍니다";
+         success = false;
+       } else {
+         _birthField = null;
+       }
+     });
+
+     // 개인정보 수집 동의 확인
+     if (success && !_IsCheck) {
+       showErrorDialog(
+           context, "개인정보 수집 동의", "개인 정보 수집에 동의하지 않으면 가입이 불가합니다", "확인");
+       return;
+     }
+
+     // 회원가입 로직 실행
+     if (success) {
+       // print("_birthField: ${_birthController.text}");
+
+       String parseBirth =
+           "${_birthController.text.substring(0, 2)}.${_birthController.text.substring(2, 4)}.${_birthController.text.substring(4, 6)}";
+       // print("parseBirth: ${parseBirth}");
+       SignUpModel signupModel = SignUpModel(
+         signId: _idController.text,
+         name: _nameController.text,
+         nickname: _nicknameController.text,
+         email: _emailController.text,
+         password: _pwController.text,
+         checkPassword: _pwcController.text,
+         birth: parseBirth,
+         agreement: _IsCheck,
+       );
+
+       SignUpController signupController = SignUpController();
+
+       bool signSuccess = await signupController.signUp(signupModel);
+
+       if (signSuccess) {
+         Get.snackbar("회원가입 성공", "카페어택을 즐겨보세요");
+         Get.off(() => LoginPage());
+       } else {
+         Get.snackbar("회원가입 실패", "회원가입 중 오류가 발생했습니다.");
+       }
+     }
+   }
 
   void _showErrorMessage(String variableType, String message) {
     setState(() {
@@ -143,7 +247,7 @@ class _SignupPageState extends State<SignupPage> {
                             ),
                           ),
                         ),
-                        Positioned(
+                        /*Positioned(
                           right: 8,
                           top: 5,
                           child: ElevatedButton(
@@ -186,7 +290,7 @@ class _SignupPageState extends State<SignupPage> {
                               ),
                             ),
                           ),
-                        ),
+                        ),*/
                       ],
                     ),
                   ),
@@ -317,6 +421,7 @@ class _SignupPageState extends State<SignupPage> {
                       SignUpModel signupModel =
                           SignUpModel(email: _emailController.text);
                       SignUpController signupController = SignUpController();
+                      Get.snackbar("이메일 전송 성공", "이메일을 확인해주세요");
 
                       if (_emailController.text.isEmpty) {
                         _showErrorMessage("email", "이메일을 입력하세요");
@@ -414,7 +519,8 @@ class _SignupPageState extends State<SignupPage> {
                           child: ElevatedButton(
                             onPressed: () async {
                               SignUpModel signupModel = SignUpModel(
-                                  authentication: _emailConfirmController.text);
+                                email: _emailController.text,
+                                  code: int.parse(_emailConfirmController.text));
                               SignUpController signupController =
                                   SignUpController();
 
@@ -692,89 +798,7 @@ class _SignupPageState extends State<SignupPage> {
                 height: 40,
               ),
               ElevatedButton(
-                onPressed: () {
-                  bool success = true;
-                  setState(() {
-                    if (_idController.text.isEmpty) {
-                      _idField = "아이디를 입력해주세요";
-                      success = false;
-                    } else if (!_IDButtonClick) {
-                      _idField = "아이디 중복확인을 진행해주세요";
-                      success = false;
-                    } else if (_IDduplication) {
-                      _idField = "이미 존재하는 아이디입니다";
-                      success = false;
-                    } else {
-                      _idField = null;
-                      success = true;
-                    }
-
-                    if (_nameController.text.isEmpty) {
-                      _nameField = "이름을 입력해주세요";
-                      success = false;
-                    } else {
-                      _nameField = null;
-                      success = true;
-                    }
-
-                    if (_nicknameController.text.isEmpty) {
-                      _nicknameField = "닉네임을 입력해주세요";
-                      success = false;
-                    } else {
-                      _nicknameField = null;
-                      success = true;
-                    }
-
-                    if (_emailController.text.isEmpty) {
-                      _emailField = "이메일을 입력해주세요";
-                      success = false;
-                    } else if (!_emailCertification) {
-                      _emailField = "이메일 인증을 진행해주세요";
-                      success = false;
-                    } else {
-                      _emailField = null;
-                      success = true;
-                    }
-
-                    if (_pwController.text.isEmpty) {
-                      _pwField = "비밀번호를 입력해주세요";
-                      success = false;
-                    } else {
-                      _pwField = null;
-                      success = true;
-                    }
-
-                    if (_pwcController.text.isEmpty) {
-                      _pwcField = "비밀번호를 확인해주세요";
-                      success = false;
-                    } else if (_pwcController.text != _pwController.text) {
-                      _pwcField = "비밀번호가 일치하지 않습니다";
-                      success = false;
-                    } else {
-                      _pwcField = null;
-                      success = true;
-                    }
-
-                    if (_birthController.text.isEmpty) {
-                      _birthField = "비밀번호를 확인해주세요";
-                      success = false;
-                    } else if (_birthController.text.length > 6) {
-                      _birthField = "yymmdd 6자리로 입력바랍니다";
-                      success = false;
-                    } else if (_birthController.text.length < 6) {
-                      _birthField = "yymmdd 6자리로 입력바랍니다";
-                      success = false;
-                    } else {
-                      _birthField = null;
-                      success = true;
-                    }
-
-                    if (success && !_IsCheck) {
-                      showErrorDialog(context, "개인정보 수집 동의",
-                          "개인 정보 수집에 동의하지 않으면 가입이 불가합니다", "확인");
-                    }
-                  });
-                },
+                onPressed: _validateAndSubmit,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0x20564646),
                   side: BorderSide(color: Color(0x50564646), width: 2),
