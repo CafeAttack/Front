@@ -7,7 +7,6 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 class SignUpController {
 
   Future<int> email_dup(SignUpModel signupModel) async {
-
     try {
       Response response = await DioClient.postRequest('/auth/email-duplication',
           signupModel.email_duplication_toJson());
@@ -49,4 +48,27 @@ class SignUpController {
     }
   }
 
+  /// 회원가입 함수
+  Future<bool> signUp(SignUpModel SignUpModel) async {
+    try {
+      // 로그인 요청
+      var response = await DioClient.postRequest(
+        '/auth/signup',
+        SignUpModel.SignUp_toJson(),
+      );
+
+      print("response: ${response.statusCode}");
+
+      // 상태 코드 확인
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        print('회원가입 실패: ${response.data['status']} - ${response.data['message']}');
+        return false;
+      }
+    } catch (e) {
+      print('로그인 에러: $e');
+      return false;
+    }
+  }
 }
