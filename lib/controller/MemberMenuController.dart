@@ -24,7 +24,7 @@ class MemberMenuController extends GetxController{
       if(response.statusCode == 200){
         Membermenu.value = MemberMenuModel.fromJson(response.data);
       }
-
+      print("memberMenuData: ${Membermenu.value.data}");
       isLoading(false);
     }catch(e){
       print("Error: $e");
