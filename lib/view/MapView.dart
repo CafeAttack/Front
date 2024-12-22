@@ -16,9 +16,9 @@ import 'dart:async';
 
 class MapPage extends StatefulWidget {
   final int act;
-  final String cafeId;
+  final int cafeId;
 
-  const MapPage({required this.act, this.cafeId = ""});
+  const MapPage({required this.act, this.cafeId = -1});
 
   @override
   _MapPageState createState() => _MapPageState();
@@ -62,8 +62,8 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
       centerLat = position.latitude;
 
 
-      // 위치 정보를 기반으로 컨트롤러 초기화 (반경 값도 전달)
-      _mapAllController = Get.put(MapAllController( centerLng, centerLat, 5000));
+      // 위치 정보를 기반으로 컨트롤러 초기화
+      _mapAllController = Get.put(MapAllController(centerLng, centerLat));
 
       // 서버에서 데이터 불러오기
       await _mapAllController.fetchMapAllFromServer();
@@ -74,7 +74,6 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
       } else {
         actMakePositionList();
       }
-
 
         loading(false); // 모든 작업이 완료된 후 로딩 상태 변경
 
@@ -109,92 +108,108 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
 
   void makePositionList() {
     positions.clear(); // 기존 위치 리스트 초기화
-    for (int i = 0; i < _mapAllController.mapAll.value.documents!.length; i++) {
+    for (int i = 0; i < _mapAllController.mapAll.value.data!.length; i++) {
       positions.add(LatLng(
-        double.parse(_mapAllController.mapAll.value.documents![i].y!),
-        double.parse(_mapAllController.mapAll.value.documents![i].x!),
+        _mapAllController.mapAll.value.data![i].latitude!,
+        _mapAllController.mapAll.value.data![i].longitude!,
+      ));
+
+      // 마커를 추가하면서 markerId를 cafeId로 설정
+      markers.add(Marker(
+        markerId: _mapAllController.mapAll.value.data![i].cafeId.toString(),
+        latLng: LatLng(
+          _mapAllController.mapAll.value.data![i].latitude!,
+          _mapAllController.mapAll.value.data![i].longitude!,
+        ),
+        markerImageSrc: mapMaker_unclicked,
+        width: 38,
+        height: 38,
+        offsetX: 15,
+        offsetY: 44,
       ));
     }
+
   }
 
   void actMakePositionList() {
-    for (int i = 0; i < _mapAllController.mapAll.value.documents!.length; i++) {
+    for (int i = 0; i < _mapAllController.mapAll.value.data!.length; i++) {
       positions.add(LatLng(
-          double.parse(_mapAllController.mapAll.value.documents![i].y!),
-          double.parse(_mapAllController.mapAll.value.documents![i].x!)));
-      if (_mapAllController.mapAll.value.documents![i].id == widget.cafeId) {
+        _mapAllController.mapAll.value.data![i].latitude!,
+        _mapAllController.mapAll.value.data![i].longitude!,
+      ));
+      if (_mapAllController.mapAll.value.data![i].cafeId == widget.cafeId) {
         actLatLng = LatLng(
-            double.parse(_mapAllController.mapAll.value.documents![i].y!),
-            double.parse(_mapAllController.mapAll.value.documents![i].x!));
+          _mapAllController.mapAll.value.data![i].latitude!,
+          _mapAllController.mapAll.value.data![i].longitude!,
+        );
       }
     }
   }
 
-  void _highlightMarker(String cafeId) async {
-    // 마커 찾기
+  void _highlightMarker(int cafeId) async {
+    // actLatLng를 설정 (해당 카페의 위치)
+    actLatLng = positions.firstWhere(
+          (position) =>
+          _mapAllController.mapAll.value.data!.any((cafe) =>
+          cafe.cafeId == cafeId &&
+              cafe.latitude == position.latitude &&
+              cafe.longitude == position.longitude),
+      orElse: () => LatLng(centerLat, centerLng), // 기본값으로 초기 위치 설정
+    );
+
+    // 지도 중심을 해당 마커로 이동
     mapController.setCenter(actLatLng);
 
-    int markerId =
-        int.parse(cafeId) - 1; // cafeId를 인덱스로 변환 (cafeId는 1부터 시작한다고 가정)
-    print("cafe maker index: $markerId");
+    // 마커를 찾아 강조 표시
+    setState(() {
+      int index = markers.toList().indexWhere(
+              (marker) => marker.markerId == cafeId.toString());
 
-    if (markerId >= 0 && markerId < markers.length) {
-      // 해당 마커를 찾고 활성화
-      int index = markers
-          .toList()
-          .indexWhere((marker) => marker.markerId == markerId.toString());
-      Marker targetMarker = markers.elementAt(index);
+      if (index != -1) {
+        print("Highlighting marker for cafeId: $cafeId");
 
-      // 마커 클릭과 같은 동작 수행
-      setState(() {
-        int index = markers
-            .toList()
-            .indexWhere((marker) => marker.markerId == markerId.toString());
+        // 기존 마커 상태 변경
         Marker targetMarker = markers.elementAt(index);
-        if (index != -1) {
-          print("${targetMarker.latLng}, $index, ${markerId}");
-          Marker oldMarker = markers.elementAt(index);
-          markers.remove(oldMarker);
-          markers.add(Marker(
-            markerId: markerId.toString(),
-            latLng: targetMarker.latLng,
-            markerImageSrc: mapMaker_clicked,
-            width: 38,
-            height: 38,
-            offsetX: oldMarker.offsetX,
-            offsetY: oldMarker.offsetY,
-          ));
-        }
-      });
+        markers.remove(targetMarker);
+        markers.add(Marker(
+          markerId: targetMarker.markerId,
+          latLng: targetMarker.latLng,
+          markerImageSrc: mapMaker_clicked, // 클릭된 상태 이미지
+          width: 38,
+          height: 38,
+          offsetX: targetMarker.offsetX,
+          offsetY: targetMarker.offsetY,
+        ));
+      }
+    });
 
-      await showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return CafeDetailBottomSheet(latlag: targetMarker.latLng);
-        },
-      );
+    // 마커 클릭 후 상세 정보를 표시
+    await showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return CafeDetailBottomSheet(latlag: actLatLng);
+      },
+    );
 
-      setState(() {
-        int index = markers
-            .toList()
-            .indexWhere((marker) => marker.markerId == markerId.toString());
-        Marker targetMarker = markers.elementAt(index);
-        if (index != -1) {
-          print("${targetMarker.latLng}, $index, $markerId");
-          Marker selectedMarker = markers.elementAt(index);
-          markers.remove(selectedMarker);
-          markers.add(Marker(
-            markerId: markerId.toString(),
-            latLng: targetMarker.latLng,
-            markerImageSrc: mapMaker_unclicked,
-            width: 38,
-            height: 38,
-            offsetX: selectedMarker.offsetX,
-            offsetY: selectedMarker.offsetY,
-          ));
-        }
-      });
-    }
+    // 다시 원래 상태로 변경
+    setState(() {
+      int index = markers.toList().indexWhere(
+              (marker) => marker.markerId == cafeId.toString());
+
+      if (index != -1) {
+        Marker selectedMarker = markers.elementAt(index);
+        markers.remove(selectedMarker);
+        markers.add(Marker(
+          markerId: selectedMarker.markerId,
+          latLng: selectedMarker.latLng,
+          markerImageSrc: mapMaker_unclicked, // 원래 상태 이미지
+          width: 38,
+          height: 38,
+          offsetX: selectedMarker.offsetX,
+          offsetY: selectedMarker.offsetY,
+        ));
+      }
+    });
   }
 
   Future<void> getRadiusBasedOnZoom() async {
@@ -286,7 +301,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
     try {
       // mapAllController에 새 중심 위치와 반경 반영
       _mapAllController = Get.put(MapAllController(
-          center.longitude, center.latitude, radius));
+          center.longitude, center.latitude));
 
       print(
           "Fetching data for radius: $radius meters around ${center.latitude}, ${center.longitude}");
@@ -395,7 +410,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                         setState(() {});
 
                         // 여기에서 마커가 설정된 후에 act 값에 따라 특정 마커 활성화
-                        if (widget.act == 1 && widget.cafeId.isNotEmpty) {
+                        if (widget.act == 1 && widget.cafeId!=-1) {
                           print("start _highlightMarker");
                           _highlightMarker(widget.cafeId);
                         }

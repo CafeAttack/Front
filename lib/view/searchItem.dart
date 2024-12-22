@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 
 class SearchItem extends StatefulWidget {
   final RichText placeName;
-  final String id;
+  final int id;
   final String roadAddressName;
   final int distance;
 
