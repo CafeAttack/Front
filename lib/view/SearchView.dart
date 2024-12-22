@@ -238,7 +238,7 @@ class _SearchPageState extends State<SearchPage> {
                                 } else {
                                   return SearchItem(
                                     distance: document.distance!,
-                                    id: document.id!,
+                                    id: int.parse(document.id!),
                                     placeName: _buildHighlightedText(
                                         placeName, lowerSearchText),
                                     roadAddressName: document.roadAddressName!,

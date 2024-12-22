@@ -9,9 +9,8 @@ class MapAllController extends GetxController {
 
   double longitude;
   double latitude;
-  int radius;
 
-  MapAllController(this.longitude, this.latitude, this.radius);
+  MapAllController(this.longitude, this.latitude);
 
   @override
   void onInit() {
@@ -26,7 +25,7 @@ class MapAllController extends GetxController {
 
       // 서버에서 데이터 요청
       dioo.Response response = await DioClient.getRequest(
-          '/map/main?category_group_code=CE7&longitude=$longitude&latitude=$latitude&radius=$radius');
+          '/map/main?longitude=$longitude&latitude=$latitude');
 
       if (response.statusCode == 200) {
         // 서버 응답에서 데이터를 파싱하여 MapAllModel에 저장

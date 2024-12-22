@@ -1,74 +1,50 @@
 class MapAllModel {
-  List<Documents>? documents;
-  Meta? meta;
+  int? status;
+  String? message;
+  List<Data>? data;
 
-  MapAllModel({this.documents, this.meta});
+  MapAllModel({this.status, this.message, this.data});
 
   MapAllModel.fromJson(Map<String, dynamic> json) {
-    if (json['documents'] != null) {
-      documents = <Documents>[];
-      json['documents'].forEach((v) {
-        documents!.add(new Documents.fromJson(v));
+    status = json['status'];
+    message = json['message'];
+    if (json['data'] != null) {
+      data = <Data>[];
+      json['data'].forEach((v) {
+        data!.add(new Data.fromJson(v));
       });
     }
-    meta = json['meta'] != null ? new Meta.fromJson(json['meta']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.documents != null) {
-      data['documents'] = this.documents!.map((v) => v.toJson()).toList();
-    }
-    if (this.meta != null) {
-      data['meta'] = this.meta!.toJson();
+    data['status'] = this.status;
+    data['message'] = this.message;
+    if (this.data != null) {
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
-class Documents {
-  String? id;
-  String? x;
-  String? y;
+class Data {
+  int? cafeId;
+  double? latitude;
+  double? longitude;
 
-  Documents({this.id, this.x, this.y});
+  Data({this.cafeId, this.latitude, this.longitude});
 
-  Documents.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    x = json['x'];
-    y = json['y'];
+  Data.fromJson(Map<String, dynamic> json) {
+    cafeId = json['cafeId'];
+    latitude = json['latitude'];
+    longitude = json['longitude'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['x'] = this.x;
-    data['y'] = this.y;
-    return data;
-  }
-}
-
-class Meta {
-  bool? isEnd;
-  int? pageableCount;
-  Null? sameName;
-  int? totalCount;
-
-  Meta({this.isEnd, this.pageableCount, this.sameName, this.totalCount});
-
-  Meta.fromJson(Map<String, dynamic> json) {
-    isEnd = json['is_end'];
-    pageableCount = json['pageable_count'];
-    sameName = json['same_name'];
-    totalCount = json['total_count'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['is_end'] = this.isEnd;
-    data['pageable_count'] = this.pageableCount;
-    data['same_name'] = this.sameName;
-    data['total_count'] = this.totalCount;
+    data['cafeId'] = this.cafeId;
+    data['latitude'] = this.latitude;
+    data['longitude'] = this.longitude;
     return data;
   }
 }
