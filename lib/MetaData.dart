@@ -47,7 +47,8 @@ List<String> categoryId = [
   "assets/Images/categoryId_2.png",
   "assets/Images/categoryId_3.png",
   "assets/Images/categoryId_4.png",
-  "assets/Images/categoryId_5.png"
+  "assets/Images/categoryId_5.png",
+  "assets/Images/categoryId_6.png"
 ];
 
 List<String> categoryId_text = [
@@ -56,7 +57,8 @@ List<String> categoryId_text = [
   "감성",
   "프랜차이즈",
   "카공",
-  "테마"
+  "테마",
+  "무인"
 ];
 
 class LoadingScreen extends StatefulWidget {
