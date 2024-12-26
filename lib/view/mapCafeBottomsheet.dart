@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:cafe_attack/MetaData.dart';
 import 'package:cafe_attack/controller/MapInfoController.dart';
 import 'package:cafe_attack/model/MapInfoModel.dart';
@@ -8,29 +6,29 @@ import 'package:cafe_attack/view/favoriteSaveBottomsheet.dart';
 import 'package:cafe_attack/view/resposive/BreakPoint.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 
 class CafeDetailBottomSheet extends StatefulWidget {
-  final LatLng latlag;
+  final int cafeId;
 
-  const CafeDetailBottomSheet({super.key, required this.latlag});
+  const CafeDetailBottomSheet({super.key, required this.cafeId});
 
   @override
   State<CafeDetailBottomSheet> createState() => _CafeDetailBottomSheetState();
 }
 
 class _CafeDetailBottomSheetState extends State<CafeDetailBottomSheet> {
-  final MapInfoController _mapInfoController = Get.put(MapInfoController());
+  late MapInfoController _mapInfoController;
   var loading = true.obs;
   String rst = "";
 
   @override
   void initState() {
     super.initState();
-
+    // print("cafeid: ${widget.cafeId}");
+    _mapInfoController = Get.put(MapInfoController(widget.cafeId));
     // 실제 작업을 시작
     Future(() {
-      rst = _cafeCategory(_mapInfoController.mapInfo.value.data!.categoryId?.length ?? 0, _mapInfoController.mapInfo.value.data!.categoryId ?? []);
+      rst = _cafeCategory(_mapInfoController.mapInfo.value.categories?.length ?? 0, _mapInfoController.mapInfo.value.categories ?? []);
       setState(() {
         // 로딩 상태를 true로 설정
         loading(false);
@@ -39,7 +37,7 @@ class _CafeDetailBottomSheetState extends State<CafeDetailBottomSheet> {
   }
 
   String _cafeCategory(int num, List<int> _categoryId) {
-    if (_categoryId == null || _categoryId.isEmpty) return "";
+    if (_categoryId == null || _categoryId.isEmpty) return "카테고리 없음";
 
     String result = "";
 
@@ -55,15 +53,27 @@ class _CafeDetailBottomSheetState extends State<CafeDetailBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final Data? data = _mapInfoController.mapInfo.value.data;
+    final MapInfoModel? data = _mapInfoController.mapInfo.value;
 
       return Obx(() {
-          return _mapInfoController.isLoading.value?
-              Container(
-                color: Colors.white,
-                child: Text("wait..."),
-              )
-          :Container(
+        if (_mapInfoController.isLoading.value) {
+          return Container(
+            color: Colors.white,
+            child: const Center(
+              child: Text("Loading..."),
+            ),
+          );
+        }
+
+        if (data == null) {
+          return Container(
+            color: Colors.white,
+            child: const Center(
+              child: Text("데이터를 불러오지 못했습니다."),
+            ),
+          );
+        }
+          return Container(
             color: Colors.white,
             padding: EdgeInsets.only(right: 16.0, left: 16.0, top: 8),
             width: BreakPoint.tablet,
@@ -75,8 +85,8 @@ class _CafeDetailBottomSheetState extends State<CafeDetailBottomSheet> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      data!.cafeName == null ? "null" : data.cafeName!,
-                      style: TextStyle(
+                      data.cafename ?? "카페 이름 없음",
+                      style: const TextStyle(
                         fontWeight: FontWeight.w400,
                         fontFamily: freesentation,
                         fontSize: 24,
@@ -87,37 +97,28 @@ class _CafeDetailBottomSheetState extends State<CafeDetailBottomSheet> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         ...List.generate(
-                          double.parse(data.avgScore ?? '0').floor(),
+                          (data.avgscore ?? 0.0).floor(),
                               (index) => Icon(
                             Icons.star,
                             color: Colors.yellow,
                           ),
                         ),
-                        if (double.parse(data.avgScore ?? '0') -
-                            double.parse(data.avgScore ?? '0').floor() >=
+                        if ((data.avgscore ?? 0.0) -
+                            (data.avgscore ?? 0.0).floor() >=
                             0.5)
                           Icon(
                             Icons.star_half,
                             color: Colors.yellow,
                           ),
-                        if (double.parse(data.avgScore ?? '0') -
-                            double.parse(data.avgScore ?? '0').floor() <
-                            0.5 &&
-                            double.parse(data.avgScore ?? '0') !=
-                                double.parse(data.avgScore ?? '0').floor())
-                          Icon(
-                            Icons.star_border,
-                            color: Colors.yellow,
-                          ),
                         SizedBox(width: 5),
                         Text(
-                          (data.avgScore ?? "0") + "/5.0",
+                          "${data.avgscore?.toStringAsFixed(1) ?? "0.0"}/5.0",
                           style: TextStyle(
                             fontWeight: FontWeight.w300,
                             fontFamily: freesentation,
                             fontSize: 13,
                           ),
-                        )
+                        ),
                       ],
                     ),
                     IconButton(
@@ -125,7 +126,7 @@ class _CafeDetailBottomSheetState extends State<CafeDetailBottomSheet> {
                         showModalBottomSheet(
                           context: context,
                           builder: (context) => FavoriteSave(),
-                          shape: RoundedRectangleBorder(
+                          shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.vertical(
                               top: Radius.circular(0), // No rounding for a rectangular shape
                             ),
@@ -133,48 +134,50 @@ class _CafeDetailBottomSheetState extends State<CafeDetailBottomSheet> {
                           backgroundColor: Colors.white,
                         );
                       },
-                      icon: data.heart==0?Icon(Icons.favorite_border):Icon(Icons.favorite),
+                      icon: data.heart == false
+                          ? const Icon(Icons.favorite_border)
+                          : const Icon(Icons.favorite),
                     ),
                   ],
                 ),
                 Text(
                   rst,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.w300,
                     fontFamily: freesentation,
                     fontSize: 16,
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
-                  data.address ?? "null",
-                  style: TextStyle(
+                  data.address ?? "주소 없음",
+                  style: const TextStyle(
                     fontWeight: FontWeight.w300,
                     fontFamily: freesentation,
                     fontSize: 20,
                   ),
                 ),
                 Text(
-                  data.time ?? "null",
-                  style: TextStyle(
+                  data.time ?? "운영 시간 없음",
+                  style: const TextStyle(
                     fontWeight: FontWeight.w300,
                     fontFamily: freesentation,
                     fontSize: 20,
                   ),
                 ),
                 Text(
-                  data.phone ?? "null",
-                  style: TextStyle(
+                  data.phone ?? "전화번호 없음",
+                  style: const TextStyle(
                     fontWeight: FontWeight.w300,
                     fontFamily: freesentation,
                     fontSize: 20,
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       "사용자 리뷰",
                       style: TextStyle(
                         fontWeight: FontWeight.w300,
@@ -183,8 +186,8 @@ class _CafeDetailBottomSheetState extends State<CafeDetailBottomSheet> {
                       ),
                     ),
                     Text(
-                      " ${data.reviewCnt ?? 0}건",
-                      style: TextStyle(
+                      " ${data.reviewcount ?? 0}건",
+                      style: const TextStyle(
                         fontWeight: FontWeight.w300,
                         fontFamily: freesentation,
                         fontSize: 20,
@@ -193,70 +196,41 @@ class _CafeDetailBottomSheetState extends State<CafeDetailBottomSheet> {
                     ),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            data.review![0].reviewDate ?? "null",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w300,
-                              fontFamily: freesentation,
-                              fontSize: 15,
+                if (data.recentReviews == null || data.recentReviews!.isEmpty)
+                  const Text("리뷰가 없습니다")
+                else
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: List.generate(
+                      data.recentReviews!.length,
+                          (index) {
+                        final review = data.recentReviews![index];
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              review.reviewdate ?? "날짜 없음",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w300,
+                                fontFamily: freesentation,
+                                fontSize: 15,
+                              ),
                             ),
-                          ),
-                          Image.asset(
-                            'assets/Images/temporary_logo.png', // todo: Modify to load from network
-                            height: 90,
-                            width: 90,
-                          ),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            data.review![1].reviewDate ?? "null",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w300,
-                              fontFamily: freesentation,
-                              fontSize: 15,
+                            Image.network(
+                              review.picurl ?? 'assets/Images/temporary_logo.png',
+                              height: 90,
+                              width: 90,
                             ),
-                          ),
-                          Image.asset(
-                            'assets/Images/temporary_logo.png',
-                            height: 90,
-                            width: 90,
-                          )
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            data.review![2].reviewDate ?? "null",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w300,
-                              fontFamily: freesentation,
-                              fontSize: 15,
-                            ),
-                          ),
-                          Image.asset(
-                            'assets/Images/temporary_logo.png',
-                            height: 90,
-                            width: 90,
-                          )
-                        ],
-                      ),
-                  ],
-                ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
                 TextButton(
                   onPressed: () {
-                    Get.to(()=>CafePage());
+                    Get.to(() => CafePage());
                   },
-                  child: Text(
+                  child: const Text(
                     "더 많은 사용자 리뷰 / 별점 보기 ...",
                     style: TextStyle(
                       fontSize: 16,

@@ -18,7 +18,7 @@ class MapPage extends StatefulWidget {
   final int act;
   final int cafeId;
 
-  const MapPage({required this.act, this.cafeId = -1});
+  const MapPage({required this.act,required this.cafeId});
 
   @override
   _MapPageState createState() => _MapPageState();
@@ -70,6 +70,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
 
       // 마커와 위치 목록 설정
       if (widget.act == 0) {
+        print("make position list!!!!");
         makePositionList();
       } else {
         actMakePositionList();
@@ -108,19 +109,21 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
 
   void makePositionList() {
     positions.clear(); // 기존 위치 리스트 초기화
-    for (int i = 0; i < _mapAllController.mapAll.value.data!.length; i++) {
-      positions.add(LatLng(
-        _mapAllController.mapAll.value.data![i].latitude!,
-        _mapAllController.mapAll.value.data![i].longitude!,
-      ));
+    markers.clear(); // 기존 마커 세트 초기화
 
-      // 마커를 추가하면서 markerId를 cafeId로 설정
+    for (int i = 0; i < _mapAllController.mapAll.value.data!.length; i++) {
+      var cafeData = _mapAllController.mapAll.value.data![i];
+
+      // LatLng 객체 생성
+      LatLng position = LatLng(cafeData.latitude!, cafeData.longitude!);
+
+      // 위치 리스트에 추가
+      positions.add(position);
+
+      // 마커 생성 후 세트에 추가
       markers.add(Marker(
-        markerId: _mapAllController.mapAll.value.data![i].cafeId.toString(),
-        latLng: LatLng(
-          _mapAllController.mapAll.value.data![i].latitude!,
-          _mapAllController.mapAll.value.data![i].longitude!,
-        ),
+        markerId: cafeData.cafeId.toString(), // cafeId를 markerId로 사용
+        latLng: position, // LatLng 값
         markerImageSrc: mapMaker_unclicked,
         width: 38,
         height: 38,
@@ -128,7 +131,6 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
         offsetY: 44,
       ));
     }
-
   }
 
   void actMakePositionList() {
@@ -147,6 +149,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   }
 
   void _highlightMarker(int cafeId) async {
+    print("highlight makers cafeid: $cafeId        ");
     // actLatLng를 설정 (해당 카페의 위치)
     actLatLng = positions.firstWhere(
           (position) =>
@@ -187,7 +190,8 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
     await showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return CafeDetailBottomSheet(latlag: actLatLng);
+        print("cafeid mapview1: ${cafeId}");
+        return CafeDetailBottomSheet(cafeId: cafeId,);
       },
     );
 
@@ -392,84 +396,85 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
               body: Stack(
                 children: [
                   KakaoMap(
-                      onMapCreated: ((controller) async {
-                        mapController = controller;
-                        getRadiusBasedOnZoom();
+                    onMapCreated: ((controller) async {
+                      mapController = controller;
+                      await getRadiusBasedOnZoom(); // 반경 기반 데이터 로드
 
-                        for (int i = 0; i < positions.length; i++) {
-                          markers.add(Marker(
-                            markerId: markers.length.toString(),
-                            latLng: positions[i],
-                            markerImageSrc: mapMaker_unclicked,
-                            width: 38,
-                            height: 38,
-                            offsetX: 15,
-                            offsetY: 44,
-                          ));
-                        }
-                        setState(() {});
+                      // 마커는 이미 makePositionList에서 생성되었으므로 다시 생성할 필요 없음
+                      setState(() {
+                        makePositionList();
+                      });
 
-                        // 여기에서 마커가 설정된 후에 act 값에 따라 특정 마커 활성화
-                        if (widget.act == 1 && widget.cafeId!=-1) {
-                          print("start _highlightMarker");
-                          _highlightMarker(widget.cafeId);
-                        }
-                      }),
-                      center: LatLng(centerLat, centerLng),
-                      markers: markers.toList(),
+                      // act 값에 따라 특정 마커 강조
+                      if (widget.act == 1 && widget.cafeId != -1) {
+                        print("start _highlightMarker");
+                        _highlightMarker(widget.cafeId);
+                      }
+                    }),
+                    center: LatLng(centerLat, centerLng),
+                    markers: markers.toList(),
                       /*onCameraIdle: (LatLng latLng, int zoomLevel) {
 
                         getRadiusBasedOnZoom(); // 디바운스된 getRadiusBasedOnZoom 호출
                       },*/
-                      onMarkerTap: (markerId, latLng, zoomLevel) async {
-                        mapController.setCenter(latLng);
+                    onMarkerTap: (markerId, latLng, zoomLevel) async {
+                      print("Marker tapped: MarkerId = $markerId, LatLng = $latLng");
 
-                        setState(() {
-                          int index = markers.toList().indexWhere(
-                              (marker) => marker.markerId == markerId);
-                          if (index != -1) {
-                            print("${latLng}, $index, $markerId");
-                            Marker oldMarker = markers.elementAt(index);
-                            markers.remove(oldMarker);
-                            markers.add(Marker(
-                              markerId: markerId,
-                              latLng: latLng,
-                              markerImageSrc: mapMaker_clicked,
-                              width: 38,
-                              height: 38,
-                              offsetX: oldMarker.offsetX,
-                              offsetY: oldMarker.offsetY,
-                            ));
-                          }
-                        });
-                        // print("$latLng, $markerId");
+                      // 마커 ID를 이용해 관련 데이터를 가져오기
+                      int cafeId = int.tryParse(markerId) ?? -1;
 
+                      // 클릭된 마커를 강조 표시
+                      setState(() {
+                        int index = markers.toList().indexWhere(
+                                (marker) => marker.markerId == markerId);
+
+                        if (index != -1) {
+                          Marker oldMarker = markers.elementAt(index);
+                          markers.remove(oldMarker);
+                          markers.add(Marker(
+                            markerId: markerId,
+                            latLng: latLng,
+                            markerImageSrc: mapMaker_clicked,
+                            width: 38,
+                            height: 38,
+                            offsetX: oldMarker.offsetX,
+                            offsetY: oldMarker.offsetY,
+                          ));
+                        }
+                      });
+
+                      // 카페 ID로 상세 정보 표시
+                      if (cafeId != -1) {
                         await showModalBottomSheet(
                           context: context,
                           builder: (BuildContext context) {
-                            return CafeDetailBottomSheet(latlag: latLng);
+                            return CafeDetailBottomSheet(cafeId: cafeId);
                           },
                         );
+                      } else {
+                        print("Invalid CafeId for MarkerId: $markerId");
+                      }
 
-                        setState(() {
-                          int index = markers.toList().indexWhere(
-                              (marker) => marker.markerId == markerId);
-                          if (index != -1) {
-                            print("${latLng}, $index, $markerId");
-                            Marker selectedMarker = markers.elementAt(index);
-                            markers.remove(selectedMarker);
-                            markers.add(Marker(
-                              markerId: markerId,
-                              latLng: latLng,
-                              markerImageSrc: mapMaker_unclicked,
-                              width: 38,
-                              height: 38,
-                              offsetX: selectedMarker.offsetX,
-                              offsetY: selectedMarker.offsetY,
-                            ));
-                          }
-                        });
-                      }),
+                      // 마커 상태 복원
+                      setState(() {
+                        int index = markers.toList().indexWhere(
+                                (marker) => marker.markerId == markerId);
+
+                        if (index != -1) {
+                          Marker selectedMarker = markers.elementAt(index);
+                          markers.remove(selectedMarker);
+                          markers.add(Marker(
+                            markerId: markerId,
+                            latLng: latLng,
+                            markerImageSrc: mapMaker_unclicked,
+                            width: 38,
+                            height: 38,
+                            offsetX: selectedMarker.offsetX,
+                            offsetY: selectedMarker.offsetY,
+                          ));
+                        }
+                      });
+                    },),
                   Positioned(
                     top: 35,
                     left: 20,
