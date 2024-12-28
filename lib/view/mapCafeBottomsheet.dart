@@ -96,19 +96,28 @@ class _CafeDetailBottomSheetState extends State<CafeDetailBottomSheet> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        ...List.generate(
-                          (data.avgscore ?? 0.0).floor(),
-                              (index) => Icon(
-                            Icons.star,
-                            color: Colors.yellow,
+                        if ((data.avgscore ?? 0.0) >= 0.5)
+                          ...List.generate(
+                            (data.avgscore ?? 0.0).floor(),
+                                (index) => Icon(
+                              Icons.star,
+                              color: Colors.yellow,
+                            ),
                           ),
-                        ),
-                        if ((data.avgscore ?? 0.0) -
-                            (data.avgscore ?? 0.0).floor() >=
-                            0.5)
+                        if ((data.avgscore ?? 0.0) >= 0.5 &&
+                            (data.avgscore ?? 0.0) - (data.avgscore ?? 0.0).floor() >= 0.5)
                           Icon(
                             Icons.star_half,
                             color: Colors.yellow,
+                          ),
+                        if ((data.avgscore ?? 0.0) < 0.5)
+                          ...List.generate(
+                            5,
+                            // If avgscore is less than 0.5, show 5 empty stars
+                                (index) => Icon(
+                              Icons.star_border,
+                              color: Colors.yellow,
+                            ),
                           ),
                         SizedBox(width: 5),
                         Text(
@@ -228,7 +237,7 @@ class _CafeDetailBottomSheetState extends State<CafeDetailBottomSheet> {
                   ),
                 TextButton(
                   onPressed: () {
-                    Get.to(() => CafePage());
+                    Get.to(() => CafePage(cafeId: widget.cafeId,));
                   },
                   child: const Text(
                     "더 많은 사용자 리뷰 / 별점 보기 ...",

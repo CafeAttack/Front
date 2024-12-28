@@ -1,40 +1,65 @@
 {
-  "status" : 200,
-  "message" : "간략한 카페 정보를 불러왔습니다.",
-  "data" : {
-    "cafeName" : "설빙 광운대점",
-    "address" : "서울 노원구 광운로 25 2층",
-    "time" : "매일 11:00 ~ 23:00 영업",
-    "phone" : "02-6953-9749",
-    "categoryId" : [1, 3],
-    "reviewCnt" : 3,
-    "AvgScore" : "4.6",
-    "review" : [
-      {
-        "reviewId" : 15,
-        "reviewWriter" : "체세연",
-        "reviewDate" : "24.6.14",
-        "reviewScore" : 5,
-        "reviewText" : "손님도 많이 없고, 종업원이 매우 친절해요!\n다시 갈 거 같아요!!",
-        "reviewPhoto" : "https://example.com/review15.jpg"
-      },
-      {
-        "reviewId" : 14,
-        "reviewWriter" :"leemh",
-        "reviewDate" : "24.5.26",
-        "reviewScore" : 4,
-        "reviewText" : "맛도 매우 좋고, 서비스도 좋아요",
-        "reviewPhoto" : "https://example.com/review14.jpg"
-      },
-      {
-        "reviewId" : 13,
-        "reviewWriter" : "홍길동",
-        "reviewDate" : "20.6.5",
-        "reviewScore" : 4,
-        "reviewText" : "여기 짱이네요. 집 주변에 이런 곳이 있다니!!\n금방 곧 다시 갈 것 같아요",
-        "reviewPhoto" : "https://example.com/review13.jpg"
-      }
-    ],
-    "heart" : true
-  }
+  "cafename": "설빙 광운대점",
+  "categories": [
+    1
+  ],
+  "address": "서울 노원구 광운로 25",
+  "time": "매일 11:00 - 23:00, 22:50 라스트오더",
+  "phone": "02-6953-9749",
+  "avgscore": 0.0,
+  "heart": true,
+  "reviews": [
+    {
+      "nickname": "aqoom",
+      "reviewdate": "24.12.20",
+      "reviewscore": 5,
+      "reviewtext": "손님도 많이 없고, 종업원이 매우 친절해요!!\\n다시 갈 거 같아요!!",
+      "picurl": "https://cafeattackbucket.s3.amazonaws.com/d9db6627-e825-4481-b303-418d619c87af-cicd.png"
+    },
+    {
+      "nickname": "User3",
+      "reviewdate": "23.12.22",
+      "reviewscore": 5,
+      "reviewtext": "The desserts are amazing!",
+      "picurl": null
+    },
+    {
+      "nickname": "User2",
+      "reviewdate": "23.12.21",
+      "reviewscore": 4,
+      "reviewtext": "Friendly staff and cozy place.",
+      "picurl": null
+    },
+    {
+      "nickname": "User1",
+      "reviewdate": "23.12.20",
+      "reviewscore": 5,
+      "reviewtext": "Great atmosphere and coffee!",
+      "picurl": null
+    }
+  ],
+  "amenities": [
+    {
+      "name": "t"
+    },
+    {
+      "name": "t"
+    },
+    {
+      "name": "t"
+    },
+    {
+      "name": "t"
+    }
+  ],
+  "tags": [
+    {
+      "tag": "디저트가 맛있어요!",
+      "count": 1
+    },
+    {
+      "tag": "분위기가 좋아요",
+      "count": 1
+    }
+  ]
 }
