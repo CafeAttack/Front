@@ -1,24 +1,31 @@
+import 'package:cafe_attack/MetaData.dart';
+import 'package:cafe_attack/controller/MapMainController.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:get/get.dart';
 
 class LabelChange extends StatefulWidget {
-  const LabelChange({super.key});
+  final ValueChanged<int> onCategorySelected;
+
+  const LabelChange({Key? key, required this.onCategorySelected}) : super(key: key);
 
   @override
   _LabelChangeState createState() => _LabelChangeState();
 }
 
-// 아이콘 바뀌게 설정하기
 class _LabelChangeState extends State<LabelChange> {
   String labelText = "ALL";
+  final int categoryId = 1;
 
-  void onLabelChange(String newLabel) {
+  void onLabelChange(String newLabel, categoryId) {
     setState(() {
       labelText = newLabel;
     });
+    print("onLabelChange: $categoryId");
+    widget.onCategorySelected(categoryId); // 선택된 카테고리 ID 전달
   }
 
-  SpeedDialChild MapFloatingChild(String _text, Color _color){
+  SpeedDialChild MapFloatingChild(String _text, Color _color, categoryId) {
     return SpeedDialChild(
       labelWidget: SizedBox(
         width: 80,
@@ -41,27 +48,27 @@ class _LabelChangeState extends State<LabelChange> {
       ),
       backgroundColor: Colors.white,
       onTap: () {
-        onLabelChange(_text);
-        print("Click $_text");
+        onLabelChange(_text, categoryId); // 카테고리 변경
+        print("Selected category: $_text, $categoryId");
       },
     );
   }
 
   Widget floatingButtons() {
     var buttons = [
-      MapFloatingChild("All", Colors.black),
-      MapFloatingChild("테이크아웃", Colors.red),
-      MapFloatingChild("감성", Colors.orange),
-      MapFloatingChild("프렌차이즈", Colors.green),
-      MapFloatingChild("카공", Colors.blue),
-      MapFloatingChild("테마", Colors.purple),
-      MapFloatingChild("무인", Colors.pink),
+      MapFloatingChild("All", Colors.black, 1),
+      MapFloatingChild("테이크아웃", Colors.red, 2),
+      MapFloatingChild("감성", Colors.orange, 3),
+      MapFloatingChild("프렌차이즈", Colors.green, 4),
+      MapFloatingChild("카공", Colors.blue, 5),
+      MapFloatingChild("테마", Colors.purple, 6),
+      MapFloatingChild("무인", Colors.pink, 7),
     ];
 
     return SpeedDial(
       label: Text(
         labelText,
-        style: TextStyle(
+        style: const TextStyle(
           fontFamily: 'Freesentation',
           fontWeight: FontWeight.w700,
           fontSize: 16.0,
@@ -74,16 +81,10 @@ class _LabelChangeState extends State<LabelChange> {
       direction: SpeedDialDirection.up,
       switchLabelPosition: true,
       buttonSize: Size(50, 50),
-      // Adjust button size
       childrenButtonSize: Size(50, 50),
-      // Adjust children button size
       spaceBetweenChildren: 5,
-      // Adjust spacing between items
       elevation: 2,
-      // Adjust shadow for separation
-      children: [
-        ...buttons
-      ],
+      children: [...buttons],
     );
   }
 
@@ -92,4 +93,6 @@ class _LabelChangeState extends State<LabelChange> {
     return floatingButtons();
   }
 }
+
+
 

@@ -36,8 +36,8 @@ class Data {
 
   Data.fromJson(Map<String, dynamic> json) {
     cafeId = json['cafeId'];
-    latitude = json['latitude'];
-    longitude = json['longitude'];
+    latitude = json['longitude'];
+    longitude = json['latitude'];
   }
 
   Map<String, dynamic> toJson() {

@@ -1,11 +1,19 @@
+import 'package:cafe_attack/model/MapAllModel.dart';
+
 import '../model/MapMainModel.dart';
 import 'package:get/get.dart';
-import 'dart:convert';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:dio/dio.dart' as dioo;
+import 'package:cafe_attack/dio_client.dart';
 
 class MapMainController extends GetxController {
-  var mapMain = MapMainModel().obs;
+  var mapMain = MapAllModel().obs;
   var isLoading = true.obs;
+
+  int categoryId;
+  double longitude;
+  double latitude;
+
+  MapMainController(this.categoryId,this.longitude, this.latitude );
 
   @override
   void onInit() {
@@ -13,12 +21,14 @@ class MapMainController extends GetxController {
     fetchMapMainFromJson();
   }
 
-  void fetchMapMainFromJson() async {
+  Future<void> fetchMapMainFromJson() async {
     try {
       isLoading.value = true;
-      String _data = await rootBundle.loadString('assets/test/map_main.json');
-      Map<String, dynamic> data = json.decode(_data);
-      mapMain.value = MapMainModel.fromJson(data);
+      print("fetchMapMainFromJson: ${categoryId}");
+      dioo.Response response = await DioClient.getRequest("/map/main/${categoryId}?longitude=${longitude}&latitude=${latitude}");
+      print("Main controller Response data: ${response.data}, ${categoryId}"); // 서버 응답 확인
+
+      mapMain.value = MapAllModel.fromJson(response.data);
       isLoading.value = false;
     } catch (e) {
       print("Error: $e");

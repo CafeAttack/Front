@@ -31,7 +31,7 @@ class _CafePageState extends State<CafePage> {
     String result = "";
 
     for (int i = 0; i < num && i < _categoryId.length; i++) {
-      result += categoryId_text[_categoryId[i]];
+      result += categoryId_text[_categoryId[i]-1];
       if (i != num - 1 && i != _categoryId.length - 1) {
         result += " / ";
       }
