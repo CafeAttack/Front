@@ -35,8 +35,9 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   late KakaoMapController mapController;
 
   var loading = true.obs;
-  late MapAllController _mapAllController;
+  // late MapAllController _mapAllController;
   List<LatLng> positions = [];
+  late MapMainController _mapMainController;
   Set<Marker> markers = {};
   var zoomLevel;
 
@@ -57,26 +58,24 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
 
   Future<void> initialize() async {
     try {
-      Position position = await getPosition(); // 위치 정보 가져오기
+      Position position = await getPosition();
       centerLng = position.longitude;
       centerLat = position.latitude;
 
+      _mapMainController = Get.put(MapMainController(1, centerLng, centerLat));
+      await _mapMainController.fetchMapMainFromJson();
 
-      // 위치 정보를 기반으로 컨트롤러 초기화
-      _mapAllController = Get.put(MapAllController(centerLng, centerLat));
+      print("MapMainController initialized. Waiting for mapController...");
 
-      // 서버에서 데이터 불러오기
-      await _mapAllController.fetchMapAllFromServer();
+    // 마커와 위치 목록 설정
+    if (widget.act == 0) {
+    print("make position list!!!!");
+    makePositionList();
+    } else {
+    actMakePositionList();
+    }
 
-      // 마커와 위치 목록 설정
-      if (widget.act == 0) {
-        print("make position list!!!!");
-        makePositionList();
-      } else {
-        actMakePositionList();
-      }
-
-        loading(false); // 모든 작업이 완료된 후 로딩 상태 변경
+    loading(false); // 모든 작업이 완료된 후 로딩 상태 변경
 
     } catch (e) {
       print('Initialization error: $e');
@@ -108,22 +107,21 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   }
 
   void makePositionList() {
-    positions.clear(); // 기존 위치 리스트 초기화
-    markers.clear(); // 기존 마커 세트 초기화
+    positions.clear();
+    markers.clear();
 
-    for (int i = 0; i < _mapAllController.mapAll.value.data!.length; i++) {
-      var cafeData = _mapAllController.mapAll.value.data![i];
+    if (_mapMainController.mapMain.value.data == null || _mapMainController.mapMain.value.data!.isEmpty) {
+      print("No data available in mapMainController.");
+      return;
+    }
 
-      // LatLng 객체 생성
+    for (int i = 0; i < _mapMainController.mapMain.value.data!.length; i++) {
+      var cafeData = _mapMainController.mapMain.value.data![i];
       LatLng position = LatLng(cafeData.latitude!, cafeData.longitude!);
-
-      // 위치 리스트에 추가
       positions.add(position);
-
-      // 마커 생성 후 세트에 추가
       markers.add(Marker(
-        markerId: cafeData.cafeId.toString(), // cafeId를 markerId로 사용
-        latLng: position, // LatLng 값
+        markerId: cafeData.cafeId.toString(),
+        latLng: position,
         markerImageSrc: mapMaker_unclicked,
         width: 38,
         height: 38,
@@ -131,21 +129,33 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
         offsetY: 44,
       ));
     }
+
+    print("makePositionList completed with mapMainController. Total markers: ${markers.length}");
   }
 
   void actMakePositionList() {
-    for (int i = 0; i < _mapAllController.mapAll.value.data!.length; i++) {
-      positions.add(LatLng(
-        _mapAllController.mapAll.value.data![i].latitude!,
-        _mapAllController.mapAll.value.data![i].longitude!,
-      ));
-      if (_mapAllController.mapAll.value.data![i].cafeId == widget.cafeId) {
-        actLatLng = LatLng(
-          _mapAllController.mapAll.value.data![i].latitude!,
-          _mapAllController.mapAll.value.data![i].longitude!,
-        );
+    positions.clear();
+
+    if (_mapMainController.mapMain.value.data == null || _mapMainController.mapMain.value.data!.isEmpty) {
+      print("No data available in mapMainController for actMakePositionList.");
+      actLatLng = LatLng(centerLat, centerLng); // 기본값 설정
+      return;
+    }
+
+    for (int i = 0; i < _mapMainController.mapMain.value.data!.length; i++) {
+      var cafeData = _mapMainController.mapMain.value.data![i];
+      LatLng position = LatLng(cafeData.latitude!, cafeData.longitude!);
+      positions.add(position);
+      if (cafeData.cafeId == widget.cafeId) {
+        actLatLng = position;
       }
     }
+
+    if (actLatLng == null) {
+      actLatLng = LatLng(centerLat, centerLng); // 기본값 설정
+    }
+
+    print("actMakePositionList completed with mapMainController. Total positions: ${positions.length}");
   }
 
   void _highlightMarker(int cafeId) async {
@@ -153,7 +163,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
     // actLatLng를 설정 (해당 카페의 위치)
     actLatLng = positions.firstWhere(
           (position) =>
-          _mapAllController.mapAll.value.data!.any((cafe) =>
+          _mapMainController.mapMain.value.data!.any((cafe) =>
           cafe.cafeId == cafeId &&
               cafe.latitude == position.latitude &&
               cafe.longitude == position.longitude),
@@ -242,7 +252,13 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
         print("Fetching data for updated center: ${centerPosition}, zoom: $currentZoomLevel");
         int radius = calculateRadius(currentZoomLevel);
 
-        await fetchDataBasedOnRadius(_mapAllController, centerPosition, radius);
+        // 새 데이터 가져오기
+        _mapMainController = Get.put(
+          MapMainController(1, centerPosition.longitude, centerPosition.latitude),
+        );
+        await _mapMainController.fetchMapMainFromJson();
+
+        // 마커 업데이트
         updateMarkers();
       } catch (e) {
         print("Error in getRadiusBasedOnZoom: $e");
@@ -257,25 +273,40 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
         (a.longitude.toStringAsFixed(6) != b.longitude.toStringAsFixed(6));
   }
 
-  void updateMarkers() {
-    // 마커 업데이트 시 setState 최소화
-    Set<Marker> newMarkers = {};
-    for (var position in positions) {
-      newMarkers.add(Marker(
-        markerId: newMarkers.length.toString(),
-        latLng: position,
-        markerImageSrc: mapMaker_unclicked,
-        width: 38,
-        height: 38,
-        offsetX: 15,
-        offsetY: 44,
-      ));
+  Future<void> updateMarkers() async {
+    if (mapController == null) {
+      print("Error: mapController is not initialized yet.");
+      return;
     }
 
-    setState(() {
-      markers = newMarkers;
-    });
+    positions.clear();
+    markers.clear();
+
+    if (_mapMainController.mapMain.value.data != null && _mapMainController.mapMain.value.data!.isNotEmpty) {
+      print("Adding markers based on fetched data...");
+      for (var cafeData in _mapMainController.mapMain.value.data!) {
+        LatLng position = LatLng(cafeData.latitude!, cafeData.longitude!);
+        positions.add(position);
+        markers.add(Marker(
+          markerId: cafeData.cafeId.toString(),
+          latLng: position,
+          markerImageSrc: mapMaker_unclicked,
+          width: 38,
+          height: 38,
+          offsetX: 15,
+          offsetY: 44,
+        ));
+      }
+    }
+
+    await mapController.clearMarker();
+    if (markers.isNotEmpty) {
+      await mapController.addMarker(markers: markers.toList());
+    }
+
   }
+
+
 
   // 줌 레벨에 따라 반경을 계산하는 예시 함수
   int calculateRadius(int zoomlevel) {
@@ -292,7 +323,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
     }
   }
 
-  Future<void> fetchDataBasedOnRadius(
+  /*Future<void> fetchDataBasedOnRadius(
       MapAllController mapAllController, LatLng center, int radius) async {
     if (isFetching) {
       print("Already fetching data. Skipping request.");
@@ -304,7 +335,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
 
     try {
       // mapAllController에 새 중심 위치와 반경 반영
-      _mapAllController = Get.put(MapAllController(
+      _mapMainController = Get.put(MapMainController(
           center.longitude, center.latitude));
 
       print(
@@ -322,13 +353,33 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
       print("isFetching reset to false.");
     }
   }
+*/
+  void onCategorySelected(int categoryId) async {
+    loading(true);
+    print("onCategorySelected: $categoryId");
 
+    // 새로운 카테고리에 대해 컨트롤러 초기화
+    _mapMainController = Get.put(
+      MapMainController(categoryId, centerLng, centerLat),
+      tag: categoryId.toString(),
+    );
+
+    // 서버에서 데이터 가져오기
+    await _mapMainController.fetchMapMainFromJson();
+
+    // 데이터 확인
+    print("Fetched data: ${_mapMainController.mapMain.value.data!.length}");
+
+    // 마커 업데이트
+    updateMarkers();
+    loading(false);
+  }
 
 
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      return loading.value || _mapAllController.isLoading.value
+      return loading.value || _mapMainController.isLoading.value
           ? const Scaffold(
               body: LoadingScreen(),
             )
@@ -358,7 +409,8 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                 ),
                 Align(
                   alignment: Alignment.bottomLeft,
-                  child: LabelChange(),
+                  child: LabelChange(onCategorySelected: onCategorySelected),
+
                 ),
                 /*Align(
                   alignment: Alignment.bottomRight,
@@ -397,13 +449,12 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                 children: [
                   KakaoMap(
                     onMapCreated: ((controller) async {
+                      print("onMapCreated called. Initializing mapController.");
                       mapController = controller;
-                      await getRadiusBasedOnZoom(); // 반경 기반 데이터 로드
 
-                      // 마커는 이미 makePositionList에서 생성되었으므로 다시 생성할 필요 없음
-                      setState(() {
-                        makePositionList();
-                      });
+                      print("MapController initialized. Loading markers...");
+                      // 마커 업데이트 호출
+                      await updateMarkers();
 
                       // act 값에 따라 특정 마커 강조
                       if (widget.act == 1 && widget.cafeId != -1) {
