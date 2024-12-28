@@ -12,7 +12,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CafePage extends StatefulWidget {
-  const CafePage({super.key});
+  final int cafeId; // cafeId를 받는 변수 추가
+
+  const CafePage({super.key, required this.cafeId}); // cafeId를 필수 인자로 받음
+
 
   @override
   State<CafePage> createState() => _CafePageState();
@@ -20,7 +23,7 @@ class CafePage extends StatefulWidget {
 
 class _CafePageState extends State<CafePage> {
   final GlobalKey _appBarKey = GlobalKey();
-  final MapMoreController _mapMoreController = Get.put(MapMoreController());
+  late MapMoreController _mapMoreController;
 
   String _cafeCategory(int num, List<int> _categoryId) {
     if (_categoryId == null || _categoryId.isEmpty) return "카테고리 없음";
@@ -39,6 +42,7 @@ class _CafePageState extends State<CafePage> {
 
   @override
   Widget build(BuildContext context) {
+    _mapMoreController = Get.put(MapMoreController(widget.cafeId ));
     return Obx(() {
       if (_mapMoreController.isLoading.value ||
           _mapMoreController.mapMore.value == null) {

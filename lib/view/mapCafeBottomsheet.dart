@@ -237,7 +237,7 @@ class _CafeDetailBottomSheetState extends State<CafeDetailBottomSheet> {
                   ),
                 TextButton(
                   onPressed: () {
-                    Get.to(() => CafePage());
+                    Get.to(() => CafePage(cafeId: widget.cafeId,));
                   },
                   child: const Text(
                     "더 많은 사용자 리뷰 / 별점 보기 ...",
