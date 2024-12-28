@@ -10,9 +10,11 @@ class Record {
   });
 
   factory Record.fromJson(Map<String, dynamic> json) {
+    // 날짜 값에서 T 이후의 내용을 제거
+    String formattedDate = json['date'].split('T')[0];
     return Record(
       id: json['id'],
-      date: json['date'],
+      date: formattedDate,
       text: json['text'],
     );
   }
@@ -26,9 +28,8 @@ class Record {
   }
 }
 
-
 class CafeRecordResponse {
-  int visitcount; // 수정 가능하도록 final 제거
+  int visitcount;
   int heart;
   List<Record> records;
 
@@ -40,20 +41,48 @@ class CafeRecordResponse {
 
   factory CafeRecordResponse.fromJson(Map<String, dynamic> json) {
     return CafeRecordResponse(
-      visitcount: json['visitcount'],
-      heart: json['heart'],
+      visitcount: json['visitcount'] ?? 0,
+      heart: json['heart'] ?? 0,
       records: List<Record>.from(
-        json['records'].map((recordJson) => Record.fromJson(recordJson)),
+        (json['records'] ?? [])
+            .map((recordJson) => Record.fromJson(recordJson)),
       ),
     );
   }
 
-  // 데이터를 JSON 형식으로 변환
   Map<String, dynamic> toJson() {
     return {
       'visitcount': visitcount,
       'heart': heart,
       'records': records.map((record) => record.toJson()).toList(),
+    };
+  }
+}
+
+class CafeRecordApiResponse {
+  int status;
+  String message;
+  CafeRecordResponse data;
+
+  CafeRecordApiResponse({
+    required this.status,
+    required this.message,
+    required this.data,
+  });
+
+  factory CafeRecordApiResponse.fromJson(Map<String, dynamic> json) {
+    return CafeRecordApiResponse(
+      status: json['status'],
+      message: json['message'],
+      data: CafeRecordResponse.fromJson(json['data']),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'status': status,
+      'message': message,
+      'data': data.toJson(),
     };
   }
 }

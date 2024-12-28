@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:cafe_attack/controller/CafeRecordController.dart';
+import 'package:cafe_attack/controller/EditrecordController.dart';
+import 'package:cafe_attack/model/EditrecordModel.dart';
 
 class RecordEditPage extends StatefulWidget {
   final String cafeName;
@@ -9,14 +10,13 @@ class RecordEditPage extends StatefulWidget {
   final DateTime visitDate;
   final int cafeid;
 
-  const RecordEditPage({
-    super.key,
-    required this.cafeName,
-    required this.visitId,
-    required this.initialReviewText,
-    required this.visitDate,
-    required this.cafeid
-  });
+  const RecordEditPage(
+      {super.key,
+      required this.cafeName,
+      required this.visitId,
+      required this.initialReviewText,
+      required this.visitDate,
+      required this.cafeid});
 
   @override
   State<RecordEditPage> createState() => _RecordEditPageState();
@@ -24,7 +24,8 @@ class RecordEditPage extends StatefulWidget {
 
 class _RecordEditPageState extends State<RecordEditPage> {
   final TextEditingController _reviewController = TextEditingController();
-  final CafeRecordController _controller = Get.find(); // 컨트롤러 연결
+  final Editrecordcontroller _editRecordController =
+      Editrecordcontroller(); // 변경된 컨트롤러
   late DateTime _selectedDate;
 
   @override
@@ -63,6 +64,58 @@ class _RecordEditPageState extends State<RecordEditPage> {
     }
   }
 
+  Future<void> _submitRecord() async {
+    // 리뷰 텍스트 가져오기 및 공백 제거
+    String updatedReview = _reviewController.text.trim();
+    if (updatedReview.isEmpty) {
+      Get.snackbar('오류', '리뷰를 작성해주세요!');
+      return;
+    }
+
+    // 날짜 포맷팅
+    String formattedDate =
+        "${_selectedDate.year}-${_selectedDate.month.toString().padLeft(2, '0')}-${_selectedDate.day.toString().padLeft(2, '0')}";
+
+    // `Editrecordmodel` 객체 생성
+    Editrecordmodel record = Editrecordmodel(
+      recordDate: formattedDate,
+      recordText: updatedReview,
+    );
+
+    // 기록 생성 또는 수정 처리
+    bool success;
+    if (widget.visitId > 0) {
+      // 기존 기록 수정
+      success = await _editRecordController.updateExistingRecord(
+        widget.cafeid,
+        widget.visitId,
+        record,
+      );
+    } else {
+      // 새로운 기록 생성
+      success = await _editRecordController.createNewRecord(
+        widget.cafeid,
+        record,
+      );
+    }
+
+    // 결과 처리
+    if (success) {
+      Get.snackbar(
+        '성공',
+        '기록이 저장되었습니다!',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      Navigator.pop(context);
+    } else {
+      Get.snackbar(
+        '실패',
+        '기록에 실패했습니다. 다시 시도해주세요.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     String formattedDate =
@@ -89,7 +142,7 @@ class _RecordEditPageState extends State<RecordEditPage> {
               ),
               const SizedBox(height: 20),
               Text(
-                "${widget.cafeName} ${widget.visitId}번째 방문 기록",
+                "${widget.cafeName} ${widget.visitId > 0 ? "${widget.visitId}번째 방문 기록" : "새로운 방문 기록"}",
                 style:
                     const TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
               ),
@@ -131,19 +184,7 @@ class _RecordEditPageState extends State<RecordEditPage> {
                 width: double.infinity,
                 height: 60,
                 child: TextButton(
-                  onPressed: () {
-                    String updatedReview = _reviewController.text;
-                    if (updatedReview.isEmpty) {
-                      Get.snackbar('오류', '리뷰를 작성해주세요!');
-                    } else {
-                      _controller.updateRecord(
-                        widget.visitId,
-                        _selectedDate,
-                        updatedReview,
-                      );
-                      Get.back();
-                    }
-                  },
+                  onPressed: _submitRecord,
                   style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),

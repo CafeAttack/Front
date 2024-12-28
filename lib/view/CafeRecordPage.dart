@@ -18,7 +18,9 @@ class CafeRecordPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // CafeRecordController 초기화
-    final controller = Get.put(CafeRecordController());
+    final controller = Get.put(CafeRecordController(
+      cafeId: cafeid,
+    ));
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -74,7 +76,9 @@ class CafeRecordPage extends StatelessWidget {
                                   visitDate:
                                       DateTime.parse(record.date), // 방문 날짜
                                   cafeid: cafeid, // cafeid 전달
-                                ));
+                                ))?.then((_) {
+                              controller.fetchCafeRecordsFromServer();
+                            });
                           },
                         ),
                       ),
@@ -91,16 +95,7 @@ class CafeRecordPage extends StatelessWidget {
                 onPressed: () {
                   final cafeRecordResponse =
                       controller.cafeRecordResponse.value;
-                  int newId = 1; // 기본값 설정
-
-                  if (cafeRecordResponse != null &&
-                      cafeRecordResponse.records.isNotEmpty) {
-                    // 기존 기록에서 ID 최댓값 찾기
-                    newId = cafeRecordResponse.records
-                            .map((record) => record.id)
-                            .reduce((a, b) => a > b ? a : b) +
-                        1;
-                  }
+                  int newId = 0; // 기본값 설정
 
                   // RecordEditPage로 이동
                   Get.to(() => RecordEditPage(
@@ -109,7 +104,9 @@ class CafeRecordPage extends StatelessWidget {
                         initialReviewText: '', // 내용은 비워둠
                         visitDate: DateTime.now(), // 오늘 날짜
                         cafeid: cafeid, // cafeid 전달
-                      ));
+                      ))?.then((_) {
+                    controller.fetchCafeRecordsFromServer();
+                  });
                 },
                 style: TextButton.styleFrom(
                   padding: const EdgeInsets.all(16.0),

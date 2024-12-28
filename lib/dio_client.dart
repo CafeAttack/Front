@@ -37,4 +37,13 @@ class DioClient {
       rethrow;
     }
   }
+
+  static Future<Response> patchRequest(String endpoint, dynamic data) async {
+    try {
+      return await _dio.patch(endpoint, data: data);
+    } catch (e) {
+      print("PATCH 요청 오류: $e");
+      rethrow;
+    }
+  }
 }

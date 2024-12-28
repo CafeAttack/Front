@@ -19,12 +19,12 @@ class _RecordmenuPageState extends State<RecordmenuPage> {
   void initState() {
     super.initState();
     ever(_controller.recordResponse, (_) {
-      _filteredCafes.value = _controller.recordResponse.value.cafes;
+      _filteredCafes.value = _controller.recordResponse.value.data;
     });
   }
 
   void _filterSearchResults(String query) {
-    final cafes = _controller.recordResponse.value.cafes;
+    final cafes = _controller.recordResponse.value.data;
     if (query.isEmpty) {
       _filteredCafes.value = cafes; // 전체 카페 리스트 보여주기
     } else {
