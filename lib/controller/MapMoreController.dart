@@ -19,6 +19,8 @@ class MapMoreController extends GetxController {
       String _data = await rootBundle.loadString('assets/test/map_more.json');
       Map<String, dynamic> data = json.decode(_data);
       mapMore.value = MapMoreModel.fromJson(data);
+      print("Parsed Model Data:");
+      print(mapMore.value.toJson()); // 파싱한 모델 데이터를 JSON으로 출력
     } catch (e) {
       print("Error: $e");
     } finally {

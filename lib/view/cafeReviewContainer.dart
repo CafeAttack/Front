@@ -2,21 +2,21 @@ import 'package:cafe_attack/MetaData.dart';
 import 'package:flutter/material.dart';
 
 class ReviewContainer extends StatefulWidget {
-  const ReviewContainer(
-      {super.key,
-      required this.reviewId,
-      required this.reviewWriter,
-      required this.reviewDate,
-      required this.reviewScore,
-      required this.reviewText,
-      required this.reviewPhoto});
+  const ReviewContainer({
+    super.key,
+    required this.reviewWriter,
+    required this.reviewDate,
+    required this.reviewScore,
+    required this.reviewText,
+    required this.reviewPhoto,
+  });
 
-  final int reviewId;
   final String reviewWriter;
   final String reviewDate;
   final int reviewScore;
+  final String? reviewPhoto; // nullable로 수정
+
   final String reviewText;
-  final String reviewPhoto;
 
   @override
   State<ReviewContainer> createState() => _ReviewContainerState();
@@ -33,25 +33,25 @@ class _ReviewContainerState extends State<ReviewContainer> {
           Row(
             children: [
               Text(
-                widget.reviewWriter,
-                style: TextStyle(
+                widget.reviewWriter ?? "알 수 없음",
+                style: const TextStyle(
                   fontSize: 17,
                   fontFamily: freesentation,
                   fontWeight: FontWeight.w300,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 5,
               ),
               Text(
-                widget.reviewDate,
-                style: TextStyle(
+                widget.reviewDate ?? "??.??.??",
+                style: const TextStyle(
                   fontSize: 11,
                   fontFamily: freesentation,
                   fontWeight: FontWeight.w300,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 5,
               ),
               Row(
@@ -72,28 +72,35 @@ class _ReviewContainerState extends State<ReviewContainer> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.reviewText,
-                  style: TextStyle(
+                  widget.reviewText ?? "내용 없음",
+                  style: const TextStyle(
                     fontSize: 11,
                     fontFamily: freesentation,
                     fontWeight: FontWeight.w300,
                   ),
                   overflow: TextOverflow.clip,
                 ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      for (int i = 0; i < 5; i++)
-                        Image.asset(
-                          basic_image, // todo 백엔드 연결 시 network image로
-                          width: 90,
-                          height: 90,
-                        ),
-                    ],
-                  ),
-                ),
+                const SizedBox(height: 8),
+                // 이미지가 있는 경우만 표시
+                widget.reviewPhoto != null && widget.reviewPhoto!.isNotEmpty
+                    ? Image.network(
+                  widget.reviewPhoto!,
+                  width: 90,
+                  height: 90,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Text(
+                      "이미지를 불러올 수 없습니다.",
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontFamily: freesentation,
+                        fontWeight: FontWeight.w300,
+                        color: Colors.red,
+                      ),
+                    );
+                  },
+                )
+                    : const SizedBox(), // 이미지가 없을 경우 아무것도 표시하지 않음
               ],
             ),
           ),
