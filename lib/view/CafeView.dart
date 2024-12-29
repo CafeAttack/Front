@@ -58,444 +58,447 @@ class _CafePageState extends State<CafePage> {
           heart: mapMore.heart ?? false,
         ),
         body: ResponsiveCenter(
-          child: SingleChildScrollView(
 
-            child: Column(children: [
-              Container(
-                decoration: BoxDecoration(
-                  border: Border(
-                    top: BorderSide(
-                      color: Colors.black,
-                      width: 0.5,
+          padding: EdgeInsets.zero,
+          maxContentWidth: BreakPoint.tablet,
+          child: SingleChildScrollView(
+            child: Column(
+                children: [
+                  Container(
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        top: BorderSide(
+                          color: Colors.black,
+                          width: 0.5,
+                        ),
+                        bottom: BorderSide(
+                          color: Colors.black,
+                          width: 0.5,
+                        ),
+                      ),
                     ),
-                    bottom: BorderSide(
-                      color: Colors.black,
-                      width: 0.5,
-                    ),
-                  ),
-                ),
-                padding: EdgeInsets.only(right: 10, left: 10, top: 8, bottom: 8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          child: Text(
-                            "위치",
-                            style: TextStyle(
-                                fontSize: 20,
-                                fontFamily: freesentation,
-                                fontWeight: FontWeight.w500),
-                            textAlign: TextAlign.center,
-                          ),
-                          width: 80,
-                          height: 23,
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        SizedBox(
-                          child: Text(
-                            mapMore.address ?? "주소 없음",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w300,
-                                fontFamily: freesentation,
-                                fontSize: 20),
-                          ),
-                          height: 23,
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          child: Text(
-                            "영업시간",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontFamily: freesentation,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          width: 80,
-                          height: 23,
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Expanded(
-                          child: Text(
-                            mapMore.time ?? "영업시간 없음",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w300,
-                              fontFamily: freesentation,
-                              fontSize: 20,
-                            ),
-                            softWrap: true, // 줄바꿈 허용
-                            overflow: TextOverflow.ellipsis, // 텍스트가 너무 길 경우 말줄임표 처리
-                            maxLines: 2, // 최대 2줄로 표시
-                          ),
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          child: Text(
-                            "전화번호",
-                            style: TextStyle(
-                                fontSize: 20,
-                                fontFamily: freesentation,
-                                fontWeight: FontWeight.w500),
-                            textAlign: TextAlign.center,
-                          ),
-                          width: 80,
-                          height: 23,
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        SizedBox(
-                          child: Text(
-                            mapMore.phone ?? "정보 없음",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w300,
-                                fontFamily: freesentation,
-                                fontSize: 20),
-                          ),
-                          height: 23,
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          child: Text(
-                            "카페유형",
-                            style: TextStyle(
-                                fontSize: 20,
-                                fontFamily: freesentation,
-                                fontWeight: FontWeight.w500),
-                            textAlign: TextAlign.center,
-                          ),
-                          width: 80,
-                          height: 23,
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        SizedBox(
-                          child: Text(
-                            _cafeCategory(mapMore.categories?.length ?? 0,
-                                mapMore.categories ?? []),
-                            style: TextStyle(
-                                fontWeight: FontWeight.w300,
-                                fontFamily: freesentation,
-                                fontSize: 20),
-                          ),
-                          height: 23,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  right: 20,
-                  left: 20,
-                  top: 8,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
+                    padding: EdgeInsets.only(right: 10, left: 10, top: 8, bottom: 8),
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "편의 시설",
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontFamily: freesentation,
-                              fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        Wrap(
-                          spacing: 10,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Checkbox(
-                                  value: (mapMore.amenities?[0].name ?? "f") == "t"? true:false, // 기본값: 선택되지 않음
-                                  onChanged: (bool? value) {
-                                    // 선택 시 로직 추가
-                                  },
-                                ),
-                                Text('화장실 내부에 있어요',
-                                  style: const TextStyle(
-                                  fontSize: 17,
-                                  fontFamily: freesentation,
-                                  fontWeight: FontWeight.w300,
-                                ),),
-                              ],
-                            ),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Checkbox(
-                                  value: (mapMore.amenities?[1].name ?? "f") == "t"? true:false,
-                                  onChanged: (bool? value) {
-                                    // 선택 시 로직 추가
-                                  },
-                                ),
-                                Text('주차가 가능해요',
-                                  style: const TextStyle(
-                                    fontSize: 17,
+                            const SizedBox(
+                              width: 80,
+                              height: 23,
+                              child: Text(
+                                "위치",
+                                style: TextStyle(
+                                    fontSize: 20,
                                     fontFamily: freesentation,
+                                    fontWeight: FontWeight.w500),
+                                textAlign: TextAlign.center,
+                              ),
+
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            SizedBox(
+                              height: 23,
+                              child: Text(
+                                mapMore.address ?? "주소 없음",
+                                style: const TextStyle(
                                     fontWeight: FontWeight.w300,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Checkbox(
-                                  value: (mapMore.amenities?[2].name ?? "f") == "t"? true:false,
-                                  onChanged: (bool? value) {
-                                    // 선택 시 로직 추가
-                                  },
-                                ),
-                                Text('흡연실 있어요',
-                                  style: const TextStyle(
-                                  fontSize: 17,
-                                  fontFamily: freesentation,
-                                  fontWeight: FontWeight.w300,
-                                ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Checkbox(
-                                  value: (mapMore.amenities?[3].name ?? "f") == "t"? true:false,
-                                  onChanged: (bool? value) {
-                                    // 선택 시 로직 추가
-                                  },
-                                ),
-                                Text('와이파이가 가능해요',
-                                  style: const TextStyle(
-                                    fontSize: 17,
                                     fontFamily: freesentation,
-                                    fontWeight: FontWeight.w300,
-                                  ),
-                                ),
-                              ],
+                                    fontSize: 20),
+                              ),
+
+                            ),
+                            const SizedBox(
+                              width: 5,
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "사용자 리뷰",
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontFamily: freesentation,
-                              fontWeight: FontWeight.w600),
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          (mapMore.reviews?.length ?? 0).toString() + "건",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w300,
-                            fontFamily: freesentation,
-                            fontSize: 12,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 5,
+                        const SizedBox(
+                          height: 5,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            if ((mapMore.avgscore ?? 0.0) > 0)
-                              ...List.generate(
-                                (mapMore.avgscore ?? 0.0).floor(),
-                                // Full stars based on the integer part of AvgScore
-                                    (index) => Icon(
-                                  Icons.star,
-                                  color: Colors.yellow,
+                            const SizedBox(
+                              width: 80,
+                              height: 23,
+                              child: Text(
+                                "영업시간",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontFamily: freesentation,
+                                  fontWeight: FontWeight.w500,
                                 ),
+                                textAlign: TextAlign.center,
                               ),
-                            if ((mapMore.avgscore ?? 0.0) > 0 &&
-                                (mapMore.avgscore ?? 0.0) - (mapMore.avgscore ?? 0.0).floor() >= 0.5)
-                              Icon(
-                                Icons.star_half,
-                                color: Colors.yellow,
-                              ),
-                            if ((mapMore.avgscore ?? 0.0) > 0 &&
-                                (mapMore.avgscore ?? 0.0) - (mapMore.avgscore ?? 0.0).floor() < 0.5 &&
-                                (mapMore.avgscore ?? 0.0) != (mapMore.avgscore ?? 0.0).floor())
-                              Icon(
-                                Icons.star_border,
-                                color: Colors.yellow,
-                              ),
-                            if ((mapMore.avgscore ?? 0.0) == 0)
-                              ...List.generate(
-                                5,
-                                // If avgscore is 0, show 5 empty stars
-                                    (index) => Icon(
-                                  Icons.star_border,
-                                  color: Colors.yellow,
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Expanded(
+                              child: Text(
+                                mapMore.time ?? "영업시간 없음",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w300,
+                                  fontFamily: freesentation,
+                                  fontSize: 20,
                                 ),
+                                softWrap: true, // 줄바꿈 허용
+                                overflow: TextOverflow.ellipsis, // 텍스트가 너무 길 경우 말줄임표 처리
+                                maxLines: 2, // 최대 2줄로 표시
                               ),
-                            Text(
-                              "${mapMore.avgscore ?? 0.0}/5.0",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w300,
-                                fontFamily: freesentation,
-                                fontSize: 13,
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            const SizedBox(
+                              width: 80,
+                              height: 23,
+                              child: Text(
+                                "전화번호",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontFamily: freesentation,
+                                    fontWeight: FontWeight.w500),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            SizedBox(
+                              height: 23,
+                              child: Text(
+                                mapMore.phone ?? "정보 없음",
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w300,
+                                    fontFamily: freesentation,
+                                    fontSize: 20),
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(
-                          width: 10,
+                        const  SizedBox(
+                          height: 5,
                         ),
-                        OutlinedButton(
-                          onPressed: () {
-                            Get.to(() => ReviewWritePage(
-                                cafeName: mapMore.cafename!,
-                                heart: mapMore.heart!));
-                          },
-                          child: Text(
-                            "리뷰쓰기",
-                            style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w300,
-                                fontFamily: freesentation,
-                                color: Color(0xFF0075FF)),
-                          ),
-                          style: OutlinedButton.styleFrom(
-                            fixedSize: Size(53.0, 20.0),
-                            minimumSize: Size.zero,
-                            padding: EdgeInsets.zero,
-                            backgroundColor: Color(0x200075FF),
-                            side: BorderSide(color: Color(0xff0075FF)),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5)),
-                          ),
-                        )
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            const SizedBox(
+                              width: 80,
+                              height: 23,
+                              child: Text(
+                                "카페유형",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontFamily: freesentation,
+                                    fontWeight: FontWeight.w500),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            SizedBox(
+                              height: 23,
+                              child: Text(
+                                _cafeCategory(mapMore.categories?.length ?? 0,
+                                    mapMore.categories ?? []),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w300,
+                                    fontFamily: freesentation,
+                                    fontSize: 20),
+                              ),
+
+                            ),
+                          ],
+                        ),
                       ],
                     ),
-                    Text(
-                      "이런 점이 좋았아요",
-                      style: const TextStyle(
-                        fontSize: 17,
-                        fontFamily: freesentation,
-                        fontWeight: FontWeight.w600,
-                      ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      right: 20,
+                      left: 20,
+                      top: 8,
                     ),
-                    SizedBox(
-                      height: (mapMore.tags?.length ?? 0) * 60.0, // ListView의 높이를 아이템 개수에 맞게 조정
-                      child: ListView.builder(
-                        itemCount: mapMore.tags?.length ?? 0, // 태그 데이터 개수
-                        physics: NeverScrollableScrollPhysics(), // 내부 스크롤 방지
-                        itemBuilder: (context, index) {
-                          List<Tags> tags = mapMore.tags ?? []; // 태그 리스트 가져오기
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0), // 아이템 간 간격 추가
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Color(0xffdbefff), // 배경 색상
-                                borderRadius: BorderRadius.circular(10), // 모서리 둥글게
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "편의 시설",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontFamily: freesentation,
+                                fontWeight: FontWeight.w600,
                               ),
-                              padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0), // 내부 패딩
-                              child: Row(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                        "✨", // 태그에 따른 이모지
-                                        style: TextStyle(fontSize: 18),
+                            ),
+                            Wrap(
+                              spacing: 10,
+                              children: [
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Checkbox(
+                                      value: (mapMore.amenities?[0].name ?? "f") == "t"? true:false, // 기본값: 선택되지 않음
+                                      onChanged: (bool? value) {
+                                        // 선택 시 로직 추가
+                                      },
+                                    ),
+                                    const Text('화장실 내부에 있어요',
+                                      style: TextStyle(
+                                        fontSize: 17,
+                                        fontFamily: freesentation,
+                                        fontWeight: FontWeight.w300,
+                                      ),),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Checkbox(
+                                      value: (mapMore.amenities?[1].name ?? "f") == "t"? true:false,
+                                      onChanged: (bool? value) {
+                                        // 선택 시 로직 추가
+                                      },
+                                    ),
+                                    const Text('주차가 가능해요',
+                                      style: const TextStyle(
+                                        fontSize: 17,
+                                        fontFamily: freesentation,
+                                        fontWeight: FontWeight.w300,
                                       ),
-                                      SizedBox(width: 8),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Checkbox(
+                                      value: (mapMore.amenities?[2].name ?? "f") == "t"? true:false,
+                                      onChanged: (bool? value) {
+                                        // 선택 시 로직 추가
+                                      },
+                                    ),
+                                    const Text('흡연실 있어요',
+                                      style: const TextStyle(
+                                        fontSize: 17,
+                                        fontFamily: freesentation,
+                                        fontWeight: FontWeight.w300,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Checkbox(
+                                      value: (mapMore.amenities?[3].name ?? "f") == "t"? true:false,
+                                      onChanged: (bool? value) {
+                                        // 선택 시 로직 추가
+                                      },
+                                    ),
+                                    const Text('와이파이가 가능해요',
+                                      style: const TextStyle(
+                                        fontSize: 17,
+                                        fontFamily: freesentation,
+                                        fontWeight: FontWeight.w300,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              "사용자 리뷰",
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontFamily: freesentation,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              (mapMore.reviews?.length ?? 0).toString() + "건",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w300,
+                                fontFamily: freesentation,
+                                fontSize: 12,
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                if ((mapMore.avgscore ?? 0.0) > 0)
+                                  ...List.generate(
+                                    (mapMore.avgscore ?? 0.0).floor(),
+                                    // Full stars based on the integer part of AvgScore
+                                        (index) => const Icon(
+                                      Icons.star,
+                                      color: Colors.yellow,
+                                    ),
+                                  ),
+                                if ((mapMore.avgscore ?? 0.0) > 0 &&
+                                    (mapMore.avgscore ?? 0.0) - (mapMore.avgscore ?? 0.0).floor() >= 0.5)
+                                  const Icon(
+                                    Icons.star_half,
+                                    color: Colors.yellow,
+                                  ),
+                                if ((mapMore.avgscore ?? 0.0) > 0 &&
+                                    (mapMore.avgscore ?? 0.0) - (mapMore.avgscore ?? 0.0).floor() < 0.5 &&
+                                    (mapMore.avgscore ?? 0.0) != (mapMore.avgscore ?? 0.0).floor())
+                                  const Icon(
+                                    Icons.star_border,
+                                    color: Colors.yellow,
+                                  ),
+                                if ((mapMore.avgscore ?? 0.0) == 0)
+                                  ...List.generate(
+                                    5,
+                                    // If avgscore is 0, show 5 empty stars
+                                        (index) => const Icon(
+                                      Icons.star_border,
+                                      color: Colors.yellow,
+                                    ),
+                                  ),
+                                Text(
+                                  "${mapMore.avgscore ?? 0.0}/5.0",
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w300,
+                                    fontFamily: freesentation,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            OutlinedButton(
+                              onPressed: () {
+                                Get.to(() => ReviewWritePage(cafeId: widget.cafeId,));
+                              },
+                              style: OutlinedButton.styleFrom(
+                                fixedSize: const Size(53.0, 20.0),
+                                minimumSize: Size.zero,
+                                padding: EdgeInsets.zero,
+                                backgroundColor: const Color(0x200075FF),
+                                side: const BorderSide(color: Color(0xff0075FF)),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5)),
+                              ),
+                              child: const Text(
+                                "리뷰쓰기",
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w300,
+                                    fontFamily: freesentation,
+                                    color: Color(0xFF0075FF)),
+                              ),
+
+                            )
+                          ],
+                        ),
+                        const Text(
+                          "이런 점이 좋았아요",
+                          style: const TextStyle(
+                            fontSize: 17,
+                            fontFamily: freesentation,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        SizedBox(
+                          height: (mapMore.tags?.length ?? 0) * 60.0, // ListView의 높이를 아이템 개수에 맞게 조정
+                          child: ListView.builder(
+                            itemCount: mapMore.tags?.length ?? 0, // 태그 데이터 개수
+                            physics: const NeverScrollableScrollPhysics(), // 내부 스크롤 방지
+                            itemBuilder: (context, index) {
+                              List<Tags> tags = mapMore.tags ?? []; // 태그 리스트 가져오기
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0), // 아이템 간 간격 추가
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Color(0xffdbefff), // 배경 색상
+                                    borderRadius: BorderRadius.circular(10), // 모서리 둥글게
+                                  ),
+                                  padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0), // 내부 패딩
+                                  child: Row(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          const Text(
+                                            "✨", // 태그에 따른 이모지
+                                            style: TextStyle(fontSize: 18),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            '"${tags[index].tag}"', // 태그 이름
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const Spacer(),
                                       Text(
-                                        '"${tags[index].tag}"', // 태그 이름
-                                        style: TextStyle(
+                                        tags[index].count.toString(), // 태그 카운트
+                                        style: const TextStyle(
                                           fontSize: 16,
-                                          fontWeight: FontWeight.w500,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.black54,
                                         ),
                                       ),
                                     ],
                                   ),
-                                  Spacer(),
-                                  Text(
-                                    tags[index].count.toString(), // 태그 카운트
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.black54,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          height: 400,
+                          child: ListView.builder(
+                              itemCount: mapMore.reviews?.length ?? 0,
+                              itemBuilder: (context, index) {
+                                List<Reviews> reviews = mapMore.reviews ??[];
+
+                                return ReviewContainer(
+                                  reviewWriter: reviews[index].nickname!,
+                                  reviewDate: reviews[index].reviewdate!,
+                                  reviewScore: reviews[index].reviewscore!,
+                                  reviewText: reviews[index].reviewtext!,
+                                  reviewPhoto: reviews[index].picurl,
+                                );
+                              }),
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      height: 400,
-                      child: ListView.builder(
-                          itemCount: mapMore.reviews?.length ?? 0,
-                          itemBuilder: (context, index) {
-                            List<Reviews> reviews = mapMore.reviews ??[];
-            
-                            return ReviewContainer(
-                              reviewWriter: reviews[index].nickname!,
-                              reviewDate: reviews[index].reviewdate!,
-                              reviewScore: reviews[index].reviewscore!,
-                              reviewText: reviews[index].reviewtext!,
-                              reviewPhoto: reviews[index].picurl,
-                            );
-                          }),
-                    ),
-                  ],
-                ),
-              ),
-            ]),
+                  ),
+                ]),
           ),
-          padding: EdgeInsets.zero,
-          maxContentWidth: BreakPoint.tablet,
         ),
       );
     });
