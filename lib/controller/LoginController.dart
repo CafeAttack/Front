@@ -12,6 +12,9 @@ class LoginController {
   Future<bool> login(LoginModel loginModel) async {
     try {
       // 로그인 요청
+
+      print("login post: ${loginModel.toJson()}");
+
       var response = await DioClient.postRequest(
         '/auth/login',
         loginModel.toJson(),
